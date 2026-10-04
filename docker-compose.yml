@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  ai-compliance:
+    build: .
+    container_name: ai-compliance-kutusu
+    ports:
+      - "8501:8501"
+      - "8000:8000"
+    volumes:
+      - ./denetimler.db:/app/denetimler.db
+      - ./locales:/app/locales
+      - ./safe.yaml:/app/safe.yaml
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HF_HUB_DISABLE_SYMLINKS_WARNING=1
+    restart: unless-stopped

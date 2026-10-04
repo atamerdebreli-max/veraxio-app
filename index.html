@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veraxio - AB AI Act Madde 50 Uyumluluk</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3E%E2%97%86%3C/text%3E%3C/svg%3E">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #0a0a0a;
+        --bg-card: #171717;
+        --bg-hover: #1f1f1f;
+        --border: #262626;
+        --text: #fafafa;
+        --text-dim: #a3a3a3;
+        --text-mute: #737373;
+        --primary: #3b82f6;
+        --primary-2: #8b5cf6;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAVBAR */
+    .navbar {
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        background: rgba(10, 10, 10, 0.85);
+        backdrop-filter: blur(12px);
+        z-index: 100;
+    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+    .logo {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+        text-decoration: none;
+    }
+    .logo-icon {
+        width: 28px; height: 28px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 14px;
+        font-weight: 800;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* HERO */
+    .hero { padding: 100px 0 60px; text-align: center; position: relative; }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 800px; height: 500px;
+        background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #60a5fa;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 24px;
+    }
+    .dot {
+        width: 6px; height: 6px;
+        background: var(--primary);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+        font-size: 68px;
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -2.5px;
+        margin-bottom: 24px;
+        background: linear-gradient(135deg, #fafafa 0%, #a3a3a3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero h1 .accent {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero-sub {
+        font-size: 20px;
+        color: var(--text-dim);
+        max-width: 640px;
+        margin: 0 auto 40px;
+        line-height: 1.5;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+
+    .cta-row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 48px;
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        font-family: inherit;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+        color: white;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+    .btn-secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--bg-card); border-color: var(--primary); }
+
+    .social-proof {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        color: var(--text-mute);
+        font-size: 13px;
+    }
+    .avatars { display: flex; }
+    .av {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        border: 2px solid var(--bg);
+        margin-left: -10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: white;
+        font-weight: 700;
+    }
+    .av:first-child { margin-left: 0; }
+
+    /* SECTIONS */
+    section { padding: 80px 0; }
+    .section-title { text-align: center; margin-bottom: 48px; }
+    .section-title h2 {
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -1.5px;
+        margin-bottom: 12px;
+    }
+    .section-title p { color: var(--text-dim); font-size: 17px; }
+
+    /* ALERT */
+    .alert {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--danger);
+        padding: 24px 28px;
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-top: 60px;
+    }
+    .alert .icon { font-size: 20px; margin-top: 2px; }
+    .alert .text { color: var(--text-dim); font-size: 15px; }
+    .alert .text strong { color: var(--text); font-weight: 600; }
+    .alert .text .red { color: var(--danger); font-weight: 600; }
+
+    /* STATS */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+    .stat {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 28px 24px;
+        border-radius: 12px;
+        transition: border-color 0.2s;
+    }
+    .stat:hover { border-color: var(--primary); }
+    .stat-value {
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+    .stat-label { font-size: 13px; color: var(--text-mute); font-weight: 500; }
+
+    /* FEATURES */
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .feature {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 28px;
+        border-radius: 12px;
+        transition: all 0.2s;
+    }
+    .feature:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .feature-icon {
+        width: 44px; height: 44px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        margin-bottom: 18px;
+    }
+    .feature-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .feature-desc { color: var(--text-dim); font-size: 14px; }
+
+    /* PRICING */
+    .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .plan {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 36px 28px;
+        border-radius: 16px;
+        position: relative;
+        transition: all 0.2s;
+    }
+    .plan:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .plan.featured {
+        border-color: var(--primary);
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0.08) 0%, var(--bg-card) 100%);
+        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2), 0 20px 40px rgba(59, 130, 246, 0.1);
+    }
+    .plan-badge {
+        position: absolute;
+        top: -12px; left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .plan-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dim);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+    .plan-price {
+        font-size: 42px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1;
+    }
+    .plan-period { color: var(--text-mute); font-size: 14px; margin-top: 4px; margin-bottom: 28px; }
+    .plan-features { list-style: none; margin-bottom: 24px; }
+    .plan-features li {
+        padding: 9px 0 9px 24px;
+        color: #d4d4d4;
+        font-size: 14px;
+        position: relative;
+    }
+    .plan-features li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: 700;
+    }
+    .plan-target {
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text-mute);
+        text-align: center;
+        font-style: italic;
+    }
+
+    /* EARLY BIRD */
+    .early-bird {
+        margin-top: 24px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+    }
+    .early-bird-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #60a5fa;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+    .early-bird-desc { color: #d4d4d4; font-size: 15px; }
+    .early-bird-desc strong { color: var(--text); font-weight: 700; }
+
+    /* FORM */
+    .form {
+        max-width: 720px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 40px;
+        border-radius: 16px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    .form-group label { font-size: 13px; font-weight: 500; color: var(--text-dim); }
+    .form-group input,
+    .form-group textarea {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 16px;
+        color: var(--text);
+        font-size: 15px;
+        font-family: inherit;
+        transition: all 0.2s;
+        outline: none;
+        resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--text-mute); }
+    .form button {
+        width: 100%;
+        padding: 15px;
+        font-size: 15px;
+        margin-top: 8px;
+    }
+
+    /* FOOTER */
+    footer {
+        border-top: 1px solid var(--border);
+        padding: 60px 0 32px;
+        text-align: center;
+    }
+    .footer-brand {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+    .footer-tagline { color: var(--text-dim); margin-bottom: 24px; font-size: 14px; }
+    .footer-email {
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+        margin-bottom: 24px;
+    }
+    .footer-email:hover { text-decoration: underline; }
+    .footer-disclaimer {
+        color: #525252;
+        font-size: 12px;
+        max-width: 600px;
+        margin: 0 auto 20px;
+        line-height: 1.6;
+    }
+    .footer-copyright {
+        color: #404040;
+        font-size: 12px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+        margin-top: 24px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 40px; letter-spacing: -1px; }
+        .hero-sub { font-size: 16px; }
+        .section-title h2 { font-size: 32px; }
+        .stats { grid-template-columns: repeat(2, 1fr); }
+        .features, .pricing { grid-template-columns: 1fr; }
+        .form-row { grid-template-columns: 1fr; }
+        .nav-links { display: none; }
+        section { padding: 56px 0; }
+        .form { padding: 24px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="container">
+        <a href="#" class="logo">
+            <span class="logo-icon">◆</span>
+            Veraxio
+        </a>
+        <div class="nav-links">
+            <a href="#features">Özellikler</a>
+            <a href="#pricing">Fiyatlandırma</a>
+            <a href="#demo">Demo Talebi</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            AB AI Act Madde 50 Uyumlu
+        </div>
+        <h1>
+            AI uyumluluğunu<br>
+            <span class="accent">otomatikleştiriyoruz</span>
+        </h1>
+        <p class="hero-sub">
+            5 dakikada AI sistemlerinizi denetleyin,<br>
+            <strong>15 milyon Euro</strong> ceza riskinden kaçının.
+        </p>
+        <div class="cta-row">
+            <a href="#demo" class="btn btn-primary">Ücretsiz Demo Talep Et →</a>
+            <a href="#features" class="btn btn-secondary">Nasıl Çalışır?</a>
+        </div>
+        <div class="social-proof">
+            <div class="avatars">
+                <div class="av">A</div>
+                <div class="av">M</div>
+                <div class="av">S</div>
+                <div class="av">K</div>
+                <div class="av">+</div>
+            </div>
+            <span>Yüzlerce şirket uyumluluğunu Veraxio ile yönetiyor</span>
+        </div>
+
+        <div class="alert">
+            <div class="icon">⚠️</div>
+            <div class="text">
+                <strong>2 Ağustos 2026'dan itibaren yürürlükte.</strong><br>
+                Chatbot'unuzda AI bildirimi yoksa, görsellerinizde C2PA işaretleme eksikse
+                <span class="red">15 milyon Euro veya cironun %3'ü</span> ceza riski var.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section>
+    <div class="container">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">15M€</div>
+                <div class="stat-label">Maksimum Ceza</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">11</div>
+                <div class="stat-label">AI Tipi Denetimi</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Dil Desteği</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Katmanlı Tespit</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Nasıl çalışır?</h2>
+            <p>Manuel danışmanlığın 6-12 hafta ve 28.000-62.000 € maliyetini,<br>5 dakikalık ve 4.900 TL/ay'lık yazılım denetimine indiriyoruz.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-title">11 AI Tipi Denetimi</div>
+                <div class="feature-desc">Chatbot, görsel üretimi, deepfake, kamu yararı metni, duygu tanıma, KVKK uyumu, AB temsilcisi, Shadow AI, kümülatif analiz ve daha fazlası.</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <div class="feature-title">4 Katmanlı Görsel Tespit</div>
+                <div class="feature-desc">C2PA metadata + PNG/IPTC + SigLIP deepfake modeli + CLIP genel AI detektörü ile kapsamlı analiz.</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🌍</div>
+                <div class="feature-title">5 Dil Desteği</div>
+                <div class="feature-desc">Türkçe, İngilizce, Bulgarca, Romence, Hırvatça. Balkanlar ve Doğu Avrupa pazarına hazır altyapı.</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📄</div>
+                <div class="feature-title">Kanıt Zinciri</div>
+                <div class="feature-desc">SHA-256 hash + zaman damgası. Denetime hazır PDF raporu. Hukuki dayanak ve sorumluluk reddi dahil.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+    <div class="container">
+        <div class="section-title">
+            <h2>Fiyatlandırma</h2>
+            <p>İhtiyacınıza uygun paketi seçin</p>
+        </div>
+
+        <div class="pricing">
+            <div class="plan">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">4.900 TL</div>
+                <div class="plan-period">/ ay</div>
+                <ul class="plan-features">
+                    <li>1 chatbot denetimi</li>
+                    <li>10 görsel / ay</li>
+                    <li>PDF rapor</li>
+                    <li>E-posta desteği</li>
+                </ul>
+                <div class="plan-target">Mikro KOBİ · Tek AI ürünü</div>
+            </div>
+
+            <div class="plan featured">
+                <div class="plan-badge">Popüler</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">12.900 TL</div>
+                <div class="plan-period">/ ay</div>
+                <ul class="plan-features">
+                    <li>5 chatbot denetimi</li>
+                    <li>50 görsel / ay</li>
+                    <li>REST API erişimi</li>
+                    <li>Zamanlanmış denetim</li>
+                    <li>Otomatik e-posta raporu</li>
+                    <li>Geçmiş arşivi</li>
+                </ul>
+                <div class="plan-target">KOBİ · Çoklu AI ürünü</div>
+            </div>
+
+            <div class="plan">
+                <div class="plan-name">Enterprise</div>
+                <div class="plan-price">39.900 TL</div>
+                <div class="plan-period">/ ay</div>
+                <ul class="plan-features">
+                    <li>Sınırsız denetim</li>
+                    <li>Özel entegrasyon</li>
+                    <li>Öncelikli destek</li>
+                    <li>Özel rapor</li>
+                    <li>AB temsilcisi takibi</li>
+                </ul>
+                <div class="plan-target">Kurumsal · Çoklu lokasyon</div>
+            </div>
+        </div>
+
+        <div class="early-bird">
+            <div class="early-bird-title">Erken Kuş İndirimi</div>
+            <div class="early-bird-desc">
+                İlk 10 müşteriye Pro paket <strong>6.900 TL/ay</strong> (%47 indirim) — 12 aylık taahhüt ile
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DEMO FORM -->
+<section id="demo">
+    <div class="container">
+        <div class="section-title">
+            <h2>Demo Talebi</h2>
+            <p>İlk denetim ücretsiz. Formu doldurun, 24 saat içinde size dönelim.</p>
+        </div>
+
+        <form class="form" id="demoForm" action="https://formspree.io/f/xaeqwqak" method="POST">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ad">Adınız Soyadınız *</label>
+                    <input type="text" id="ad" name="ad" placeholder="Örn: Ahmet Yılmaz" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta *</label>
+                    <input type="email" id="email" name="email" placeholder="ornek@sirket.com" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sirket">Şirket Adı</label>
+                    <input type="text" id="sirket" name="sirket" placeholder="Örn: ABC Teknoloji A.Ş.">
+                </div>
+                <div class="form-group">
+                    <label for="telefon">Telefon</label>
+                    <input type="tel" id="telefon" name="telefon" placeholder="+90 5XX XXX XX XX">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="mesaj">Mesajınız (opsiyonel)</label>
+                <textarea id="mesaj" name="mesaj" rows="4" placeholder="Kaç AI sisteminiz var? Hangi sektördesiniz?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">📩 Demo Talebi Gönder</button>
+        </form>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-brand">◆ Veraxio</div>
+        <div class="footer-tagline">AB AI Act Madde 50 Uyumluluk Denetim Platformu</div>
+
+        <div class="footer-hukuki">
+            <a href="gizlilik.html">Gizlilik Politikası</a>
+            <span>·</span>
+            <a href="kvkk.html">KVKK Aydınlatma</a>
+            <span>·</span>
+            <a href="kullanim.html">Kullanım Şartları</a>
+            <span>·</span>
+            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+        </div>
+
+        <a class="footer-email" href="mailto:info@veraxio.ai">info@veraxio.ai</a>
+        <div class="footer-disclaimer">
+            Bu sayfa teknik bir denetim aracını tanıtır. Hukuki görüş niteliği taşımaz.
+            Nihai hukuki değerlendirme için uzman bir avukata başvurun.
+        </div>
+        <div class="footer-copyright">
+            © 2026 Veraxio. Tüm hakları saklıdır.
+        </div>
+    </div>
+</footer>
+
+<script>
+document.getElementById('demoForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const eskiMetin = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Gönderiliyor...';
+
+    const formData = new FormData(e.target);
+
+    try {
+        const yanit = await fetch('https://formspree.io/f/xaeqwqak', {
+            method: 'POST',
+            body: formData,
+            headers: { 'Accept': 'application/json' }
+        });
+
+        const sonuc = await yanit.json();
+
+        if (yanit.ok) {
+            e.target.innerHTML = `
+                <div style="text-align:center; padding: 40px 20px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                    <h3 style="color: #fafafa; font-size: 22px; margin-bottom: 12px;">
+                        Talebiniz Alındı!
+                    </h3>
+                    <p style="color: #a3a3a3; font-size: 15px; line-height: 1.6;">
+                        24 saat içinde <strong style="color: #60a5fa;">${formData.get('email')}</strong> adresine
+                        dönüş yapacağız.
+                    </p>
+                    <p style="color: #737373; font-size: 13px; margin-top: 24px;">
+                        Kayıt No: <code style="color: #60a5fa;">DEMO-${Date.now().toString().slice(-10)}</code>
+                    </p>
+                </div>
+            `;
+        } else {
+            alert('❌ Hata: ' + (sonuc.mesaj || 'Bilinmeyen hata'));
+            btn.disabled = false;
+            btn.innerHTML = eskiMetin;
+        }
+    } catch (err) {
+        alert('❌ Bağlantı hatası. Lütfen tekrar deneyin.');
+        btn.disabled = false;
+        btn.innerHTML = eskiMetin;
+    }
+});
+</script>
+
+</body>
+</html>

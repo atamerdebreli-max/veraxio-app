@@ -1,0 +1,55 @@
+meta:
+  pack_id: safe_defaults
+  policy_id: safe_defaults_v1
+  policy_version: "1.0"
+  created_at: "2026-09-18T00:00:00Z"
+  author: "[Tamer]"
+  name: Safe Defaults
+  description: Conservative defaults for AI assistants
+  version: "1.0"
+schema_version: 4
+version: 4
+default_action: BLOCK
+global:
+  rules:
+  - id: allow_file_read
+    when:
+      action_name: file_read
+    then: ALLOW
+    reason: file_read_allowed_by_pack
+  - id: block_file_write
+    when:
+      action_name: file_write
+    then: BLOCK
+    reason: file_write_blocked_by_pack
+  - id: block_file_delete
+    when:
+      action_name: file_delete
+    then: BLOCK
+    reason: file_delete_blocked_by_pack
+  - id: block_email_send
+    when:
+      action_name: email_send
+    then: BLOCK
+    reason: email_send_blocked_by_pack
+  - id: block_shell_exec
+    when:
+      action_name: shell_exec
+    then: BLOCK
+    reason: shell_exec_blocked_by_pack
+  - id: block_network_access
+    when:
+      category: network
+    then: BLOCK
+    reason: network_access_blocked_by_pack
+  - id: allow_chatbot_with_disclosure
+    when:
+      action_name: chatbot_interaction_with_disclosure
+    then: ALLOW
+    reason: madde50_1_uyumlu_chatbot_ai_bildirimi_var
+  - id: block_chatbot_no_disclosure
+    when:
+      action_name: chatbot_interaction
+    then: BLOCK
+    reason: madde50_1_ihlali_chatbot_ai_bildirimi_yok
+boundaries: {}

@@ -1,0 +1,225 @@
+# ============================================================
+# ORTAM DEGISKENLERI
+# ============================================================
+.env
+.env.*
+!.env.example
+
+# ============================================================
+# VERITABANI (Musteri verisi - ASLA PUSH'LAMA!)
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+denetimler*.db
+
+# ============================================================
+# YEDEKLER VE ARSIVLER
+# ============================================================
+yedekler/
+arsiv_scriptler/
+arsiv_*/
+*.bak
+*.py.bak
+*.html.bak
+*.json.bak
+*.db.bak
+
+# ============================================================
+# CACHE
+# ============================================================
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.cache/
+
+# ============================================================
+# LOGLAR
+# ============================================================
+logs/
+*.log
+
+# ============================================================
+# STREAMLIT SECRETS
+# ============================================================
+.streamlit/secrets.toml
+
+# ============================================================
+# IDE
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ============================================================
+# MODEL DOSYALARI (Buyuk dosyalar)
+# ============================================================
+*.safetensors
+*.bin
+*.onnx
+*.pt
+*.pth
+models/
+
+# ============================================================
+# RAPORLAR (Kisisel veriler)
+# ============================================================
+rapor_*.pdf
+rapor_*.json
+rapor_*.csv
+toplu_rapor_*.pdf
+
+# ============================================================
+# PDF IMZA SERTIFIKALARI
+# ============================================================
+*.pfx
+*.p12
+*.pem
+*.key
+certificates/
+
+
+# ============================================================
+# YARDIMCI SCRIPT'LER (bir kere calisanlar)
+# ============================================================
+*_fix.py
+*_ekle.py
+*_ekle2.py
+*_ekle3.py
+*_ceviri.py
+*_guncelle.py
+*_duzelt.py
+*_migration.py
+*_final.py
+*_v2.py
+*_v3.py
+
+admin_*.py
+cache_*.py
+core_path_*.py
+dashboard_kur.py
+dashboard_ceviri*.py
+db_index_*.py
+db_limit_*.py
+db_trial_*.py
+db_yedek.py
+db_yukseltme.py
+demo_*.py
+env_*.py
+fix_*.py
+footer_*.py
+formspree_*.py
+git_*.py
+gitignore_*.py
+hesabim_ceviri.py
+hukuki_ceviri.py
+hukuki_html_olustur.py
+i18n_sidebar_*.py
+i18n_tara.py
+i18n_tr_*.py
+kayit_trial_*.py
+landing_favicon.py
+landing_form_*.py
+landing_server_ESKI.py
+landing_server_v2.py
+lazy_import_*.py
+loading_optimize.py
+locales_fix.py
+locales_rebrand.py
+locales_yeni_tr.json
+login_hukuki_ekle.py
+main_emoji_*.py
+main_hesabim_*.py
+main_hukuki_*.py
+main_log_*.py
+main_onboarding_*.py
+main_sidebar_*.py
+main_yukselt_*.py
+onboarding_ceviri.py
+pdf_logo_*.py
+pdf_marka*.py
+sayfa_tek_limit_ekle.py
+scheduler_yedek_*.py
+sidebar_*.py
+smtp_*.py
+toplu_denetim_fix.py
+tr_*.py
+trial_durum_*.py
+versiyon_guncelle.py
+yedek_restore_*.py
+yedek_tasi.py
+yukselt_ceviri.py
+arsiv_analiz.py
+arsivle.py
+auth_email_fix.py
+belirsiz_kontrol.py
+fix_*.py
+
+# ============================================================
+# YEDEK DOSYALAR
+# ============================================================
+*_ESKI.*
+*_ESKI.py
+*_ESKI.html
+tema_yeni.py
+
+# ============================================================
+# TEST DOSYALARI
+# ============================================================
+test_*.pdf
+test_*.txt
+test_*.txt.*
+test_*.jpg
+test_*.json
+test_*.md
+test_zaman*
+test_ham*
+test_raporu.md
+test_gorsel.jpg
+
+# ============================================================
+# YANLISLIKLA OLUSAN DOSYALAR
+# ============================================================
+cd
+notepad
+py
+
+
+# ============================================================
+# TURKCE EKRAN GORUNTULERI
+# ============================================================
+Ekran*
+Ekran*.*
+
+# ============================================================
+# AI GORSEL TEST DOSYALARI
+# ============================================================
+ai_gorsel*
+ai_gorsel_*
+
+# ============================================================
+# REBRAND YEDEKLERI
+# ============================================================
+*.rebrand_bak
+*.rebrand_*
+locales/*.rebrand_bak
+locales/*.bak
+
+# ============================================================
+# JSON TEST DOSYALARI
+# ============================================================
+chatbot_test.json
+tr_ek_anahtarlar.json
+locales_yeni_tr.json
+
+# ============================================================
+# LOG DOSYALARI
+# ============================================================
+zamanlanmis_log.txt
+*_log.txt
