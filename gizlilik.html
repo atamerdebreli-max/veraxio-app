@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gizlilik Politikasi - Veraxio</title>
+<title>Gizlilik Politikası - Veraxio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,7 +12,6 @@
         background: #0a0a0a;
         color: #fafafa;
         line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
     }
     .navbar {
         padding: 20px 0;
@@ -38,11 +37,23 @@
         display: inline-flex; align-items: center; justify-content: center;
         color: white; font-size: 14px; font-weight: 800;
     }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-back {
         color: #a3a3a3; text-decoration: none; font-size: 14px; font-weight: 500;
-        transition: color 0.2s;
     }
     .nav-back:hover { color: #fafafa; }
+    .lang-select {
+        background: #171717;
+        border: 1px solid #262626;
+        color: #fafafa;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+    .lang-select:hover { border-color: #3b82f6; }
     .content { padding: 60px 0 100px; }
     .page-header {
         margin-bottom: 48px;
@@ -73,7 +84,6 @@
         color: #d4d4d4;
         font-size: 15px;
     }
-    .info-box strong { color: #60a5fa; }
     footer {
         border-top: 1px solid #1f1f1f;
         padding: 40px 0 30px;
@@ -89,6 +99,8 @@
         .page-header h1 { font-size: 32px; }
         h2 { font-size: 18px; }
         p { font-size: 15px; }
+        .nav-right { gap: 8px; }
+        .nav-back { display: none; }
     }
 </style>
 </head>
@@ -100,43 +112,99 @@
             <span class="logo-icon">◆</span>
             Veraxio
         </a>
-        <a href="index.html" class="nav-back">← Ana Sayfa</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-back" data-i18n="back">← Geri</a>
+            <select id="langSelector" class="lang-select" onchange="changeLang(this.value)">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="bg">🇧🇬 BG</option>
+                <option value="ro">🇷🇴 RO</option>
+                <option value="hr">🇭🇷 HR</option>
+            </select>
+        </div>
     </div>
 </nav>
 
 <section class="content">
     <div class="container">
         <div class="page-header">
-            <h1>Gizlilik Politikasi</h1>
-            <div class="meta">Son güncelleme: 4 Ekim 2026</div>
+            <h1 id="page-title">Gizlilik Politikası</h1>
+            <div class="meta" data-i18n="meta">Son güncelleme: 4 Ekim 2026</div>
         </div>
-<h2>1. Toplanan Veriler</h2>
-<p>Sistemimiz su verileri toplar: (a) hesap bilgileri (ad, e-posta, kullanici adi), (b) denetim kayitlari (AI tipi, musteri adi, sonuc, tarih), (c) oturum bilgileri (IP adresi, giris zamani), (d) teknik loglar.</p>
-<h2>2. Verilerin Kullanimi</h2>
-<p>Toplanan veriler yalnizca: hizmetin sunulmasi, denetim raporlarinin olusturulmasi, yasal yukumluluklerin yerine getirilmesi ve hizmet iyilestirmesi amaciyla kullanilir. Verileriniz ucuncu taraflarla ticari amacla paylasilmaz.</p>
-<h2>3. Veri Saklama Suresi</h2>
-<p>Denetim kayitlari hesabiniz aktif oldugu surece saklanir. Hesap silindiginde veriler 30 gun icinde anonim hale getirilir veya silinir. Yasal zorunluluk halinde ilgili mevzuat suresince saklanir.</p>
-<h2>4. Veri Guvenligi</h2>
-<p>Verileriniz sifreli baglanti (HTTPS) uzerinden iletilir. Veritabani erisimleri kimlik dogrulama ile korunur. Sifreler bcrypt algoritmasiyla hashlenir. Gunluk otomatik yedek alinir.</p>
-<h2>5. Haklariniz</h2>
-<p>KVKK ve GDPR kapsaminda: verilerinize erisim, duzeltme, silme (unutulma hakki), isleme itiraz, veri tasima haklarina sahipsiniz. Basvuru icin iletisim bilgilerini kullanin.</p>
 
+        <div id="content-body">
+
+        </div>
     </div>
 </section>
 
 <footer>
     <div class="container">
         <div class="footer-links">
-            <a href="gizlilik.html">Gizlilik Politikası</a> ·
-            <a href="kvkk.html">KVKK Aydınlatma</a> ·
-            <a href="kullanim.html">Kullanım Şartları</a> ·
-            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+            <a href="gizlilik.html" data-i18n="lnk_gizlilik">Gizlilik Politikası</a> ·
+            <a href="kvkk.html" data-i18n="lnk_kvkk">KVKK Aydınlatma</a> ·
+            <a href="kullanim.html" data-i18n="lnk_kullanim">Kullanım Şartları</a> ·
+            <a href="dpa.html" data-i18n="lnk_dpa">Veri İşleme Sözleşmesi</a>
         </div>
-        <div class="footer-copy">
-            © 2026 Veraxio. Tüm hakları saklıdır.
-        </div>
+        <div class="footer-copy" data-i18n="footer_copy">© 2026 Veraxio. Tüm hakları saklıdır.</div>
     </div>
 </footer>
+
+<script>
+const HUKUKI = {"tr": {"baslik": "Gizlilik Politikasi", "bolumler": [["1. Toplanan Veriler", "Sistemimiz su verileri toplar: (a) hesap bilgileri (ad, e-posta, kullanici adi), (b) denetim kayitlari (AI tipi, musteri adi, sonuc, tarih), (c) oturum bilgileri (IP adresi, giris zamani), (d) teknik loglar."], ["2. Verilerin Kullanimi", "Toplanan veriler yalnizca: hizmetin sunulmasi, denetim raporlarinin olusturulmasi, yasal yukumluluklerin yerine getirilmesi ve hizmet iyilestirmesi amaciyla kullanilir. Verileriniz ucuncu taraflarla ticari amacla paylasilmaz."], ["3. Veri Saklama Suresi", "Denetim kayitlari hesabiniz aktif oldugu surece saklanir. Hesap silindiginde veriler 30 gun icinde anonim hale getirilir veya silinir. Yasal zorunluluk halinde ilgili mevzuat suresince saklanir."], ["4. Veri Guvenligi", "Verileriniz sifreli baglanti (HTTPS) uzerinden iletilir. Veritabani erisimleri kimlik dogrulama ile korunur. Sifreler bcrypt algoritmasiyla hashlenir. Gunluk otomatik yedek alinir."], ["5. Haklariniz", "KVKK ve GDPR kapsaminda: verilerinize erisim, duzeltme, silme (unutulma hakki), isleme itiraz, veri tasima haklarina sahipsiniz. Basvuru icin iletisim bilgilerini kullanin."]]}, "en": {"baslik": "Privacy Policy", "bolumler": [["1. Data We Collect", "Our system collects: (a) account information (name, email, username), (b) audit records (AI type, client name, result, date), (c) session information (IP, login time), (d) technical logs."], ["2. How We Use Data", "Collected data is used solely for: providing the service, generating audit reports, fulfilling legal obligations, and improving the service. Your data is not shared with third parties for commercial purposes."], ["3. Data Retention", "Audit records are stored as long as your account is active. Upon account deletion, data is anonymized or deleted within 30 days. Legal retention periods apply where required by law."], ["4. Data Security", "Data is transmitted over encrypted connection (HTTPS). Database access is protected by authentication. Passwords are hashed with bcrypt. Daily automatic backups are taken."], ["5. Your Rights", "Under GDPR and KVKK, you have the right to: access, rectify, delete (right to be forgotten), object to processing, and data portability. Contact us to exercise these rights."]]}, "bg": {"baslik": "Политика за поверителност", "bolumler": [["1. Събирани данни", "Нашата система събира: (а) информация за акаунта (име, имейл, потребителско име), (б) записи от одити (тип AI, име на клиент, резултат, дата), (в) информация за сесията (IP, време на влизане), (г) технически логове."], ["2. Използване на данните", "Събраните данни се използват само за: предоставяне на услугата, генериране на одиторски доклади, изпълнение на законови задължения и подобряване на услугата. Вашите данни не се споделят с трети страни за търговски цели."], ["3. Срок на съхранение", "Одиторските записи се съхраняват, докато акаунтът ви е активен. При изтриване на акаунта данните се анонимизират или изтриват в рамките на 30 дни."], ["4. Сигурност на данните", "Данните се предават по криптирана връзка (HTTPS). Достъпът до базата данни е защитен с удостоверяване. Паролите се хешират с bcrypt. Ежедневни автоматични резервни копия."], ["5. Вашите права", "Съгласно GDPR и KVKK имате право на: достъп, коригиране, изтриване (право да бъдеш забравен), възражение срещу обработка, преносимост на данни."]]}, "ro": {"baslik": "Politica de confidentialitate", "bolumler": [["1. Date colectate", "Sistemul nostru colecteaza: (a) informatii despre cont (nume, email, utilizator), (b) inregistrari de audit (tip AI, nume client, rezultat, data), (c) informatii de sesiune (IP, ora autentificare), (d) jurnale tehnice."], ["2. Utilizarea datelor", "Datele colectate sunt utilizate exclusiv pentru: furnizarea serviciului, generarea rapoartelor de audit, indeplinirea obligatiilor legale si imbunatatirea serviciului. Datele dvs. nu sunt partajate cu terte parti in scopuri comerciale."], ["3. Perioada de pastrare", "Inregistrarile de audit sunt pastrate cat timp contul dvs. este activ. La stergerea contului, datele sunt anonimizate sau sterse in 30 de zile."], ["4. Securitatea datelor", "Datele sunt transmise prin conexiune criptata (HTTPS). Accesul la baza de date este protejat prin autentificare. Parolele sunt hash-uite cu bcrypt. Backup-uri automate zilnice."], ["5. Drepturile dvs.", "Conform GDPR si KVKK, aveti dreptul la: acces, rectificare, stergere (dreptul de a fi uitat), opozitie la prelucrare, portabilitate a datelor."]]}, "hr": {"baslik": "Politika privatnosti", "bolumler": [["1. Prikupljeni podaci", "Nas sustav prikuplja: (a) podatke o racunu (ime, e-posta, korisnicko ime), (b) zapise revizije (tip AI, naziv klijenta, rezultat, datum), (c) podatke o sesiji (IP, vrijeme prijave), (d) tehnicke zapise."], ["2. Koristenje podataka", "Prikupljeni podaci koriste se iskljucivo za: pruzanje usluge, generiranje izvjesca revizije, ispunjavanje pravnih obveza i poboljsanje usluge."], ["3. Razdoblje cuvanja", "Zapisi revizije cuvaju se dok je vas racun aktivan. Nakon brisanja racuna, podaci se anonimiziraju ili brisu u roku od 30 dana."], ["4. Sigurnost podataka", "Podaci se prenose sifriranom vezom (HTTPS). Pristup bazi podataka zasticen je autentifikacijom. Lozinke se hashiraju bcrypt algoritmom."], ["5. Vasa prava", "Prema GDPR-u i KVKK-u imate pravo na: pristup, ispravak, brisanje (pravo na zaborav), prigovor na obradu, prenosivost podataka."]]}};
+
+let currentLang = localStorage.getItem("veraxio_lang") || "tr";
+
+function changeLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("veraxio_lang", lang);
+    render(lang);
+}
+
+function render(lang) {
+    const t = HUKUKI[lang];
+    if (!t) return;
+
+    // Baslik
+    const baslik = document.getElementById("page-title");
+    if (baslik && t.baslik) baslik.textContent = t.baslik;
+
+    // Icerik bolumleri
+    let html = "";
+    if (t.bolumler) {
+        for (const [b, m] of t.bolumler) {
+            if (b) html += "<h2>" + b + "</h2>";
+            if (m) html += "<p>" + m + "</p>";
+        }
+    }
+    document.getElementById("content-body").innerHTML = html;
+
+    // Sayfa meta
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const ceviriler = {
+            "back": t.geri || "← Geri",
+            "meta": t.meta || "Son güncelleme: 4 Ekim 2026",
+            "lnk_gizlilik": t.lnk_gizlilik || "Gizlilik Politikası",
+            "lnk_kvkk": t.lnk_kvkk || "KVKK Aydınlatma",
+            "lnk_kullanim": t.lnk_kullanim || "Kullanım Şartları",
+            "lnk_dpa": t.lnk_dpa || "Veri İşleme Sözleşmesi",
+            "footer_copy": t.footer_copy || "© 2026 Veraxio. Tüm hakları saklıdır.",
+        };
+        if (ceviriler[key]) el.textContent = ceviriler[key];
+    });
+
+    document.documentElement.lang = lang;
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = lang;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = currentLang;
+    render(currentLang);
+});
+</script>
 
 </body>
 </html>

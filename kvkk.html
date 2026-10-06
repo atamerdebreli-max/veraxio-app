@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KVKK Aydinlatma Metni - Veraxio</title>
+<title>KVKK Aydınlatma - Veraxio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,7 +12,6 @@
         background: #0a0a0a;
         color: #fafafa;
         line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
     }
     .navbar {
         padding: 20px 0;
@@ -38,11 +37,23 @@
         display: inline-flex; align-items: center; justify-content: center;
         color: white; font-size: 14px; font-weight: 800;
     }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-back {
         color: #a3a3a3; text-decoration: none; font-size: 14px; font-weight: 500;
-        transition: color 0.2s;
     }
     .nav-back:hover { color: #fafafa; }
+    .lang-select {
+        background: #171717;
+        border: 1px solid #262626;
+        color: #fafafa;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+    .lang-select:hover { border-color: #3b82f6; }
     .content { padding: 60px 0 100px; }
     .page-header {
         margin-bottom: 48px;
@@ -73,7 +84,6 @@
         color: #d4d4d4;
         font-size: 15px;
     }
-    .info-box strong { color: #60a5fa; }
     footer {
         border-top: 1px solid #1f1f1f;
         padding: 40px 0 30px;
@@ -89,6 +99,8 @@
         .page-header h1 { font-size: 32px; }
         h2 { font-size: 18px; }
         p { font-size: 15px; }
+        .nav-right { gap: 8px; }
+        .nav-back { display: none; }
     }
 </style>
 </head>
@@ -100,47 +112,99 @@
             <span class="logo-icon">◆</span>
             Veraxio
         </a>
-        <a href="index.html" class="nav-back">← Ana Sayfa</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-back" data-i18n="back">← Geri</a>
+            <select id="langSelector" class="lang-select" onchange="changeLang(this.value)">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="bg">🇧🇬 BG</option>
+                <option value="ro">🇷🇴 RO</option>
+                <option value="hr">🇭🇷 HR</option>
+            </select>
+        </div>
     </div>
 </nav>
 
 <section class="content">
     <div class="container">
         <div class="page-header">
-            <h1>KVKK Aydinlatma Metni</h1>
-            <div class="meta">Son güncelleme: 4 Ekim 2026</div>
+            <h1 id="page-title">KVKK Aydınlatma</h1>
+            <div class="meta" data-i18n="meta">Son güncelleme: 4 Ekim 2026</div>
         </div>
-<h2>1. Veri Sorumlusu</h2>
-<p>6698 sayili Kisisel Verilerin Korunmasi Kanunu (KVKK) uyarinca veri sorumlusu Veraxio Teknoloji A.S.'dir.</p>
-<h2>2. Islenen Kisisel Veriler</h2>
-<p>Kimlik verisi (ad, soyad), iletisim verisi (e-posta, telefon), musteri islem verisi (denetim kayitlari), islem guvenligi verisi (IP, log kayitlari).</p>
-<h2>3. Isleme Amaclari</h2>
-<p>Sozlesmenin ifasi, yasal yukumluluklerin yerine getirilmesi, hizmet kalitesinin iyilestirilmesi, guvenlik saglanmasi.</p>
-<h2>4. Aktarim</h2>
-<p>Kisisel verileriniz, acik rizaniz olmadan ucuncu kisilere aktarilmaz. Yasal zorunluluk halinde yetkili kamu kurumlariyla paylasilabilir.</p>
-<h2>5. Toplama Yontemi</h2>
-<p>Verileriniz elektronik ortamda, web uygulamasi uzerinden otomatik veya manuel yollarla toplanir.</p>
-<h2>6. KVKK Madde 11 Haklariniz</h2>
-<p>Kisisel verilerinizin islenip islenmedigini ogrenme, islenmisse buna iliskin bilgi talep etme, islenme amacini ogrenme, eksik/yanlis islenmisse duzeltilmesini isteme, silinmesini talep etme, aktarildigi ucuncu kisileri ogrenme haklarina sahipsiniz.</p>
-<h2>Başvuru</h2>
-<p>Basvurularinizi kvkk@veraxio.com adresine iletebilirsiniz. En gec 30 gun icinde yanit verilir.</p>
 
+        <div id="content-body">
+
+        </div>
     </div>
 </section>
 
 <footer>
     <div class="container">
         <div class="footer-links">
-            <a href="gizlilik.html">Gizlilik Politikası</a> ·
-            <a href="kvkk.html">KVKK Aydınlatma</a> ·
-            <a href="kullanim.html">Kullanım Şartları</a> ·
-            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+            <a href="gizlilik.html" data-i18n="lnk_gizlilik">Gizlilik Politikası</a> ·
+            <a href="kvkk.html" data-i18n="lnk_kvkk">KVKK Aydınlatma</a> ·
+            <a href="kullanim.html" data-i18n="lnk_kullanim">Kullanım Şartları</a> ·
+            <a href="dpa.html" data-i18n="lnk_dpa">Veri İşleme Sözleşmesi</a>
         </div>
-        <div class="footer-copy">
-            © 2026 Veraxio. Tüm hakları saklıdır.
-        </div>
+        <div class="footer-copy" data-i18n="footer_copy">© 2026 Veraxio. Tüm hakları saklıdır.</div>
     </div>
 </footer>
+
+<script>
+const HUKUKI = {"tr": {"baslik": "KVKK Aydinlatma Metni", "bolumler": [["1. Veri Sorumlusu", "6698 sayili Kisisel Verilerin Korunmasi Kanunu (KVKK) uyarinca veri sorumlusu Veraxio Teknoloji A.S.'dir."], ["2. Islenen Kisisel Veriler", "Kimlik verisi (ad, soyad), iletisim verisi (e-posta, telefon), musteri islem verisi (denetim kayitlari), islem guvenligi verisi (IP, log kayitlari)."], ["3. Isleme Amaclari", "Sozlesmenin ifasi, yasal yukumluluklerin yerine getirilmesi, hizmet kalitesinin iyilestirilmesi, guvenlik saglanmasi."], ["4. Aktarim", "Kisisel verileriniz, acik rizaniz olmadan ucuncu kisilere aktarilmaz. Yasal zorunluluk halinde yetkili kamu kurumlariyla paylasilabilir."], ["5. Toplama Yontemi", "Verileriniz elektronik ortamda, web uygulamasi uzerinden otomatik veya manuel yollarla toplanir."], ["6. KVKK Madde 11 Haklariniz", "Kisisel verilerinizin islenip islenmedigini ogrenme, islenmisse buna iliskin bilgi talep etme, islenme amacini ogrenme, eksik/yanlis islenmisse duzeltilmesini isteme, silinmesini talep etme, aktarildigi ucuncu kisileri ogrenme haklarina sahipsiniz."], ["Başvuru", "Basvurularinizi kvkk@veraxio.com adresine iletebilirsiniz. En gec 30 gun icinde yanit verilir."]]}, "en": {"baslik": "KVKK Disclosure Statement", "bolumler": [["1. Data Controller", "Under the Turkish Personal Data Protection Law No. 6698 (KVKK), the data controller is Veraxio Technology Inc."], ["2. Personal Data Processed", "Identity data (name, surname), contact data (email, phone), customer transaction data (audit records), transaction security data (IP, logs)."], ["3. Processing Purposes", "Performance of contract, fulfillment of legal obligations, service quality improvement, security provision."], ["4. Transfer", "Your personal data is not transferred to third parties without your explicit consent. May be shared with authorized public institutions when legally required."], ["5. Collection Method", "Your data is collected electronically through the web application, automatically or manually."], ["6. Your Rights under KVKK Article 11", "You have the right to: learn whether your data is processed, request information about it, learn the purpose, request correction if incomplete/incorrect, request deletion, learn to whom it was transferred."], ["Başvuru", "Applications can be sent to kvkk@veraxio.com. Response within 30 days at latest."]]}, "bg": {"baslik": "KVKK Декларация за разкриване", "bolumler": [["1. Администратор на данни", "Съгласно турския закон за защита на личните данни № 6698 (KVKK), администратор на данни е Veraxio Technology Inc."], ["2. Обработвани лични данни", "Данни за самоличност (име, фамилия), данни за контакт (имейл, телефон), данни за транзакции (одиторски записи), данни за сигурност (IP, логове)."], ["3. Цели на обработка", "Изпълнение на договор, изпълнение на законови задължения, подобряване на качеството на услугата, осигуряване на сигурност."], ["4. Предаване", "Вашите лични данни не се предават на трети страни без вашето изрично съгласие. Може да бъдат споделени с упълномощени публични институции при законово изискване."], ["5. Метод на събиране", "Вашите данни се събират електронно чрез уеб приложението, автоматично или ръчно."], ["6. Вашите права съгласно член 11 от KVKK", "Имате право да: научите дали данните ви се обработват, да поискате информация, да научите целта, да поискате корекция, да поискате изтриване, да научите на кого са предадени."], ["Başvuru", "Заявленията могат да се изпращат на kvkk@veraxio.com. Отговор в рамките на 30 дни."]]}, "ro": {"baslik": "Declaratie de divulgare KVKK", "bolumler": [["1. Operator de date", "Conform Legii turce nr. 6698 privind protectia datelor personale (KVKK), operatorul de date este Veraxio Technology Inc."], ["2. Date personale prelucrate", "Date de identitate (nume, prenume), date de contact (email, telefon), date privind tranzactiile (inregistrari de audit), date de securitate (IP, jurnale)."], ["3. Scopuri de prelucrare", "Executarea contractului, indeplinirea obligatiilor legale, imbunatatirea calitatii serviciului, asigurarea securitatii."], ["4. Transfer", "Datele dvs. personale nu sunt transferate catre terte parti fara consimtamantul dvs. explicit. Pot fi partajate cu institutii publice autorizate cand legea o cere."], ["5. Metoda de colectare", "Datele dvs. sunt colectate electronic prin aplicatia web, automat sau manual."], ["6. Drepturile dvs. conform articolului 11 din KVKK", "Aveti dreptul sa: aflati daca datele sunt prelucrate, solicitati informatii, aflati scopul, solicitati corectarea, solicitati stergerea, aflati cui au fost transferate."], ["Başvuru", "Cererile pot fi trimise la kvkk@veraxio.com. Raspuns in termen de 30 de zile."]]}, "hr": {"baslik": "KVKK izjava o objavi", "bolumler": [["1. Voditelj obrade podataka", "Prema turskom Zakonu br. 6698 o zastiti osobnih podataka (KVKK), voditelj obrade je Veraxio Technology Inc."], ["2. Obradeni osobni podaci", "Podaci o identitetu (ime, prezime), podaci za kontakt (e-posta, telefon), podaci o transakcijama (zapisi revizije), podaci o sigurnosti (IP, zapisi)."], ["3. Svrhe obrade", "Izvrsenje ugovora, ispunjavanje pravnih obveza, poboljsanje kvalitete usluge, osiguranje sigurnosti."], ["4. Prijenos", "Vasi osobni podaci ne prenose se trecim stranama bez vase izricite suglasnosti."], ["5. Metoda prikupljanja", "Vasi podaci prikupljaju se elektronicki putem web aplikacije, automatski ili rucno."], ["6. Vasa prava prema clanu 11 KVKK-a", "Imate pravo: saznati obraduju li se vasi podaci, zatraziti informacije, saznati svrhu, zatraziti ispravak, zatraziti brisanje, saznati kome su preneseni."], ["Başvuru", "Zahtjevi se mogu poslati na kvkk@veraxio.com. Odgovor u roku od 30 dana."]]}};
+
+let currentLang = localStorage.getItem("veraxio_lang") || "tr";
+
+function changeLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("veraxio_lang", lang);
+    render(lang);
+}
+
+function render(lang) {
+    const t = HUKUKI[lang];
+    if (!t) return;
+
+    // Baslik
+    const baslik = document.getElementById("page-title");
+    if (baslik && t.baslik) baslik.textContent = t.baslik;
+
+    // Icerik bolumleri
+    let html = "";
+    if (t.bolumler) {
+        for (const [b, m] of t.bolumler) {
+            if (b) html += "<h2>" + b + "</h2>";
+            if (m) html += "<p>" + m + "</p>";
+        }
+    }
+    document.getElementById("content-body").innerHTML = html;
+
+    // Sayfa meta
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const ceviriler = {
+            "back": t.geri || "← Geri",
+            "meta": t.meta || "Son güncelleme: 4 Ekim 2026",
+            "lnk_gizlilik": t.lnk_gizlilik || "Gizlilik Politikası",
+            "lnk_kvkk": t.lnk_kvkk || "KVKK Aydınlatma",
+            "lnk_kullanim": t.lnk_kullanim || "Kullanım Şartları",
+            "lnk_dpa": t.lnk_dpa || "Veri İşleme Sözleşmesi",
+            "footer_copy": t.footer_copy || "© 2026 Veraxio. Tüm hakları saklıdır.",
+        };
+        if (ceviriler[key]) el.textContent = ceviriler[key];
+    });
+
+    document.documentElement.lang = lang;
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = lang;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = currentLang;
+    render(currentLang);
+});
+</script>
 
 </body>
 </html>

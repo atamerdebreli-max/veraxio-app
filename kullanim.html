@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kullanim Sartlari - Veraxio</title>
+<title>Kullanım Şartları - Veraxio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,7 +12,6 @@
         background: #0a0a0a;
         color: #fafafa;
         line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
     }
     .navbar {
         padding: 20px 0;
@@ -38,11 +37,23 @@
         display: inline-flex; align-items: center; justify-content: center;
         color: white; font-size: 14px; font-weight: 800;
     }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-back {
         color: #a3a3a3; text-decoration: none; font-size: 14px; font-weight: 500;
-        transition: color 0.2s;
     }
     .nav-back:hover { color: #fafafa; }
+    .lang-select {
+        background: #171717;
+        border: 1px solid #262626;
+        color: #fafafa;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+    .lang-select:hover { border-color: #3b82f6; }
     .content { padding: 60px 0 100px; }
     .page-header {
         margin-bottom: 48px;
@@ -73,7 +84,6 @@
         color: #d4d4d4;
         font-size: 15px;
     }
-    .info-box strong { color: #60a5fa; }
     footer {
         border-top: 1px solid #1f1f1f;
         padding: 40px 0 30px;
@@ -89,6 +99,8 @@
         .page-header h1 { font-size: 32px; }
         h2 { font-size: 18px; }
         p { font-size: 15px; }
+        .nav-right { gap: 8px; }
+        .nav-back { display: none; }
     }
 </style>
 </head>
@@ -100,42 +112,99 @@
             <span class="logo-icon">◆</span>
             Veraxio
         </a>
-        <a href="index.html" class="nav-back">← Ana Sayfa</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-back" data-i18n="back">← Geri</a>
+            <select id="langSelector" class="lang-select" onchange="changeLang(this.value)">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="bg">🇧🇬 BG</option>
+                <option value="ro">🇷🇴 RO</option>
+                <option value="hr">🇭🇷 HR</option>
+            </select>
+        </div>
     </div>
 </nav>
 
 <section class="content">
     <div class="container">
         <div class="page-header">
-            <h1>Kullanim Sartlari</h1>
-            <div class="meta">Son güncelleme: 4 Ekim 2026</div>
+            <h1 id="page-title">Kullanım Şartları</h1>
+            <div class="meta" data-i18n="meta">Son güncelleme: 4 Ekim 2026</div>
         </div>
-<h2>1. Hizmet Kapsami</h2>
-<p>Veraxio, AB AI Act ve KVKK uyumluluk denetimi saglayan bir SaaS platformudur. Hizmet, otomatik denetim araclari ve raporlama icerir.</p>
-<h2>2. Kullanici Yukumlulukleri</h2>
-<p>Kullanici: dogru bilgi vermek, hesap guvenligini saglamak, hizmeti yasalara uygun kullanmak, baskalarinin haklarini ihlal etmemekle yukumludur.</p>
-<h2>3. Fikri Mulkiyet</h2>
-<p>Platformun tum yazilim, tasarim ve icerigi Veraxio'ya aittir. Kullanicilar yalnizca hizmet amaciyla kullanim hakki elde eder.</p>
-<h2>4. Sorumluluk Siniri</h2>
-<p>Sistem tarafindan uretilen raporlar teknik denetim ciktisidir ve hukuki danismanlik niteligi tasimaz. Nihai hukuki degerlendirme icin uzman bir avukata basvurulmalidir.</p>
-<p>Veraxio, hizmet kullanimindan dogacak dolayli zararlardan sorumlu tutulamaz.</p>
 
+        <div id="content-body">
+
+        </div>
     </div>
 </section>
 
 <footer>
     <div class="container">
         <div class="footer-links">
-            <a href="gizlilik.html">Gizlilik Politikası</a> ·
-            <a href="kvkk.html">KVKK Aydınlatma</a> ·
-            <a href="kullanim.html">Kullanım Şartları</a> ·
-            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+            <a href="gizlilik.html" data-i18n="lnk_gizlilik">Gizlilik Politikası</a> ·
+            <a href="kvkk.html" data-i18n="lnk_kvkk">KVKK Aydınlatma</a> ·
+            <a href="kullanim.html" data-i18n="lnk_kullanim">Kullanım Şartları</a> ·
+            <a href="dpa.html" data-i18n="lnk_dpa">Veri İşleme Sözleşmesi</a>
         </div>
-        <div class="footer-copy">
-            © 2026 Veraxio. Tüm hakları saklıdır.
-        </div>
+        <div class="footer-copy" data-i18n="footer_copy">© 2026 Veraxio. Tüm hakları saklıdır.</div>
     </div>
 </footer>
+
+<script>
+const HUKUKI = {"tr": {"baslik": "Kullanim Sartlari", "bolumler": [["1. Hizmet Kapsami", "Veraxio, AB AI Act ve KVKK uyumluluk denetimi saglayan bir SaaS platformudur. Hizmet, otomatik denetim araclari ve raporlama icerir."], ["2. Kullanici Yukumlulukleri", "Kullanici: dogru bilgi vermek, hesap guvenligini saglamak, hizmeti yasalara uygun kullanmak, baskalarinin haklarini ihlal etmemekle yukumludur."], ["3. Fikri Mulkiyet", "Platformun tum yazilim, tasarim ve icerigi Veraxio'ya aittir. Kullanicilar yalnizca hizmet amaciyla kullanim hakki elde eder."], ["4. Sorumluluk Siniri", "Sistem tarafindan uretilen raporlar teknik denetim ciktisidir ve hukuki danismanlik niteligi tasimaz. Nihai hukuki degerlendirme icin uzman bir avukata basvurulmalidir."], ["", "Veraxio, hizmet kullanimindan dogacak dolayli zararlardan sorumlu tutulamaz."]]}, "en": {"baslik": "Terms of Service", "bolumler": [["1. Service Scope", "Veraxio is a SaaS platform providing EU AI Act and KVKK compliance audits. The service includes automated audit tools and reporting."], ["2. User Obligations", "The user is obligated to: provide accurate information, ensure account security, use the service lawfully, and not violate the rights of others."], ["3. Intellectual Property", "All software, design, and content of the platform belong to Veraxio. Users obtain only a usage right for service purposes."], ["4. Limitation of Liability", "Reports generated by the system are technical audit outputs and do not constitute legal advice. Consult a qualified lawyer for final legal assessment."], ["", "Veraxio cannot be held liable for indirect damages arising from service use."]]}, "bg": {"baslik": "Условия за ползване", "bolumler": [["1. Обхват на услугата", "Veraxio е SaaS платформа, предоставяща одити за съответствие с EU AI Act и KVKK. Услугата включва автоматизирани инструменти за одит и отчетност."], ["2. Задължения на потребителя", "Потребителят е длъжен да: предоставя точна информация, осигурява сигурност на акаунта, използва услугата законосъобразно и не нарушава правата на другите."], ["3. Интелектуална собственост", "Целият софтуер, дизайн и съдържание на платформата принадлежат на Veraxio. Потребителите получават само право на използване за целите на услугата."], ["4. Ограничение на отговорността", "Докладите, генерирани от системата, са технически одиторски резултати и не представляват правен съвет. Консултирайте се с квалифициран адвокат."], ["", "Veraxio не носи отговорност за косвени щети, произтичащи от използването на услугата."]]}, "ro": {"baslik": "Termeni de utilizare", "bolumler": [["1. Domeniul serviciului", "Veraxio este o platforma SaaS care ofera audituri de conformitate EU AI Act si KVKK. Serviciul include instrumente automatizate de audit si raportare."], ["2. Obligatiile utilizatorului", "Utilizatorul este obligat sa: furnizeze informatii corecte, asigure securitatea contului, utilizeze serviciul in mod legal si nu incalce drepturile altora."], ["3. Proprietate intelectuala", "Intregul software, design si continut al platformei apartin Veraxio. Utilizatorii obtin doar un drept de utilizare in scopuri de serviciu."], ["4. Limitarea raspunderii", "Rapoartele generate de sistem sunt rezultate tehnice de audit si nu constituie consultanta juridica. Consultati un avocat calificat."], ["", "Veraxio nu poate fi tras la raspundere pentru daune indirecte rezultate din utilizarea serviciului."]]}, "hr": {"baslik": "Uvjeti koristenja", "bolumler": [["1. Opseg usluge", "Veraxio je SaaS platforma koja pruza revizije sukladnosti EU AI Act i KVKK. Usluga ukljucuje automatizirane alate za reviziju i izvjestavanje."], ["2. Obveze korisnika", "Korisnik je obvezan: pruziti tocne informacije, osigurati sigurnost racuna, koristiti uslugu u skladu sa zakonom i ne krsiti prava drugih."], ["3. Intelektualno vlasnistvo", "Sav softver, dizajn i sadrzaj platforme pripadaju Veraxiou. Korisnici dobivaju samo pravo koristenja u svrhu usluge."], ["4. Ogranicenje odgovornosti", "Izvjesca generirana od strane sustava su tehnicki rezultati revizije i ne predstavljaju pravni savjet."], ["", "Veraxio se ne moze smatrati odgovornim za neizravne stete koje proizlaze iz koristenja usluge."]]}};
+
+let currentLang = localStorage.getItem("veraxio_lang") || "tr";
+
+function changeLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("veraxio_lang", lang);
+    render(lang);
+}
+
+function render(lang) {
+    const t = HUKUKI[lang];
+    if (!t) return;
+
+    // Baslik
+    const baslik = document.getElementById("page-title");
+    if (baslik && t.baslik) baslik.textContent = t.baslik;
+
+    // Icerik bolumleri
+    let html = "";
+    if (t.bolumler) {
+        for (const [b, m] of t.bolumler) {
+            if (b) html += "<h2>" + b + "</h2>";
+            if (m) html += "<p>" + m + "</p>";
+        }
+    }
+    document.getElementById("content-body").innerHTML = html;
+
+    // Sayfa meta
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const ceviriler = {
+            "back": t.geri || "← Geri",
+            "meta": t.meta || "Son güncelleme: 4 Ekim 2026",
+            "lnk_gizlilik": t.lnk_gizlilik || "Gizlilik Politikası",
+            "lnk_kvkk": t.lnk_kvkk || "KVKK Aydınlatma",
+            "lnk_kullanim": t.lnk_kullanim || "Kullanım Şartları",
+            "lnk_dpa": t.lnk_dpa || "Veri İşleme Sözleşmesi",
+            "footer_copy": t.footer_copy || "© 2026 Veraxio. Tüm hakları saklıdır.",
+        };
+        if (ceviriler[key]) el.textContent = ceviriler[key];
+    });
+
+    document.documentElement.lang = lang;
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = lang;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = currentLang;
+    render(currentLang);
+});
+</script>
 
 </body>
 </html>

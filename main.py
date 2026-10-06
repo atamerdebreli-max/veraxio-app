@@ -57,6 +57,10 @@ if "email_dogrula" in _qp:
 if "davet" in _qp:
     _onemli_parametre_var = True  # davet_token login.py'de query_params'tan okunuyor
 
+# auth + session importlari (erken)
+import auth as _auth
+import session_manager
+
 # i18n baslat
 import i18n
 from i18n import t, dil_secici
@@ -67,6 +71,13 @@ if "dil" not in st.session_state:
 
 # Dil secici - EN BASTA cagir ki sayfa basliklari dogru hesaplansin
 dil_secici()
+
+# ============================================================
+# SESSION TIMEOUT KONTROLU
+# ============================================================
+if _auth.giris_yapildi_mi():
+    session_manager.session_kontrol()
+
 # Tema uygula (dark mode CSS)
 import tema
 tema.tema_uygula()
@@ -97,11 +108,14 @@ st.sidebar.markdown("**" + t("app.kapsam") + "**")
 st.sidebar.markdown("---")
 
 # Kullanici bilgisi + Trial + Limit
-import auth as _auth
+import session_manager
 if _auth.giris_yapildi_mi():
     _kullanici = _auth.mevcut_kullanici()
     st.sidebar.success(f"👤 {_kullanici.get('ad_soyad') or _kullanici.get('kullanici_adi')}")
     st.sidebar.caption(f"Rol: {_kullanici.get('rol', 'user').upper()}")
+
+    # Session kalan sure
+    session_manager.kalan_sure_goster()
 
     # Trial durumu
     try:

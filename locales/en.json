@@ -415,7 +415,12 @@
     "2fa_adim3": "Step 3: Verification",
     "2fa_adim3_aciklama": "Enter the 6-digit code from the app.",
     "2fa_aktiflestir_btn": "Enable 2FA",
-    "2fa_aktiflestirildi": "2FA enabled!"
+    "2fa_aktiflestirildi": "2FA enabled!",
+    "email_dogrulama_gonderildi": "📧 Verification email sent: **{email}** — Please check your inbox.",
+    "email_dogrulama_gerekli": "You need to verify your email address before using your account. Check your inbox.",
+    "email_dogrulama_baslik": "Email Verification",
+    "email_dogrulama_basarili": "✅ Your email address has been successfully verified!",
+    "email_dogrulama_gecersiz": "❌ Verification link is invalid or expired."
   },
   "auth": {
     "giris_gerekli": "⚠️ You must sign in to view this page.",
@@ -721,5 +726,24 @@
     "adim5_baslik": "Track from Dashboard",
     "adim5_aciklama": "See all audits, compliance rate, and risk analysis from the Dashboard.",
     "adim5_ipucu": "Includes month-over-month comparison, risk analysis, and compliance matrix."
+  },
+  "session": {
+    "kalan": "Session",
+    "son": "Last",
+    "dk": "min",
+    "doldu": "Session expired",
+    "timeout_mesaj": "⏰ You have been inactive for a while. Your session was closed for security. Please sign in again."
+  },
+  "sifre": {
+    "kural_baslik": "Password requirements:",
+    "kural_uzunluk": "At least 8 characters",
+    "kural_buyuk": "At least 1 uppercase letter",
+    "kural_kucuk": "At least 1 lowercase letter",
+    "kural_rakam": "At least 1 number",
+    "guc": "Password strength",
+    "zayif": "Weak",
+    "orta": "Medium",
+    "guclu": "Strong",
+    "cok_guclu": "Very Strong"
   }
 }

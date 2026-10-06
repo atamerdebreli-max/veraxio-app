@@ -8,6 +8,75 @@ import db
 from i18n import t
 
 
+def sifre_kontrol(sifre):
+    """
+    Sifre karmasiklik kurallarini kontrol eder.
+    Donus: {"durum": "OK"} | {"durum": "HATA", "hata": "...", "kod": "..."}
+    """
+    if not sifre:
+        return {"durum": "HATA", "kod": "BOS", "hata": "Sifre bos olamaz"}
+
+    if len(sifre) < 8:
+        return {"durum": "HATA", "kod": "KISA", "hata": "En az 8 karakter olmali"}
+
+    if len(sifre) > 128:
+        return {"durum": "HATA", "kod": "UZUN", "hata": "En fazla 128 karakter olmali"}
+
+    if not any(c.isupper() for c in sifre):
+        return {"durum": "HATA", "kod": "BUYUK_HARF", "hata": "En az 1 buyuk harf olmali"}
+
+    if not any(c.islower() for c in sifre):
+        return {"durum": "HATA", "kod": "KUCUK_HARF", "hata": "En az 1 kucuk harf olmali"}
+
+    if not any(c.isdigit() for c in sifre):
+        return {"durum": "HATA", "kod": "RAKAM", "hata": "En az 1 rakam olmali"}
+
+    return {"durum": "OK"}
+
+
+def sifre_gucu(sifre):
+    """
+    Sifre gucunu 0-100 arasi puanlar.
+    Donus: {"puan": int, "seviye": "ZAYIF"|"ORTA"|"GUCLU"|"COK_GUCLU", "renk": "..."}
+    """
+    puan = 0
+
+    # Uzunluk
+    if len(sifre) >= 8:
+        puan += 20
+    if len(sifre) >= 12:
+        puan += 15
+    if len(sifre) >= 16:
+        puan += 10
+
+    # Karakter cesitliligi
+    if any(c.isupper() for c in sifre):
+        puan += 15
+    if any(c.islower() for c in sifre):
+        puan += 15
+    if any(c.isdigit() for c in sifre):
+        puan += 10
+    if any(not c.isalnum() for c in sifre):
+        puan += 15
+
+    seviye = "ZAYIF"
+    renk = "#ef4444"  # kirmizi
+    if puan >= 80:
+        seviye = "COK_GUCLU"
+        renk = "#22c55e"  # yesil
+    elif puan >= 60:
+        seviye = "GUCLU"
+        renk = "#22c55e"
+    elif puan >= 40:
+        seviye = "ORTA"
+        renk = "#f59e0b"  # amber
+    else:
+        seviye = "ZAYIF"
+        renk = "#ef4444"
+
+    return {"puan": min(puan, 100), "seviye": seviye, "renk": renk}
+
+
 def sifre_hashle(sifre):
     """Sifreyi bcrypt ile hash'ler."""
     return bcrypt.hashpw(sifre.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
@@ -22,6 +91,17 @@ def sifre_dogrula(sifre, sifre_hash):
 
 
 def giris_yap(kullanici_adi, sifre):
+    # BRUTE FORCE KILIT KONTROLU
+    _kilit = db.giris_kilitli_mi(kullanici_adi)
+    if _kilit.get("kilitli"):
+        _kalan = _kilit.get("kalan_dk", 0)
+        return {
+            "durum": "HATA",
+            "hata": f"Hesabiniz gecici olarak kilitli. {_kalan} dakika sonra tekrar deneyin.",
+            "kod": "KILITLI",
+            "kalan_dk": _kalan,
+        }
+
     """
     Kullanici girisi yapar.
     Returns:
@@ -55,6 +135,27 @@ def giris_yap(kullanici_adi, sifre):
         except Exception:
             pass
         return {"durum": "HATA", "hata": "Kullanici adi veya sifre hatali"}
+
+    # EMAIL DOGRULAMA KONTROLU (sadece admin degilse)
+    _rol = kullanici.get("rol", "user")
+    _email_dogrulandi = kullanici.get("email_dogrulandi", 1)  # None ise 1 varsay
+
+    if _rol != "admin" and not _email_dogrulandi:
+        try:
+            db.audit_kaydet(
+                eylem="giris_email_dogrulanmadi",
+                kullanici_adi=kullanici_adi,
+                firma_id=kullanici.get("firma_id"),
+                detay="Email dogrulanmamis",
+                basarili=False,
+            )
+        except Exception:
+            pass
+        return {
+            "durum": "HATA",
+            "hata": "E-posta adresiniz dogrulanmamis. Lutfen e-postaniza gelen dogrulama linkine tiklayin.",
+            "kod": "DOGRULANMADI",
+        }
 
     # Son giris guncelle
     db.kullanici_giris_guncelle(kullanici_adi)

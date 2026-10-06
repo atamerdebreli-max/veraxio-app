@@ -387,7 +387,12 @@
     "2fa_adim3": "3. Adim: Dogrulama",
     "2fa_adim3_aciklama": "Uygulamadaki 6 haneli kodu girin.",
     "2fa_aktiflestir_btn": "2FA Aktiflestir",
-    "2fa_aktiflestirildi": "2FA aktiflestirildi!"
+    "2fa_aktiflestirildi": "2FA aktiflestirildi!",
+    "email_dogrulama_gonderildi": "📧 Doğrulama e-postası gönderildi: **{email}** — Lütfen gelen kutunuzu kontrol edin.",
+    "email_dogrulama_gerekli": "Hesabınızı kullanmak için önce e-posta adresinizi doğrulamanız gerekiyor. Gelen kutunuzu kontrol edin.",
+    "email_dogrulama_baslik": "E-posta Doğrulama",
+    "email_dogrulama_basarili": "✅ E-posta adresiniz başarıyla doğrulandı!",
+    "email_dogrulama_gecersiz": "❌ Doğrulama linki geçersiz veya süresi dolmuş."
   },
   "auth": {
     "giris_gerekli": "⚠️ Bu sayfayi gormek icin giris yapmalisiniz.",
@@ -721,5 +726,24 @@
     "adim5_baslik": "Panelden Takip Edin",
     "adim5_aciklama": "Dashboard'dan tüm denetimlerinizi, uyum oranınızı ve risk analizini görün.",
     "adim5_ipucu": "Bu ay vs Geçen ay karşılaştırması, risk analizi ve uyum matrisi dahildir."
+  },
+  "session": {
+    "kalan": "Oturum",
+    "son": "Son",
+    "dk": "dk",
+    "doldu": "Oturum doldu",
+    "timeout_mesaj": "⏰ Uzun suredir islem yapmadiniz. Guvenlik icin oturumunuz kapatildi. Lutfen tekrar giris yapin."
+  },
+  "sifre": {
+    "kural_baslik": "Şifre gereksinimleri:",
+    "kural_uzunluk": "En az 8 karakter",
+    "kural_buyuk": "En az 1 büyük harf",
+    "kural_kucuk": "En az 1 küçük harf",
+    "kural_rakam": "En az 1 rakam",
+    "guc": "Şifre gücü",
+    "zayif": "Zayıf",
+    "orta": "Orta",
+    "guclu": "Güçlü",
+    "cok_guclu": "Çok Güçlü"
   }
 }

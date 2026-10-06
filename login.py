@@ -42,8 +42,8 @@ if sifre_token:
             if submit_sifre:
                 if not yeni_sifre:
                     st.error(t("login.zorunlu"))
-                elif len(yeni_sifre) < 6:
-                    st.error(t("login.sifre_kisa"))
+                elif auth.sifre_kontrol(yeni_sifre)["durum"] != "OK":
+                    st.error("❌ " + auth.sifre_kontrol(yeni_sifre)["hata"])
                 elif yeni_sifre != yeni_sifre2:
                     st.error(t("login.sifre_eslesmiyor"))
                 else:
@@ -207,13 +207,26 @@ with tab_giris:
                     st.session_state["2fa_bekleyen_sifre"] = sifre
                     st.rerun()
                 else:
-                    # Normal giris
+                    # Normal giris + brute force korumasi
+                    _kilit = db.giris_kilitli_mi(kullanici_adi)
+                    if _kilit.get("kilitli"):
+                        _kalan = _kilit.get("kalan_dk", 0)
+                        st.error(f"🔒 Hesabiniz gecici olarak kilitli. {_kalan} dakika sonra tekrar deneyin.")
+                        st.stop()
+
                     sonuc = auth.giris_yap(kullanici_adi, sifre)
                     if sonuc["durum"] == "OK":
+                        db.giris_denemesi_kaydet(kullanici_adi, basarili=True)
                         st.success(t("login.giris_basarili"))
                         st.rerun()
                     else:
-                        st.error(t("login.giris_hata"))
+                        db.giris_denemesi_kaydet(kullanici_adi, basarili=False)
+                        _kalan_hak = db.kalan_deneme_hakki(kullanici_adi)
+                        if _kalan_hak > 0:
+                            st.error(t("login.giris_hata") + f" ({_kalan_hak} hakkiniz kaldi)")
+                        else:
+                            st.error("🔒 Hesabiniz 15 dakika kilitlendi. Lutfen sonra tekrar deneyin.")
+                        st.stop()
 
     # 2FA ADIMI
     if st.session_state.get("2fa_bekleyen_kullanici"):
@@ -305,11 +318,14 @@ with tab_kayit:
                 if submit_davet:
                     if not dav_kullanici or not dav_sifre:
                         st.error(t("login.zorunlu"))
-                    elif len(dav_sifre) < 6:
-                        st.error(t("login.sifre_kisa"))
-                    elif dav_sifre != dav_sifre2:
-                        st.error(t("login.sifre_eslesmiyor"))
                     else:
+                        _sk2 = auth.sifre_kontrol(dav_sifre)
+                        if _sk2["durum"] != "OK":
+                            st.error("❌ " + _sk2["hata"])
+                            st.stop()
+                        if dav_sifre != dav_sifre2:
+                            st.error(t("login.sifre_eslesmiyor"))
+                            st.stop()
                         sonuc = auth.davet_kabul_et_ve_kayit_ol(
                             token=davet_token,
                             kullanici_adi=dav_kullanici,
@@ -344,11 +360,14 @@ with tab_kayit:
         if submit_kayit:
             if not firma_adi or not yeni_kullanici or not yeni_sifre:
                 st.error(t("login.firma_zorunlu"))
-            elif len(yeni_sifre) < 6:
-                st.error(t("login.sifre_kisa"))
-            elif yeni_sifre != yeni_sifre2:
-                st.error(t("login.sifre_eslesmiyor"))
             else:
+                _sk = auth.sifre_kontrol(yeni_sifre)
+                if _sk["durum"] != "OK":
+                    st.error("❌ " + _sk["hata"])
+                    st.stop()
+                if yeni_sifre != yeni_sifre2:
+                    st.error(t("login.sifre_eslesmiyor"))
+                    st.stop()
                 firma_id = db.firma_ekle(
                     firma_adi=firma_adi,
                     vergi_no=firma_vergi,
@@ -365,6 +384,17 @@ with tab_kayit:
                     rol="user",
                 )
                 if basarili:
+                    # Email dogrulama gonder
+                    try:
+                        _dil = st.session_state.get("dil", "tr")
+                        _email_sonuc = auth.email_dogrulama_gonder(yeni_kullanici, yeni_email, _dil)
+                        if _email_sonuc.get("durum") == "OK":
+                            st.info("📧 " + t("login.email_dogrulama_gonderildi").format(email=yeni_email))
+                        else:
+                            print(f"[Kayit] Email gonderilemedi: {_email_sonuc}")
+                    except Exception as _e:
+                        print(f"[Kayit] Email hatasi: {_e}")
+
                     # Trial baslat (7 gun ucretsiz)
                     try:
                         trial_sonuc = db.trial_baslat(yeni_kullanici)
@@ -386,16 +416,8 @@ with tab_kayit:
                     st.success(f"✅ **{firma_adi}** " + t("login.firma_basarili"))
                     st.info(t("login.firma_sonra_giris"))
 
-                    # Otomatik giris (opsiyonel, biraz daha iyi UX)
-                    try:
-                        giris_sonuc = auth.giris_yap(yeni_kullanici, yeni_sifre)
-                        if giris_sonuc and giris_sonuc.get("durum") == "OK":
-                            st.success("🎉 Otomatik giriş yapıldı! Yönlendiriliyorsunuz...")
-                            import time
-                            time.sleep(1)
-                            st.rerun()
-                    except Exception:
-                        pass
+                    # OTOMATIK GIRIS YOK - email dogrulanmasi gerekli
+                    st.warning("⚠️ " + t("login.email_dogrulama_gerekli"))
                 else:
                     db.firma_sil(firma_id)
                     st.error(t("login.kullanici_alindi"))

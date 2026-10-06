@@ -65,7 +65,21 @@
         font-size: 14px;
         font-weight: 800;
     }
-    .nav-links { display: flex; gap: 32px; }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .lang-select {
+        background: #171717;
+        border: 1px solid #262626;
+        color: #fafafa;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+    .lang-select:hover {
+        border-color: #3b82f6;
+    }
     .nav-links a {
         color: var(--text-dim);
         text-decoration: none;
@@ -335,6 +349,37 @@
     }
 
     /* EARLY BIRD */
+    .plan-select-btn {
+        display: block;
+        width: 100%;
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: transparent;
+        border: 1px solid #3b82f6;
+        color: #3b82f6;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .plan-select-btn:hover {
+        background: #3b82f6;
+        color: white;
+        transform: translateY(-1px);
+    }
+    .plan-select-featured {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .plan-select-featured:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
     .early-bird {
         margin-top: 24px;
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
@@ -453,9 +498,16 @@
             Veraxio
         </a>
         <div class="nav-links">
-            <a href="#features">Özellikler</a>
-            <a href="#pricing">Fiyatlandırma</a>
-            <a href="#demo">Demo Talebi</a>
+            <a href="#features" data-i18n="nav_features">Özellikler</a>
+            <a href="#pricing" data-i18n="nav_pricing">Fiyatlandırma</a>
+            <a href="#demo" data-i18n="nav_demo">Demo Talebi</a>
+            <select id="langSelector" class="lang-select" onchange="changeLang(this.value)">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="bg">🇧🇬 BG</option>
+                <option value="ro">🇷🇴 RO</option>
+                <option value="hr">🇭🇷 HR</option>
+            </select>
         </div>
     </div>
 </nav>
@@ -463,21 +515,21 @@
 <!-- HERO -->
 <section class="hero">
     <div class="container">
-        <div class="hero-badge">
+        <div class="hero-badge" data-i18n="hero_badge">
             <span class="dot"></span>
-            AB AI Act Madde 50 Uyumlu
+            <span data-i18n="hero_badge_text">AB AI Act Madde 50 Uyumlu</span>
         </div>
         <h1>
-            AI uyumluluğunu<br>
-            <span class="accent">otomatikleştiriyoruz</span>
+            <span data-i18n="hero_title_1">AI uyumluluğunu</span><br>
+            <span class="accent" data-i18n="hero_title_2">otomatikleştiriyoruz</span>
         </h1>
         <p class="hero-sub">
-            5 dakikada AI sistemlerinizi denetleyin,<br>
-            <strong>15 milyon Euro</strong> ceza riskinden kaçının.
+            <span data-i18n="hero_sub_1">5 dakikada AI sistemlerinizi denetleyin,</span><br>
+            <span data-i18n="hero_sub_2"><strong>15 milyon Euro</strong> ceza riskinden kaçının.</span>
         </p>
         <div class="cta-row">
-            <a href="#demo" class="btn btn-primary">Ücretsiz Demo Talep Et →</a>
-            <a href="#features" class="btn btn-secondary">Nasıl Çalışır?</a>
+            <a href="#demo" class="btn btn-primary" data-i18n="hero_cta1">🚀 Ücretsiz Dene →</a>
+            <a href="#pricing" class="btn btn-secondary" data-i18n="hero_cta2">Fiyatları Gör →</a>
         </div>
         <div class="social-proof">
             <div class="avatars">
@@ -487,15 +539,15 @@
                 <div class="av">K</div>
                 <div class="av">+</div>
             </div>
-            <span>Yüzlerce şirket uyumluluğunu Veraxio ile yönetiyor</span>
+            <span data-i18n="social_proof">Yüzlerce şirket uyumluluğunu Veraxio ile yönetiyor</span>
         </div>
 
         <div class="alert">
             <div class="icon">⚠️</div>
             <div class="text">
-                <strong>2 Ağustos 2026'dan itibaren yürürlükte.</strong><br>
-                Chatbot'unuzda AI bildirimi yoksa, görsellerinizde C2PA işaretleme eksikse
-                <span class="red">15 milyon Euro veya cironun %3'ü</span> ceza riski var.
+                <span data-i18n="alert_bold"><strong>2 Ağustos 2026'dan itibaren yürürlükte.</strong></span><br>
+                <span data-i18n="alert_text">Chatbot'unuzda AI bildirimi yoksa, görsellerinizde C2PA işaretleme eksikse</span>
+                <span class="red" data-i18n="alert_penalty">15 milyon Euro veya cironun %3'ü</span> <span data-i18n="alert_end">ceza riski var.</span>
             </div>
         </div>
     </div>
@@ -507,19 +559,19 @@
         <div class="stats">
             <div class="stat">
                 <div class="stat-value">15M€</div>
-                <div class="stat-label">Maksimum Ceza</div>
+                <div class="stat-label" data-i18n="stat_max_penalty">Maksimum Ceza</div>
             </div>
             <div class="stat">
                 <div class="stat-value">11</div>
-                <div class="stat-label">AI Tipi Denetimi</div>
+                <div class="stat-label" data-i18n="stat_ai_types">AI Tipi Denetimi</div>
             </div>
             <div class="stat">
                 <div class="stat-value">5</div>
-                <div class="stat-label">Dil Desteği</div>
+                <div class="stat-label" data-i18n="stat_languages">Dil Desteği</div>
             </div>
             <div class="stat">
                 <div class="stat-value">4</div>
-                <div class="stat-label">Katmanlı Tespit</div>
+                <div class="stat-label" data-i18n="stat_layers">Katmanlı Tespit</div>
             </div>
         </div>
     </div>
@@ -529,30 +581,30 @@
 <section id="features">
     <div class="container">
         <div class="section-title">
-            <h2>Nasıl çalışır?</h2>
+            <h2 data-i18n="features_title">Nasıl çalışır?</h2>
             <p>Manuel danışmanlığın 6-12 hafta ve 28.000-62.000 € maliyetini,<br>5 dakikalık ve 4.900 TL/ay'lık yazılım denetimine indiriyoruz.</p>
         </div>
 
         <div class="features">
             <div class="feature">
                 <div class="feature-icon">🔍</div>
-                <div class="feature-title">11 AI Tipi Denetimi</div>
-                <div class="feature-desc">Chatbot, görsel üretimi, deepfake, kamu yararı metni, duygu tanıma, KVKK uyumu, AB temsilcisi, Shadow AI, kümülatif analiz ve daha fazlası.</div>
+                <div class="feature-title" data-i18n="feat1_title">11 AI Tipi Denetimi</div>
+                <div class="feature-desc" data-i18n="feat1_desc">Chatbot, görsel üretimi, deepfake, kamu yararı metni, duygu tanıma, KVKK uyumu, AB temsilcisi, Shadow AI, kümülatif analiz ve daha fazlası.</div>
             </div>
             <div class="feature">
                 <div class="feature-icon">🎨</div>
-                <div class="feature-title">4 Katmanlı Görsel Tespit</div>
-                <div class="feature-desc">C2PA metadata + PNG/IPTC + SigLIP deepfake modeli + CLIP genel AI detektörü ile kapsamlı analiz.</div>
+                <div class="feature-title" data-i18n="feat2_title">4 Katmanlı Görsel Tespit</div>
+                <div class="feature-desc" data-i18n="feat2_desc">C2PA metadata + PNG/IPTC + SigLIP deepfake modeli + CLIP genel AI detektörü ile kapsamlı analiz.</div>
             </div>
             <div class="feature">
                 <div class="feature-icon">🌍</div>
-                <div class="feature-title">5 Dil Desteği</div>
-                <div class="feature-desc">Türkçe, İngilizce, Bulgarca, Romence, Hırvatça. Balkanlar ve Doğu Avrupa pazarına hazır altyapı.</div>
+                <div class="feature-title" data-i18n="feat3_title">5 Dil Desteği</div>
+                <div class="feature-desc" data-i18n="feat3_desc">Türkçe, İngilizce, Bulgarca, Romence, Hırvatça. Balkanlar ve Doğu Avrupa pazarına hazır altyapı.</div>
             </div>
             <div class="feature">
                 <div class="feature-icon">📄</div>
-                <div class="feature-title">Kanıt Zinciri</div>
-                <div class="feature-desc">SHA-256 hash + zaman damgası. Denetime hazır PDF raporu. Hukuki dayanak ve sorumluluk reddi dahil.</div>
+                <div class="feature-title" data-i18n="feat4_title">Kanıt Zinciri</div>
+                <div class="feature-desc" data-i18n="feat4_desc">SHA-256 hash + zaman damgası. Denetime hazır PDF raporu. Hukuki dayanak ve sorumluluk reddi dahil.</div>
             </div>
         </div>
     </div>
@@ -562,8 +614,8 @@
 <section id="pricing">
     <div class="container">
         <div class="section-title">
-            <h2>Fiyatlandırma</h2>
-            <p>İhtiyacınıza uygun paketi seçin</p>
+            <h2 data-i18n="pricing_title">Fiyatlandırma</h2>
+            <p data-i18n="pricing_sub">İhtiyacınıza uygun paketi seçin</p>
         </div>
 
         <div class="pricing">
@@ -572,12 +624,15 @@
                 <div class="plan-price">4.900 TL</div>
                 <div class="plan-period">/ ay</div>
                 <ul class="plan-features">
-                    <li>1 chatbot denetimi</li>
-                    <li>10 görsel / ay</li>
-                    <li>PDF rapor</li>
-                    <li>E-posta desteği</li>
+                    <li data-i18n="plan1_feat1">1 chatbot denetimi</li>
+                    <li data-i18n="plan1_feat2">10 görsel / ay</li>
+                    <li data-i18n="plan1_feat3">PDF rapor</li>
+                    <li data-i18n="plan1_feat4">E-posta desteği</li>
                 </ul>
-                <div class="plan-target">Mikro KOBİ · Tek AI ürünü</div>
+                <div class="plan-target" data-i18n="plan_target1">Mikro KOBİ · Tek AI ürünü</div>
+                <button class="plan-select-btn" onclick="selectPlan('Starter')">
+                    <span data-i18n="plan_select">Bu Planı Seç →</span>
+                </button>
             </div>
 
             <div class="plan featured">
@@ -586,14 +641,17 @@
                 <div class="plan-price">12.900 TL</div>
                 <div class="plan-period">/ ay</div>
                 <ul class="plan-features">
-                    <li>5 chatbot denetimi</li>
-                    <li>50 görsel / ay</li>
-                    <li>REST API erişimi</li>
-                    <li>Zamanlanmış denetim</li>
-                    <li>Otomatik e-posta raporu</li>
-                    <li>Geçmiş arşivi</li>
+                    <li data-i18n="plan2_feat1">5 chatbot denetimi</li>
+                    <li data-i18n="plan2_feat2">50 görsel / ay</li>
+                    <li data-i18n="plan2_feat3">REST API erişimi</li>
+                    <li data-i18n="plan2_feat4">Zamanlanmış denetim</li>
+                    <li data-i18n="plan2_feat5">Otomatik e-posta raporu</li>
+                    <li data-i18n="plan2_feat6">Geçmiş arşivi</li>
                 </ul>
-                <div class="plan-target">KOBİ · Çoklu AI ürünü</div>
+                <div class="plan-target" data-i18n="plan_target2">KOBİ · Çoklu AI ürünü</div>
+                <button class="plan-select-btn plan-select-featured" onclick="selectPlan('Pro')">
+                    <span data-i18n="plan_select">Bu Planı Seç →</span>
+                </button>
             </div>
 
             <div class="plan">
@@ -601,19 +659,22 @@
                 <div class="plan-price">39.900 TL</div>
                 <div class="plan-period">/ ay</div>
                 <ul class="plan-features">
-                    <li>Sınırsız denetim</li>
-                    <li>Özel entegrasyon</li>
-                    <li>Öncelikli destek</li>
-                    <li>Özel rapor</li>
-                    <li>AB temsilcisi takibi</li>
+                    <li data-i18n="plan3_feat1">Sınırsız denetim</li>
+                    <li data-i18n="plan3_feat2">Özel entegrasyon</li>
+                    <li data-i18n="plan3_feat3">Öncelikli destek</li>
+                    <li data-i18n="plan3_feat4">Özel rapor</li>
+                    <li data-i18n="plan3_feat5">AB temsilcisi takibi</li>
                 </ul>
-                <div class="plan-target">Kurumsal · Çoklu lokasyon</div>
+                <div class="plan-target" data-i18n="plan_target3">Kurumsal · Çoklu lokasyon</div>
+                <button class="plan-select-btn" onclick="selectPlan('Enterprise')">
+                    <span data-i18n="plan_select">Bu Planı Seç →</span>
+                </button>
             </div>
         </div>
 
         <div class="early-bird">
-            <div class="early-bird-title">Erken Kuş İndirimi</div>
-            <div class="early-bird-desc">
+            <div class="early-bird-title" data-i18n="early_bird_title">Erken Kuş İndirimi</div>
+            <div class="early-bird-desc" data-i18n="early_bird_desc">
                 İlk 10 müşteriye Pro paket <strong>6.900 TL/ay</strong> (%47 indirim) — 12 aylık taahhüt ile
             </div>
         </div>
@@ -624,36 +685,36 @@
 <section id="demo">
     <div class="container">
         <div class="section-title">
-            <h2>Demo Talebi</h2>
+            <h2 data-i18n="demo_title">Demo Talebi</h2>
             <p>İlk denetim ücretsiz. Formu doldurun, 24 saat içinde size dönelim.</p>
         </div>
 
         <form class="form" id="demoForm" action="https://formspree.io/f/xaeqwqak" method="POST">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="ad">Adınız Soyadınız *</label>
-                    <input type="text" id="ad" name="ad" placeholder="Örn: Ahmet Yılmaz" required>
+                    <label for="ad" data-i18n="form_name">Adınız Soyadınız *</label>
+                    <input type="text" id="ad" name="ad" placeholder="Örn: Ahmet Yılmaz" data-i18n-placeholder="ph_name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">E-posta *</label>
-                    <input type="email" id="email" name="email" placeholder="ornek@sirket.com" required>
+                    <label for="email" data-i18n="form_email">E-posta *</label>
+                    <input type="email" id="email" name="email" placeholder="ornek@sirket.com" data-i18n-placeholder="ph_email" required>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="sirket">Şirket Adı</label>
-                    <input type="text" id="sirket" name="sirket" placeholder="Örn: ABC Teknoloji A.Ş.">
+                    <label for="sirket" data-i18n="form_company">Şirket Adı</label>
+                    <input type="text" id="sirket" name="sirket" placeholder="Örn: ABC Teknoloji A.Ş." data-i18n-placeholder="ph_company">
                 </div>
                 <div class="form-group">
-                    <label for="telefon">Telefon</label>
-                    <input type="tel" id="telefon" name="telefon" placeholder="+90 5XX XXX XX XX">
+                    <label for="telefon" data-i18n="form_phone">Telefon</label>
+                    <input type="tel" id="telefon" name="telefon" placeholder="+90 5XX XXX XX XX" data-i18n-placeholder="ph_phone">
                 </div>
             </div>
             <div class="form-group">
-                <label for="mesaj">Mesajınız (opsiyonel)</label>
-                <textarea id="mesaj" name="mesaj" rows="4" placeholder="Kaç AI sisteminiz var? Hangi sektördesiniz?"></textarea>
+                <label for="mesaj" data-i18n="form_message">Mesajınız (opsiyonel)</label>
+                <textarea id="mesaj" name="mesaj" rows="4" placeholder="Kaç AI sisteminiz var? Hangi sektördesiniz?" data-i18n-placeholder="ph_message"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">📩 Demo Talebi Gönder</button>
+            <button type="submit" class="btn btn-primary" data-i18n="form_send">📩 Demo Talebi Gönder</button>
         </form>
     </div>
 </section>
@@ -662,24 +723,24 @@
 <footer>
     <div class="container">
         <div class="footer-brand">◆ Veraxio</div>
-        <div class="footer-tagline">AB AI Act Madde 50 Uyumluluk Denetim Platformu</div>
+        <div class="footer-tagline" data-i18n="footer_tagline">AB AI Act Madde 50 Uyumluluk Denetim Platformu</div>
 
         <div class="footer-hukuki">
-            <a href="gizlilik.html">Gizlilik Politikası</a>
+            <a href="gizlilik.html" data-i18n="footer_gizlilik">Gizlilik Politikası</a>
             <span>·</span>
-            <a href="kvkk.html">KVKK Aydınlatma</a>
+            <a href="kvkk.html" data-i18n="footer_kvkk">KVKK Aydınlatma</a>
             <span>·</span>
-            <a href="kullanim.html">Kullanım Şartları</a>
+            <a href="kullanim.html" data-i18n="footer_kullanim">Kullanım Şartları</a>
             <span>·</span>
-            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+            <a href="dpa.html" data-i18n="footer_dpa">Veri İşleme Sözleşmesi</a>
         </div>
 
         <a class="footer-email" href="mailto:info@veraxio.ai">info@veraxio.ai</a>
-        <div class="footer-disclaimer">
+        <div class="footer-disclaimer" data-i18n="footer_disclaimer">
             Bu sayfa teknik bir denetim aracını tanıtır. Hukuki görüş niteliği taşımaz.
             Nihai hukuki değerlendirme için uzman bir avukata başvurun.
         </div>
-        <div class="footer-copyright">
+        <div class="footer-copyright" data-i18n="footer_copyright">
             © 2026 Veraxio. Tüm hakları saklıdır.
         </div>
     </div>
@@ -734,5 +795,548 @@ document.getElementById('demoForm').addEventListener('submit', async function(e)
 });
 </script>
 
+
+
+<script>
+// ============================================================
+// I18N - 5 DIL DESTEGI
+// ============================================================
+const I18N = {
+    tr: {
+        nav_features: "Özellikler",
+        nav_pricing: "Fiyatlandırma",
+        nav_demo: "Demo Talebi",
+        hero_badge: "AB AI Act Madde 50 Uyumlu",
+        hero_title_1: "AI uyumluluğunu",
+        hero_title_2: "otomatikleştiriyoruz",
+        hero_sub_1: "5 dakikada AI sistemlerinizi denetleyin,",
+        hero_sub_2: "<strong>15 milyon Euro</strong> ceza riskinden kaçının.",
+        hero_cta1: "🚀 Ücretsiz Dene →",
+        hero_cta2: "Fiyatları Gör →",
+        social_proof: "Yüzlerce şirket uyumluluğunu Veraxio ile yönetiyor",
+        alert_bold: "<strong>2 Ağustos 2026'dan itibaren yürürlükte.</strong>",
+        alert_text: "Chatbot'unuzda AI bildirimi yoksa, görsellerinizde C2PA işaretleme eksikse",
+        alert_penalty: "15 milyon Euro veya cironun %3'ü",
+        alert_end: "ceza riski var.",
+        stat_max_penalty: "Maksimum Ceza",
+        stat_ai_types: "AI Tipi Denetimi",
+        stat_languages: "Dil Desteği",
+        stat_layers: "Katmanlı Tespit",
+        features_title: "Nasıl çalışır?",
+        features_sub_1: "Manuel danışmanlığın 6-12 hafta ve 28.000-62.000 € maliyetini,",
+        features_sub_2: "5 dakikalık ve 4.900 TL/ay'lık yazılım denetimine indiriyoruz.",
+        feat1_title: "11 AI Tipi Denetimi",
+        feat1_desc: "Chatbot, görsel üretimi, deepfake, kamu yararı metni, duygu tanıma, KVKK uyumu, AB temsilcisi, Shadow AI, kümülatif analiz ve daha fazlası.",
+        feat2_title: "4 Katmanlı Görsel Tespit",
+        feat2_desc: "C2PA metadata + PNG/IPTC + SigLIP deepfake modeli + CLIP genel AI detektörü ile kapsamlı analiz.",
+        feat3_title: "5 Dil Desteği",
+        feat3_desc: "Türkçe, İngilizce, Bulgarca, Romence, Hırvatça. Balkanlar ve Doğu Avrupa pazarına hazır altyapı.",
+        feat4_title: "Kanıt Zinciri",
+        feat4_desc: "SHA-256 hash + zaman damgası. Denetime hazır PDF raporu. Hukuki dayanak ve sorumluluk reddi dahil.",
+        pricing_title: "Fiyatlandırma",
+        pricing_sub: "İhtiyacınıza uygun paketi seçin",
+        plan_starter: "Starter",
+        plan_pro: "Pro",
+        plan_enterprise: "Enterprise",
+        plan_period: "/ ay",
+        plan_popular: "Popüler",
+        plan_target1: "Mikro KOBİ · Tek AI ürünü",
+        plan_target2: "KOBİ · Çoklu AI ürünü",
+        plan_target3: "Kurumsal · Çoklu lokasyon",
+        early_bird_title: "Erken Kuş İndirimi",
+        early_bird_desc: "İlk 10 müşteriye Pro paket <strong>6.900 TL/ay</strong> (%47 indirim) — 12 aylık taahhüt ile",
+        demo_title: "Demo Talebi",
+        demo_sub: "İlk denetim ücretsiz. Formu doldurun, 24 saat içinde size dönelim.",
+        form_name: "Adınız Soyadınız",
+        form_email: "E-posta",
+        form_company: "Şirket Adı",
+        form_phone: "Telefon",
+        form_message: "Mesajınız (opsiyonel)",
+        form_send: "📩 Demo Talebi Gönder",
+        footer_tagline: "AB AI Act Madde 50 Uyumluluk Denetim Platformu",
+        footer_disclaimer: "Bu sayfa teknik bir denetim aracını tanıtır. Hukuki görüş niteliği taşımaz. Nihai hukuki değerlendirme için uzman bir avukata başvurun.",
+        footer_copyright: "© 2026 Veraxio. Tüm hakları saklıdır.",
+        plan_select: "Bu Planı Seç →",
+        ph_name: "Örn: Ahmet Yılmaz",
+        ph_email: "ornek@sirket.com",
+        ph_company: "Örn: ABC Teknoloji A.Ş.",
+        ph_phone: "+90 5XX XXX XX XX",
+        ph_message: "Kaç AI sisteminiz var? Hangi sektördesiniz?",
+        hero_badge_text: "AB AI Act Madde 50 Uyumlu",
+        social_proof: "Yüzlerce şirket uyumluluğunu Veraxio ile yönetiyor",
+        features_sub_1: "Manuel danışmanlığın 6-12 hafta ve 28.000-62.000 € maliyetini,",
+        features_sub_2: "5 dakikalık ve 4.900 TL/ay'lık yazılım denetimine indirgiyoruz.",
+        feat1_title: "11 AI Tipi Denetimi",
+        feat1_desc: "Chatbot, görsel üretimi, deepfake, kamu yararı metni, duygu tanıma, KVKK uyumu, AB temsilcisi, Shadow AI, kümülatif analiz ve daha fazlası.",
+        feat2_title: "4 Katmanlı Görsel Tespit",
+        feat2_desc: "C2PA metadata + PNG/IPTC + SigLIP deepfake modeli + CLIP genel AI detektörü ile kapsamlı analiz.",
+        feat3_title: "5 Dil Desteği",
+        feat3_desc: "Türkçe, İngilizce, Bulgarca, Romence, Hırvatça. Balkanlar ve Doğu Avrupa pazarına hazır altyapı.",
+        feat4_title: "Kanıt Zinciri",
+        feat4_desc: "SHA-256 hash + zaman damgası. Denetime hazır PDF raporu. Hukuki dayanak ve sorumluluk reddi dahil.",
+        plan1_feat1: "1 chatbot denetimi",
+        plan1_feat2: "10 görsel / ay",
+        plan1_feat3: "PDF rapor",
+        plan1_feat4: "E-posta desteği",
+        plan2_feat1: "5 chatbot denetimi",
+        plan2_feat2: "50 görsel / ay",
+        plan2_feat3: "REST API erişimi",
+        plan2_feat4: "Zamanlanmış denetim",
+        plan2_feat5: "Otomatik e-posta raporu",
+        plan2_feat6: "Geçmiş arşivi",
+        plan3_feat1: "Sınırsız denetim",
+        plan3_feat2: "Özel entegrasyon",
+        plan3_feat3: "Öncelikli destek",
+        plan3_feat4: "Özel rapor",
+        plan3_feat5: "AB temsilcisi takibi",
+        footer_gizlilik: "Gizlilik Politikası",
+        footer_kvkk: "KVKK Aydınlatma",
+        footer_kullanim: "Kullanım Şartları",
+        footer_dpa: "Veri İşleme Sözleşmesi",
+        footer_disclaimer: "Bu sayfa teknik bir denetim aracını tanıtır. Hukuki görüş niteliği taşımaz. Nihai hukuki değerlendirme için uzman bir avukata başvurun.",
+        footer_copyright: "© 2026 Veraxio. Tüm hakları saklıdır.",
+
+    },
+    en: {
+        nav_features: "Features",
+        nav_pricing: "Pricing",
+        nav_demo: "Request Demo",
+        hero_badge: "EU AI Act Article 50 Compliant",
+        hero_title_1: "We automate",
+        hero_title_2: "AI compliance",
+        hero_sub_1: "Audit your AI systems in 5 minutes,",
+        hero_sub_2: "avoid <strong>15 million Euro</strong> in penalty risk.",
+        hero_cta1: "🚀 Start Free →",
+        hero_cta2: "See Pricing →",
+        social_proof: "Hundreds of companies manage compliance with Veraxio",
+        alert_bold: "<strong>In effect since August 2, 2026.</strong>",
+        alert_text: "If your chatbot lacks AI disclosure, or your images lack C2PA marking,",
+        alert_penalty: "15 million Euro or 3% of turnover",
+        alert_end: "penalty risk applies.",
+        stat_max_penalty: "Maximum Penalty",
+        stat_ai_types: "AI Type Audits",
+        stat_languages: "Language Support",
+        stat_layers: "Layered Detection",
+        features_title: "How does it work?",
+        features_sub_1: "Manual consulting takes 6-12 weeks and costs 28,000-62,000 €.",
+        features_sub_2: "We reduce it to a 5-minute audit at 4,900 TL/month.",
+        feat1_title: "11 AI Type Audits",
+        feat1_desc: "Chatbot, image generation, deepfake, public interest text, emotion recognition, KVKK compliance, EU representative, Shadow AI, cumulative analysis and more.",
+        feat2_title: "4-Layer Visual Detection",
+        feat2_desc: "Comprehensive analysis with C2PA metadata + PNG/IPTC + SigLIP deepfake model + CLIP general AI detector.",
+        feat3_title: "5 Language Support",
+        feat3_desc: "Turkish, English, Bulgarian, Romanian, Croatian. Ready for Balkans and Eastern Europe market.",
+        feat4_title: "Chain of Evidence",
+        feat4_desc: "SHA-256 hash + timestamp. Audit-ready PDF report. Includes legal basis and disclaimer.",
+        pricing_title: "Pricing",
+        pricing_sub: "Choose the plan that fits your needs",
+        plan_period: "/ month",
+        plan_popular: "Popular",
+        plan_target1: "Micro SMB · Single AI product",
+        plan_target2: "SMB · Multiple AI products",
+        plan_target3: "Enterprise · Multiple locations",
+        early_bird_title: "Early Bird Discount",
+        early_bird_desc: "First 10 customers get Pro plan at <strong>6,900 TL/month</strong> (47% off) — with 12-month commitment",
+        demo_title: "Request Demo",
+        demo_sub: "First audit is free. Fill out the form and we'll respond within 24 hours.",
+        form_name: "Full Name",
+        form_email: "Email",
+        form_company: "Company Name",
+        form_phone: "Phone",
+        form_message: "Your Message (optional)",
+        form_send: "📩 Send Demo Request",
+        footer_tagline: "EU AI Act Article 50 Compliance Platform",
+        footer_disclaimer: "This page presents a technical audit tool. It does not constitute legal advice. Consult a qualified lawyer for final legal assessment.",
+        footer_copyright: "© 2026 Veraxio. All rights reserved.",
+        plan_select: "Choose This Plan →",
+        ph_name: "Ex: John Smith",
+        ph_email: "example@company.com",
+        ph_company: "Ex: ABC Technology Inc.",
+        ph_phone: "+1 XXX XXX XXXX",
+        ph_message: "How many AI systems do you have? Which sector are you in?",
+        hero_badge_text: "EU AI Act Article 50 Compliant",
+        social_proof: "Hundreds of companies manage compliance with Veraxio",
+        features_sub_1: "Manual consulting takes 6-12 weeks and costs 28,000-62,000 €.",
+        features_sub_2: "We reduce it to a 5-minute audit at 4,900 TL/month.",
+        feat1_title: "11 AI Type Audits",
+        feat1_desc: "Chatbot, image generation, deepfake, public interest text, emotion recognition, KVKK compliance, EU representative, Shadow AI, cumulative analysis and more.",
+        feat2_title: "4-Layer Visual Detection",
+        feat2_desc: "Comprehensive analysis with C2PA metadata + PNG/IPTC + SigLIP deepfake model + CLIP general AI detector.",
+        feat3_title: "5 Language Support",
+        feat3_desc: "Turkish, English, Bulgarian, Romanian, Croatian. Ready for Balkans and Eastern Europe market.",
+        feat4_title: "Chain of Evidence",
+        feat4_desc: "SHA-256 hash + timestamp. Audit-ready PDF report. Includes legal basis and disclaimer.",
+        plan1_feat1: "1 chatbot audit",
+        plan1_feat2: "10 images / month",
+        plan1_feat3: "PDF report",
+        plan1_feat4: "Email support",
+        plan2_feat1: "5 chatbot audits",
+        plan2_feat2: "50 images / month",
+        plan2_feat3: "REST API access",
+        plan2_feat4: "Scheduled audits",
+        plan2_feat5: "Automated email report",
+        plan2_feat6: "History archive",
+        plan3_feat1: "Unlimited audits",
+        plan3_feat2: "Custom integration",
+        plan3_feat3: "Priority support",
+        plan3_feat4: "Custom report",
+        plan3_feat5: "EU representative tracking",
+        footer_gizlilik: "Privacy Policy",
+        footer_kvkk: "KVKK Disclosure",
+        footer_kullanim: "Terms of Service",
+        footer_dpa: "Data Processing Agreement",
+        footer_disclaimer: "This page presents a technical audit tool. It does not constitute legal advice. Consult a qualified lawyer for final legal assessment.",
+        footer_copyright: "© 2026 Veraxio. All rights reserved.",
+
+    },
+    bg: {
+        nav_features: "Функции",
+        nav_pricing: "Ценообразуване",
+        nav_demo: "Заяви демо",
+        hero_badge: "Съвместим с член 50 от AI Act на ЕС",
+        hero_title_1: "Автоматизираме",
+        hero_title_2: "AI съответствието",
+        hero_sub_1: "Одитирайте AI системите си за 5 минути,",
+        hero_sub_2: "избегнете <strong>15 милиона евро</strong> риск от санкции.",
+        hero_cta1: "🚀 Започни безплатно →",
+        hero_cta2: "Виж цените →",
+        social_proof: "Стотици компании управляват съответствието си с Veraxio",
+        alert_bold: "<strong>В сила от 2 август 2026 г.</strong>",
+        alert_text: "Ако вашият чатбот няма AI декларация или изображенията ви нямат C2PA маркировка,",
+        alert_penalty: "15 милиона евро или 3% от оборота",
+        alert_end: "риск от санкции.",
+        stat_max_penalty: "Максимална санкция",
+        stat_ai_types: "Одити по тип AI",
+        stat_languages: "Езикова поддръжка",
+        stat_layers: "Многослойно откриване",
+        features_title: "Как работи?",
+        features_sub_1: "Ръчният консултинг отнема 6-12 седмици и струва 28 000-62 000 €.",
+        features_sub_2: "Ние го свеждаме до 5-минутен одит за 4 900 TL/месец.",
+        feat1_title: "11 типа AI одити",
+        feat1_desc: "Чатбот, генериране на изображения, дълбоки фалшификати, текст от обществен интерес, разпознаване на емоции, KVKK съответствие, представител в ЕС, Shadow AI, кумулативен анализ и още.",
+        feat2_title: "4-слойно визуално откриване",
+        feat2_desc: "Цялостен анализ с C2PA метаданни + PNG/IPTC + SigLIP модел за дълбоки фалшификати + CLIP общ AI детектор.",
+        feat3_title: "Поддръжка на 5 езика",
+        feat3_desc: "Турски, английски, български, румънски, хърватски. Готово за пазарите на Балканите и Източна Европа.",
+        feat4_title: "Верига на доказателствата",
+        feat4_desc: "SHA-256 хеш + времеви печат. PDF доклад, готов за одит. Включва правно основание и отказ от отговорност.",
+        pricing_title: "Ценообразуване",
+        pricing_sub: "Изберете плана, който отговаря на нуждите ви",
+        plan_period: "/ месец",
+        plan_popular: "Популярен",
+        plan_target1: "Микро МСП · Един AI продукт",
+        plan_target2: "МСП · Няколко AI продукта",
+        plan_target3: "Корпоративен · Няколко локации",
+        early_bird_title: "Отстъпка за ранни клиенти",
+        early_bird_desc: "Първите 10 клиенти получават Pro план за <strong>6 900 TL/месец</strong> (47% отстъпка) — с 12-месечен ангажимент",
+        demo_title: "Заяви демо",
+        demo_sub: "Първият одит е безплатен. Попълнете формуляра и ще отговорим до 24 часа.",
+        form_name: "Пълно име",
+        form_email: "Имейл",
+        form_company: "Име на фирма",
+        form_phone: "Телефон",
+        form_message: "Вашето съобщение (по избор)",
+        form_send: "📩 Изпрати заявка",
+        footer_tagline: "Платформа за съответствие с член 50 от AI Act на ЕС",
+        footer_disclaimer: "Тази страница представя технически инструмент за одит. Не представлява правен съвет. Консултирайте се с квалифициран адвокат.",
+        footer_copyright: "© 2026 Veraxio. Всички права запазени.",
+        plan_select: "Избери този план →",
+        ph_name: "Напр.: Иван Петров",
+        ph_email: "primer@kompania.com",
+        ph_company: "Напр.: АБВ Технология АД",
+        ph_phone: "+359 XXX XXX XXX",
+        ph_message: "Колко AI системи имате? В кой сектор сте?",
+        hero_badge_text: "Съвместим с член 50 от AI Act на ЕС",
+        social_proof: "Стотици компании управляват съответствието си с Veraxio",
+        features_sub_1: "Ръчният консултинг отнема 6-12 седмици и струва 28 000-62 000 €.",
+        features_sub_2: "Ние го свеждаме до 5-минутен одит за 4 900 TL/месец.",
+        feat1_title: "11 типа AI одити",
+        feat1_desc: "Чатбот, генериране на изображения, дълбоки фалшификати, текст от обществен интерес, разпознаване на емоции, KVKK съответствие, представител в ЕС, Shadow AI, кумулативен анализ и още.",
+        feat2_title: "4-слойно визуално откриване",
+        feat2_desc: "Цялостен анализ с C2PA метаданни + PNG/IPTC + SigLIP модел за дълбоки фалшификати + CLIP общ AI детектор.",
+        feat3_title: "Поддръжка на 5 езика",
+        feat3_desc: "Турски, английски, български, румънски, хърватски. Готово за пазарите на Балканите и Източна Европа.",
+        feat4_title: "Верига на доказателствата",
+        feat4_desc: "SHA-256 хеш + времеви печат. PDF доклад, готов за одит. Включва правно основание и отказ от отговорност.",
+        plan1_feat1: "1 чатбот одит",
+        plan1_feat2: "10 изображения / месец",
+        plan1_feat3: "PDF доклад",
+        plan1_feat4: "Имейл поддръжка",
+        plan2_feat1: "5 чатбот одита",
+        plan2_feat2: "50 изображения / месец",
+        plan2_feat3: "REST API достъп",
+        plan2_feat4: "Планирани одити",
+        plan2_feat5: "Автоматичен имейл доклад",
+        plan2_feat6: "Архив на историята",
+        plan3_feat1: "Неограничени одити",
+        plan3_feat2: "Персонализирана интеграция",
+        plan3_feat3: "Приоритетна поддръжка",
+        plan3_feat4: "Персонализиран доклад",
+        plan3_feat5: "Проследяване на представител в ЕС",
+        footer_gizlilik: "Политика за поверителност",
+        footer_kvkk: "KVKK разкритие",
+        footer_kullanim: "Условия за ползване",
+        footer_dpa: "Споразумение за обработка на данни",
+        footer_disclaimer: "Тази страница представя технически инструмент за одит. Не представлява правен съвет. Консултирайте се с квалифициран адвокат.",
+        footer_copyright: "© 2026 Veraxio. Всички права запазени.",
+
+    },
+    ro: {
+        nav_features: "Caracteristici",
+        nav_pricing: "Preturi",
+        nav_demo: "Solicita demo",
+        hero_badge: "Conform cu Articolul 50 din AI Act UE",
+        hero_title_1: "Automatizam",
+        hero_title_2: "conformitatea AI",
+        hero_sub_1: "Auditati sistemele AI in 5 minute,",
+        hero_sub_2: "evitati riscul de <strong>15 milioane Euro</strong>.",
+        hero_cta1: "🚀 Incepe gratuit →",
+        hero_cta2: "Vezi preturile →",
+        social_proof: "Sute de companii isi gestioneaza conformitatea cu Veraxio",
+        alert_bold: "<strong>In vigoare din 2 august 2026.</strong>",
+        alert_text: "Daca chatbotul dvs. nu are declaratie AI sau imaginile dvs. nu au marcaj C2PA,",
+        alert_penalty: "15 milioane Euro sau 3% din cifra de afaceri",
+        alert_end: "risc de sanctiune.",
+        stat_max_penalty: "Sanctiune maxima",
+        stat_ai_types: "Audituri pe tip AI",
+        stat_languages: "Suport lingvistic",
+        stat_layers: "Detectie pe straturi",
+        features_title: "Cum functioneaza?",
+        features_sub_1: "Consultanța manuala dureaza 6-12 saptamani și costa 28.000-62.000 €.",
+        features_sub_2: "Reducem la un audit de 5 minute la 4.900 TL/luna.",
+        feat1_title: "11 tipuri de audit AI",
+        feat1_desc: "Chatbot, generare de imagini, deepfake, text de interes public, recunoastere a emotiilor, conformitate KVKK, reprezentant UE, Shadow AI, analiza cumulativa și altele.",
+        feat2_title: "Detectie vizuala pe 4 straturi",
+        feat2_desc: "Analiza cuprinzatoare cu metadate C2PA + PNG/IPTC + model deepfake SigLIP + detector AI general CLIP.",
+        feat3_title: "Suport pentru 5 limbi",
+        feat3_desc: "Turca, engleza, bulgara, romana, croata. Pregatit pentru piata Balcanilor și Europa de Est.",
+        feat4_title: "Lanț de dovezi",
+        feat4_desc: "Hash SHA-256 + marca temporala. Raport PDF pregatit pentru audit. Include baza legala și disclaimer.",
+        pricing_title: "Preturi",
+        pricing_sub: "Alegeți planul potrivit nevoilor dvs.",
+        plan_period: "/ luna",
+        plan_popular: "Popular",
+        plan_target1: "Micro IMM · Un singur produs AI",
+        plan_target2: "IMM · Mai multe produse AI",
+        plan_target3: "Enterprise · Mai multe locatii",
+        early_bird_title: "Reducere early bird",
+        early_bird_desc: "Primii 10 clienti primesc planul Pro la <strong>6.900 TL/luna</strong> (47% reducere) — cu angajament de 12 luni",
+        demo_title: "Solicita demo",
+        demo_sub: "Primul audit este gratuit. Completati formularul și va raspundem in 24 de ore.",
+        form_name: "Nume complet",
+        form_email: "Email",
+        form_company: "Nume companie",
+        form_phone: "Telefon",
+        form_message: "Mesajul dvs. (opțional)",
+        form_send: "📩 Trimite solicitare",
+        footer_tagline: "Platforma de conformitate cu Articolul 50 din AI Act UE",
+        footer_disclaimer: "Aceasta pagina prezinta un instrument tehnic de audit. Nu constituie consultanta juridica. Consultati un avocat calificat.",
+        footer_copyright: "© 2026 Veraxio. Toate drepturile rezervate.",
+        plan_select: "Alege acest plan →",
+        ph_name: "Ex: Ion Popescu",
+        ph_email: "exemplu@companie.com",
+        ph_company: "Ex: ABC Tehnologia SRL",
+        ph_phone: "+40 XXX XXX XXX",
+        ph_message: "Cate sisteme AI aveti? In ce sector activati?",
+        hero_badge_text: "Conform cu Articolul 50 din AI Act UE",
+        social_proof: "Sute de companii isi gestioneaza conformitatea cu Veraxio",
+        features_sub_1: "Consultanța manuala dureaza 6-12 saptamani și costa 28.000-62.000 €.",
+        features_sub_2: "Reducem la un audit de 5 minute la 4.900 TL/luna.",
+        feat1_title: "11 tipuri de audit AI",
+        feat1_desc: "Chatbot, generare de imagini, deepfake, text de interes public, recunoastere a emotiilor, conformitate KVKK, reprezentant UE, Shadow AI, analiza cumulativa și altele.",
+        feat2_title: "Detectie vizuala pe 4 straturi",
+        feat2_desc: "Analiza cuprinzatoare cu metadate C2PA + PNG/IPTC + model deepfake SigLIP + detector AI general CLIP.",
+        feat3_title: "Suport pentru 5 limbi",
+        feat3_desc: "Turca, engleza, bulgara, romana, croata. Pregatit pentru piata Balcanilor și Europa de Est.",
+        feat4_title: "Lanț de dovezi",
+        feat4_desc: "Hash SHA-256 + marca temporala. Raport PDF pregatit pentru audit. Include baza legala și disclaimer.",
+        plan1_feat1: "1 audit chatbot",
+        plan1_feat2: "10 imagini / luna",
+        plan1_feat3: "Raport PDF",
+        plan1_feat4: "Suport email",
+        plan2_feat1: "5 audituri chatbot",
+        plan2_feat2: "50 imagini / luna",
+        plan2_feat3: "Acces REST API",
+        plan2_feat4: "Audituri programate",
+        plan2_feat5: "Raport automatizat prin email",
+        plan2_feat6: "Arhiva istoricului",
+        plan3_feat1: "Audituri nelimitate",
+        plan3_feat2: "Integrare personalizata",
+        plan3_feat3: "Suport prioritar",
+        plan3_feat4: "Raport personalizat",
+        plan3_feat5: "Urmarirea reprezentantului UE",
+        footer_gizlilik: "Politica de confidentialitate",
+        footer_kvkk: "Divulgare KVKK",
+        footer_kullanim: "Termeni de utilizare",
+        footer_dpa: "Acord de prelucrare a datelor",
+        footer_disclaimer: "Aceasta pagina prezinta un instrument tehnic de audit. Nu constituie consultanta juridica. Consultati un avocat calificat.",
+        footer_copyright: "© 2026 Veraxio. Toate drepturile rezervate.",
+
+    },
+    hr: {
+        nav_features: "Znacajke",
+        nav_pricing: "Cijene",
+        nav_demo: "Zatrazi demo",
+        hero_badge: "Sukladno s clankom 50. AI Act EU",
+        hero_title_1: "Automatiziramo",
+        hero_title_2: "AI sukladnost",
+        hero_sub_1: "Revizirajte svoje AI sustave u 5 minuta,",
+        hero_sub_2: "izbjegnite rizik od <strong>15 milijuna eura</strong>.",
+        hero_cta1: "🚀 Započni besplatno →",
+        hero_cta2: "Vidi cijene →",
+        social_proof: "Stotine tvrtki upravljaju svojom sukladnoscu s Veraxio",
+        alert_bold: "<strong>Na snazi od 2. kolovoza 2026.</strong>",
+        alert_text: "Ako vas chatbot nema AI objavu ili vase slike nemaju C2PA oznaku,",
+        alert_penalty: "15 milijuna eura ili 3% prihoda",
+        alert_end: "rizik od kazne.",
+        stat_max_penalty: "Maksimalna kazna",
+        stat_ai_types: "Revizije po tipu AI",
+        stat_languages: "Jezična podrska",
+        stat_layers: "Viseslojno otkrivanje",
+        features_title: "Kako funkcionira?",
+        features_sub_1: "Rucno savjetovanje traje 6-12 tjedana i kosta 28.000-62.000 €.",
+        features_sub_2: "Svodimo na 5-minutnu reviziju za 4.900 TL/mjesec.",
+        feat1_title: "11 tipova AI revizija",
+        feat1_desc: "Chatbot, generiranje slika, deepfake, tekst od javnog interesa, prepoznavanje emocija, KVKK sukladnost, predstavnik u EU, Shadow AI, kumulativna analiza i vise.",
+        feat2_title: "Viseslojno vizualno otkrivanje",
+        feat2_desc: "Sveobuhvatna analiza s C2PA metapodacima + PNG/IPTC + SigLIP deepfake model + CLIP opci AI detektor.",
+        feat3_title: "Podrska za 5 jezika",
+        feat3_desc: "Turski, engleski, bugarski, rumunjski, hrvatski. Spremno za trziste Balkana i Istocne Europe.",
+        feat4_title: "Lanac dokaza",
+        feat4_desc: "SHA-256 hash + vremenski zig. PDF izvjesce spremno za reviziju. Ukljucuje pravnu osnovu i odricanje odgovornosti.",
+        pricing_title: "Cijene",
+        pricing_sub: "Odaberite plan koji odgovara vasim potrebama",
+        plan_period: "/ mjesec",
+        plan_popular: "Popularno",
+        plan_target1: "Mikro MSP · Jedan AI proizvod",
+        plan_target2: "MSP · Vise AI proizvoda",
+        plan_target3: "Korporativno · Vise lokacija",
+        early_bird_title: "Popust za rane korisnike",
+        early_bird_desc: "Prvih 10 klijenata dobiva Pro plan za <strong>6.900 TL/mjesec</strong> (47% popusta) — uz 12-mjesecnu obvezu",
+        demo_title: "Zatrazi demo",
+        demo_sub: "Prva revizija je besplatna. Ispunite obrazac i odgovorit cemo u roku od 24 sata.",
+        form_name: "Puno ime",
+        form_email: "E-posta",
+        form_company: "Naziv tvrtke",
+        form_phone: "Telefon",
+        form_message: "Vasa poruka (opcionalno)",
+        form_send: "📩 Posalji zahtjev",
+        footer_tagline: "Platforma za sukladnost s clankom 50. AI Act EU",
+        footer_disclaimer: "Ova stranica predstavlja tehnicki alat za reviziju. Ne predstavlja pravni savjet. Posavjetujte se s kvalificiranim odvjetnikom.",
+        footer_copyright: "© 2026 Veraxio. Sva prava zadrzana.",
+        plan_select: "Odaberi ovaj plan →",
+        ph_name: "Npr: Ivan Horvat",
+        ph_email: "primjer@tvrtka.com",
+        ph_company: "Npr: ABC Tehnologija d.o.o.",
+        ph_phone: "+385 XXX XXX XXX",
+        ph_message: "Koliko AI sustava imate? U kojem sektoru poslujete?",
+        hero_badge_text: "Sukladno s clankom 50. AI Act EU",
+        social_proof: "Stotine tvrtki upravljaju svojom sukladnoscu s Veraxio",
+        features_sub_1: "Rucno savjetovanje traje 6-12 tjedana i kosta 28.000-62.000 €.",
+        features_sub_2: "Svodimo na 5-minutnu reviziju za 4.900 TL/mjesec.",
+        feat1_title: "11 tipova AI revizija",
+        feat1_desc: "Chatbot, generiranje slika, deepfake, tekst od javnog interesa, prepoznavanje emocija, KVKK sukladnost, predstavnik u EU, Shadow AI, kumulativna analiza i vise.",
+        feat2_title: "Viseslojno vizualno otkrivanje",
+        feat2_desc: "Sveobuhvatna analiza s C2PA metapodacima + PNG/IPTC + SigLIP deepfake model + CLIP opci AI detektor.",
+        feat3_title: "Podrska za 5 jezika",
+        feat3_desc: "Turski, engleski, bugarski, rumunjski, hrvatski. Spremno za trziste Balkana i Istocne Europe.",
+        feat4_title: "Lanac dokaza",
+        feat4_desc: "SHA-256 hash + vremenski zig. PDF izvjesce spremno za reviziju. Ukljucuje pravnu osnovu i odricanje odgovornosti.",
+        plan1_feat1: "1 chatbot revizija",
+        plan1_feat2: "10 slika / mjesec",
+        plan1_feat3: "PDF izvjesce",
+        plan1_feat4: "E-posta podrska",
+        plan2_feat1: "5 chatbot revizija",
+        plan2_feat2: "50 slika / mjesec",
+        plan2_feat3: "REST API pristup",
+        plan2_feat4: "Zakazane revizije",
+        plan2_feat5: "Automatsko izvjesce e-postom",
+        plan2_feat6: "Arhiva povijesti",
+        plan3_feat1: "Neogranicene revizije",
+        plan3_feat2: "Prilagođena integracija",
+        plan3_feat3: "Prioritetna podrska",
+        plan3_feat4: "Prilagođeno izvjesce",
+        plan3_feat5: "Pracenje predstavnika u EU",
+        footer_gizlilik: "Politika privatnosti",
+        footer_kvkk: "KVKK objava",
+        footer_kullanim: "Uvjeti koristenja",
+        footer_dpa: "Ugovor o obradi podataka",
+        footer_disclaimer: "Ova stranica predstavlja tehnicki alat za reviziju. Ne predstavlja pravni savjet. Posavjetujte se s kvalificiranim odvjetnikom.",
+        footer_copyright: "© 2026 Veraxio. Sva prava zadrzana.",
+
+    },
+};
+
+// Aktif dil
+let currentLang = localStorage.getItem("veraxio_lang") || "tr";
+
+// Dil degistir
+function changeLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("veraxio_lang", lang);
+    applyLang(lang);
+}
+
+// Cevirileri uygula
+function applyLang(lang) {
+    const t = I18N[lang] || I18N.tr;
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (t[key]) {
+            el.innerHTML = t[key];
+        }
+    });
+    // Placeholder cevirisi
+    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (t[key]) {
+            el.placeholder = t[key];
+        }
+    });
+    // HTML lang attribute
+    document.documentElement.lang = lang;
+    // Selectbox guncelle
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = lang;
+}
+
+// Sayfa yuklendiginde
+// Plani sec -> forma scroll + mesaj doldur
+function selectPlan(planAdi) {
+    const mesaj = document.getElementById("mesaj");
+    if (mesaj) {
+        const dil = localStorage.getItem("veraxio_lang") || "tr";
+        const prefix = {
+            tr: "Seçtiğim plan: ",
+            en: "Selected plan: ",
+            bg: "Избран план: ",
+            ro: "Plan selectat: ",
+            hr: "Odabrani plan: "
+        }[dil] || "Selected plan: ";
+        mesaj.value = prefix + planAdi + "\n";
+        mesaj.focus();
+    }
+    // Form'a scroll
+    const demo = document.getElementById("demo");
+    if (demo) {
+        demo.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    // Gorsel feedback
+    setTimeout(() => {
+        if (mesaj) mesaj.style.borderColor = "#3b82f6";
+    }, 500);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = currentLang;
+    applyLang(currentLang);
+});
+
+// Hemen uygula (DOMContentLoaded gelmeden)
+if (document.readyState !== "loading") {
+    applyLang(currentLang);
+}
+</script>
 </body>
 </html>

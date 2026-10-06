@@ -10,6 +10,14 @@ from email.mime.application import MIMEApplication
 from pathlib import Path
 from dotenv import load_dotenv
 
+# HTML sablonlari
+from email_templates import (
+    hos_geldin_email,
+    sifre_sifirla_email,
+    denetim_rapor_email,
+    demo_talebi_email,
+)
+
 # .env dosyasini yukle (varsa)
 load_dotenv(Path(__file__).parent / ".env")
 
@@ -50,7 +58,7 @@ def email_ayarli_mi():
     return bool(SMTP_USER and SMTP_PASS)
 
 
-def email_gonder(alici, konu, icerik, pdf_yolu=None):
+def email_gonder(alici, konu, icerik, pdf_yolu=None, html=False):
     """Gmail SMTP ile e-posta gonderir."""
     if not email_ayarli_mi():
         return {
@@ -67,7 +75,9 @@ def email_gonder(alici, konu, icerik, pdf_yolu=None):
         msg["To"] = alici
         msg["Subject"] = konu
 
-        msg.attach(MIMEText(icerik, "plain", "utf-8"))
+        # HTML veya plain format
+        _tip = "html" if html else "plain"
+        msg.attach(MIMEText(icerik, _tip, "utf-8"))
 
         if pdf_yolu and Path(pdf_yolu).exists():
             with open(pdf_yolu, "rb") as f:
@@ -98,119 +108,42 @@ def email_gonder(alici, konu, icerik, pdf_yolu=None):
         return {"durum": "HATA", "hata": f"Beklenmeyen hata: {str(e)[:100]}"}
 
 
-def deneme_emaili_gonder(alici):
-    """Test e-postasi gonderir."""
+def deneme_emaili_gonder(alici, kullanici_adi="Test", firma_adi="Veraxio", dil="tr"):
+    """Test e-postasi gonderir (HTML - Veraxio HTML)."""
+    html = hos_geldin_email(kullanici_adi, firma_adi, dil)
     return email_gonder(
         alici=alici,
-        konu="AI Uyumluluk Kutusu - Test E-postasi",
-        icerik=(
-            "Merhaba,\n\n"
-            "Bu bir test e-postasidir. AI Uyumluluk Kutusu "
-            "otomatik rapor gonderim sistemi calisiyor.\n\n"
-            "Saygilarimizla,\n"
-            "AI Uyumluluk Kutusu"
-        ),
+        konu="Veraxio - Test E-postasi",
+        icerik=html,
         pdf_yolu=None,
+        html=True,
     )
 
 # ============================================================
 # SIFRE SIFIRLAMA VE DOGRULAMA E-POSTALARI
 # ============================================================
 def sifre_sifirlama_emaili_gonder(alici, kullanici_adi, token, dil="tr"):
-    """Sifre sifirlama e-postasi gonderir."""
-    # URL
+    """Sifre sifirlama e-postasi gonderir (HTML - Veraxio HTML)."""
+    # URL - Worker domain ile
     url = f"http://localhost:8501/?sifre_sifirla={token}"
 
-    mesajlar = {
-        "tr": {
-            "konu": "AI Uyumluluk Kutusu - Sifre Sifirlama",
-            "icerik": f"""Merhaba {kullanici_adi},
-
-Sifrenizi sifirlamak icin asagidaki linke tiklayin:
-
-{url}
-
-Bu link 24 saat gecerlidir.
-
-Eger bu talebi siz yapmadiysaniz, bu e-postayi dikkate almayin.
-
-Saygilarimizla,
-AI Uyumluluk Kutusu
-"""
-        },
-        "en": {
-            "konu": "AI Compliance Box - Password Reset",
-            "icerik": f"""Hello {kullanici_adi},
-
-Click the link below to reset your password:
-
-{url}
-
-This link is valid for 24 hours.
-
-If you didn't request this, please ignore this email.
-
-Best regards,
-AI Compliance Box
-"""
-        },
-        "bg": {
-            "konu": "AI Compliance Box - Нулиране на парола",
-            "icerik": f"""Здравейте {kullanici_adi},
-
-Кликнете на линка по-долу, за да нулирате паролата си:
-
-{url}
-
-Този линк е валиден 24 часа.
-
-Ако не сте поискали това, игнорирайте имейла.
-
-С уважение,
-AI Compliance Box
-"""
-        },
-        "ro": {
-            "konu": "AI Compliance Box - Resetare parola",
-            "icerik": f"""Buna {kullanici_adi},
-
-Faceți clic pe linkul de mai jos pentru a reseta parola:
-
-{url}
-
-Acest link este valabil 24 de ore.
-
-Dacă nu ați solicitat acest lucru, ignorați acest email.
-
-Cu respect,
-AI Compliance Box
-"""
-        },
-        "hr": {
-            "konu": "AI Compliance Box - Resetiranje lozinke",
-            "icerik": f"""Pozdrav {kullanici_adi},
-
-Kliknite na link ispod za resetiranje lozinke:
-
-{url}
-
-Ovaj link vrijedi 24 sata.
-
-Ako niste zatrazili ovo, ignorirajte ovaj email.
-
-S postovanjem,
-AI Compliance Box
-"""
-        }
+    KONULAR = {
+        "tr": "Veraxio - Sifre Sifirlama",
+        "en": "Veraxio - Password Reset",
+        "bg": "Veraxio - Нулиране на парола",
+        "ro": "Veraxio - Resetare parola",
+        "hr": "Veraxio - Ponistavanje lozinke",
     }
+    konu = KONULAR.get(dil, KONULAR["tr"])
 
-    m = mesajlar.get(dil, mesajlar["tr"])
+    html = sifre_sifirla_email(kullanici_adi, url, dil)
 
     return email_gonder(
         alici=alici,
-        konu=m["konu"],
-        icerik=m["icerik"],
+        konu=konu,
+        icerik=html,
         pdf_yolu=None,
+        html=True,
     )
 
 

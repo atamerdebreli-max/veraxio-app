@@ -14,6 +14,12 @@ from datetime import datetime
 import db
 from fpdf import FPDF
 import tempfile
+import io
+try:
+    import qrcode
+    QRCODE_AKTIF = True
+except Exception:
+    QRCODE_AKTIF = False
 
 os.environ["SIPHRIX_POLICY_FILE"] = str(Path(__file__).parent / "safe.yaml")
 
@@ -1211,6 +1217,60 @@ def rapor_pdf_olustur(musteri_adi, sektor, chatbot_url, iletisim_kisi, denetci_a
     pdf.cell(0, 5, f"  Hash (SHA-256): {rapor_hash}", new_x="LMARGIN", new_y="NEXT")
     pdf.cell(0, 5, f"  Auditor: {denetci_adi}", new_x="LMARGIN", new_y="NEXT")
     pdf.cell(0, 5, f"  Version: 1.4", new_x="LMARGIN", new_y="NEXT")
+
+    # ============================================================
+    # QR KOD - RAPOR DOGRULAMA
+    # ============================================================
+    if QRCODE_AKTIF:
+        try:
+            pdf.ln(6)
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.cell(0, 6, "REPORT VERIFICATION (QR):", new_x="LMARGIN", new_y="NEXT")
+            pdf.ln(2)
+
+            # QR icerik
+            _qr_url = f"https://wandering-scene-8c0a.a-tamerdebreli.workers.dev/dogrula.html?rapor={rapor_no}"
+            _qr = qrcode.QRCode(version=1, box_size=10, border=1)
+            _qr.add_data(_qr_url)
+            _qr.make(fit=True)
+            _qr_img = _qr.make_image(fill_color="black", back_color="white")
+
+            # PNG olarak byte'a cevir
+            _buf = io.BytesIO()
+            _qr_img.save(_buf, format="PNG")
+            _buf.seek(0)
+
+            # Gecici dosyaya yaz (FPDF dosya yolu ister veya byte)
+            _tmp_qr = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+            _tmp_qr.write(_buf.getvalue())
+            _tmp_qr.close()
+
+            # PDF'e gom
+            _qr_y = pdf.get_y()
+            pdf.image(_tmp_qr.name, x=10, y=_qr_y, w=32)
+
+            # Yanina aciklama
+            pdf.set_xy(46, _qr_y + 4)
+            pdf.set_font("Helvetica", size=8)
+            pdf.cell(0, 4, "Scan to verify this report", new_x="LMARGIN", new_y="NEXT")
+            pdf.set_xy(46, _qr_y + 9)
+            pdf.set_font("Helvetica", "I", 8)
+            pdf.cell(0, 4, _qr_url, new_x="LMARGIN", new_y="NEXT")
+            pdf.set_xy(46, _qr_y + 14)
+            pdf.set_font("Helvetica", size=7)
+            pdf.cell(0, 4, "Hash: " + rapor_hash + "...", new_x="LMARGIN", new_y="NEXT")
+
+            # Imleci QR'in altina al
+            pdf.set_y(_qr_y + 38)
+
+            # Temizlik
+            try:
+                import os as _os
+                _os.unlink(_tmp_qr.name)
+            except Exception:
+                pass
+        except Exception as _e:
+            print(f"[QR] Hata: {_e}")
 
     return pdf, rapor_no
 

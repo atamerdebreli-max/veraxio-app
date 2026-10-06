@@ -223,3 +223,5 @@ locales_yeni_tr.json
 # ============================================================
 zamanlanmis_log.txt
 *_log.txt
+Dockerfile.txt
+tema_yeni.py

@@ -415,7 +415,12 @@
     "2fa_adim3": "Pasul 3: Verificare",
     "2fa_adim3_aciklama": "Introduceti codul de 6 cifre.",
     "2fa_aktiflestir_btn": "Activeaza 2FA",
-    "2fa_aktiflestirildi": "2FA activat!"
+    "2fa_aktiflestirildi": "2FA activat!",
+    "email_dogrulama_gonderildi": "📧 Email de verificare trimis: **{email}** — Va rugam sa va verificati inbox-ul.",
+    "email_dogrulama_gerekli": "Trebuie sa va verificati adresa de email inainte de a utiliza contul. Verificati inbox-ul.",
+    "email_dogrulama_baslik": "Verificare email",
+    "email_dogrulama_basarili": "✅ Adresa dvs. de email a fost verificata cu succes!",
+    "email_dogrulama_gecersiz": "❌ Linkul de verificare este invalid sau expirat."
   },
   "auth": {
     "giris_gerekli": "⚠️ Trebuie sa va conectati pentru a vedea aceasta pagina.",
@@ -721,5 +726,24 @@
     "adim5_baslik": "Urmariti din Tablou",
     "adim5_aciklama": "Vedeti toate auditurile, rata de conformitate si analiza riscurilor.",
     "adim5_ipucu": "Include comparatie luna-la-luna si matrice de conformitate."
+  },
+  "session": {
+    "kalan": "Sesiune",
+    "son": "Ultimele",
+    "dk": "min",
+    "doldu": "Sesiune expirata",
+    "timeout_mesaj": "⏰ Ati fost inactiv o perioada. Sesiunea a fost inchisa pentru securitate. Va rugam sa va autentificati din nou."
+  },
+  "sifre": {
+    "kural_baslik": "Cerinte parola:",
+    "kural_uzunluk": "Minim 8 caractere",
+    "kural_buyuk": "Minim 1 litera mare",
+    "kural_kucuk": "Minim 1 litera mica",
+    "kural_rakam": "Minim 1 cifra",
+    "guc": "Puterea parolei",
+    "zayif": "Slaba",
+    "orta": "Medie",
+    "guclu": "Puternica",
+    "cok_guclu": "Foarte puternica"
   }
 }

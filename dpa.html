@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Veri Isleme Sozlesmesi (DPA) - Veraxio</title>
+<title>Veri İşleme Sözleşmesi - Veraxio</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,7 +12,6 @@
         background: #0a0a0a;
         color: #fafafa;
         line-height: 1.7;
-        -webkit-font-smoothing: antialiased;
     }
     .navbar {
         padding: 20px 0;
@@ -38,11 +37,23 @@
         display: inline-flex; align-items: center; justify-content: center;
         color: white; font-size: 14px; font-weight: 800;
     }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-back {
         color: #a3a3a3; text-decoration: none; font-size: 14px; font-weight: 500;
-        transition: color 0.2s;
     }
     .nav-back:hover { color: #fafafa; }
+    .lang-select {
+        background: #171717;
+        border: 1px solid #262626;
+        color: #fafafa;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        cursor: pointer;
+        outline: none;
+    }
+    .lang-select:hover { border-color: #3b82f6; }
     .content { padding: 60px 0 100px; }
     .page-header {
         margin-bottom: 48px;
@@ -73,7 +84,6 @@
         color: #d4d4d4;
         font-size: 15px;
     }
-    .info-box strong { color: #60a5fa; }
     footer {
         border-top: 1px solid #1f1f1f;
         padding: 40px 0 30px;
@@ -89,6 +99,8 @@
         .page-header h1 { font-size: 32px; }
         h2 { font-size: 18px; }
         p { font-size: 15px; }
+        .nav-right { gap: 8px; }
+        .nav-back { display: none; }
     }
 </style>
 </head>
@@ -100,45 +112,99 @@
             <span class="logo-icon">◆</span>
             Veraxio
         </a>
-        <a href="index.html" class="nav-back">← Ana Sayfa</a>
+        <div class="nav-right">
+            <a href="index.html" class="nav-back" data-i18n="back">← Geri</a>
+            <select id="langSelector" class="lang-select" onchange="changeLang(this.value)">
+                <option value="tr">🇹🇷 TR</option>
+                <option value="en">🇬🇧 EN</option>
+                <option value="bg">🇧🇬 BG</option>
+                <option value="ro">🇷🇴 RO</option>
+                <option value="hr">🇭🇷 HR</option>
+            </select>
+        </div>
     </div>
 </nav>
 
 <section class="content">
     <div class="container">
         <div class="page-header">
-            <h1>Veri Isleme Sozlesmesi (DPA)</h1>
-            <div class="meta">Son güncelleme: 4 Ekim 2026</div>
+            <h1 id="page-title">Veri İşleme Sözleşmesi</h1>
+            <div class="meta" data-i18n="meta">Son güncelleme: 4 Ekim 2026</div>
         </div>
-<h2>Özet</h2>
-<p>Bu DPA, GDPR Madde 28 ve KVKK Madde 9 kapsaminda veri isleyen ile veri sorumlusu arasindaki iliskiyi duzenler.</p>
-<h2>1. Veri Isleyen</h2>
-<p>Veraxio, musteri adina kisisel veri isleyen taraf olarak, verileri yalnizca sozlesme kapsaminda isler.</p>
-<h2>2. Islem Konusu ve Suresi</h2>
-<p>Isleme, sozlesme suresi boyunca ve yalnizca hizmet kapsaminda gerceklestirilir. Sozlesme sonunda veriler iade edilir veya silinir.</p>
-<h2>3. Teknik ve Idari Tedbirler</h2>
-<p>Veraxio: sifreleme, erisim kontrolu, log kaydi, duzenli yedekleme, personel egitimi gibi teknik ve idari tedbirleri uygular.</p>
-<h2>4. Alt Isleyenler</h2>
-<p>Veraxio, alt isleyen kullanmadan once musteri onayini alir. Alt isleyenler de ayni veri koruma yukumluluklerine tabidir.</p>
-<h2>Talep</h2>
-<p>DPA talep etmek icin: dpa@veraxio.com</p>
 
+        <div id="content-body">
+
+        </div>
     </div>
 </section>
 
 <footer>
     <div class="container">
         <div class="footer-links">
-            <a href="gizlilik.html">Gizlilik Politikası</a> ·
-            <a href="kvkk.html">KVKK Aydınlatma</a> ·
-            <a href="kullanim.html">Kullanım Şartları</a> ·
-            <a href="dpa.html">Veri İşleme Sözleşmesi</a>
+            <a href="gizlilik.html" data-i18n="lnk_gizlilik">Gizlilik Politikası</a> ·
+            <a href="kvkk.html" data-i18n="lnk_kvkk">KVKK Aydınlatma</a> ·
+            <a href="kullanim.html" data-i18n="lnk_kullanim">Kullanım Şartları</a> ·
+            <a href="dpa.html" data-i18n="lnk_dpa">Veri İşleme Sözleşmesi</a>
         </div>
-        <div class="footer-copy">
-            © 2026 Veraxio. Tüm hakları saklıdır.
-        </div>
+        <div class="footer-copy" data-i18n="footer_copy">© 2026 Veraxio. Tüm hakları saklıdır.</div>
     </div>
 </footer>
+
+<script>
+const HUKUKI = {"tr": {"baslik": "Veri Isleme Sozlesmesi (DPA)", "bolumler": [["Özet", "Bu DPA, GDPR Madde 28 ve KVKK Madde 9 kapsaminda veri isleyen ile veri sorumlusu arasindaki iliskiyi duzenler."], ["1. Veri Isleyen", "Veraxio, musteri adina kisisel veri isleyen taraf olarak, verileri yalnizca sozlesme kapsaminda isler."], ["2. Islem Konusu ve Suresi", "Isleme, sozlesme suresi boyunca ve yalnizca hizmet kapsaminda gerceklestirilir. Sozlesme sonunda veriler iade edilir veya silinir."], ["3. Teknik ve Idari Tedbirler", "Veraxio: sifreleme, erisim kontrolu, log kaydi, duzenli yedekleme, personel egitimi gibi teknik ve idari tedbirleri uygular."], ["4. Alt Isleyenler", "Veraxio, alt isleyen kullanmadan once musteri onayini alir. Alt isleyenler de ayni veri koruma yukumluluklerine tabidir."], ["Talep", "DPA talep etmek icin: dpa@veraxio.com"]]}, "en": {"baslik": "Data Processing Agreement (DPA)", "bolumler": [["Özet", "This DPA governs the relationship between the data processor and controller under GDPR Article 28 and KVKK Article 9."], ["1. Data Processor", "Veraxio, as the party processing personal data on behalf of the customer, processes data solely within the scope of the agreement."], ["2. Subject Matter and Duration", "Processing is carried out throughout the contract term and only within the scope of the service. Upon contract termination, data is returned or deleted."], ["3. Technical and Organizational Measures", "Veraxio applies: encryption, access control, logging, regular backups, personnel training, and similar technical and organizational measures."], ["4. Sub-processors", "Veraxio obtains customer approval before using sub-processors. Sub-processors are subject to the same data protection obligations."], ["Talep", "To request DPA: dpa@veraxio.com"]]}, "bg": {"baslik": "Споразумение за обработка на данни (DPA)", "bolumler": [["Özet", "Това DPA урежда отношенията между обработващия и администратора на данни съгласно член 28 от GDPR и член 9 от KVKK."], ["1. Обработващ данни", "Veraxio, като страна, обработваща лични данни от името на клиента, обработва данни само в обхвата на споразумението."], ["2. Предмет и продължителност", "Обработката се извършва през целия срок на договора и само в обхвата на услугата. При прекратяване на договора данните се връщат или изтриват."], ["3. Технически и организационни мерки", "Veraxio прилага: криптиране, контрол на достъпа, логване, редовни резервни копия, обучение на персонала."], ["4. Подизпълнители", "Veraxio получава одобрение от клиента преди използване на подизпълнители. Подизпълнителите подлежат на същите задължения за защита на данните."], ["Talep", "За заявка на DPA: dpa@veraxio.com"]]}, "ro": {"baslik": "Acord de prelucrare a datelor (DPA)", "bolumler": [["Özet", "Acest DPA reglementeaza relatia dintre procesatorul si operatorul de date conform articolului 28 din GDPR si articolului 9 din KVKK."], ["1. Procesator de date", "Veraxio, ca parte care prelucreaza date personale in numele clientului, prelucreaza datele exclusiv in scopul acordului."], ["2. Obiect si durata", "Prelucrarea se efectueaza pe toata durata contractului si doar in domeniul serviciului. La terminarea contractului, datele sunt returnate sau sterse."], ["3. Masuri tehnice si organizationale", "Veraxio aplica: criptare, controlul accesului, jurnalizare, backup-uri regulate, instruirea personalului."], ["4. Sub-procesatori", "Veraxio obtine aprobarea clientului inainte de a utiliza sub-procesatori. Acestia sunt supusi acelorasi obligatii de protectie a datelor."], ["Talep", "Pentru a solicita DPA: dpa@veraxio.com"]]}, "hr": {"baslik": "Ugovor o obradi podataka (DPA)", "bolumler": [["Özet", "Ovaj DPA ureduje odnos izmedu izvrsitelja obrade i voditelja obrade prema clanu 28 GDPR-a i clanu 9 KVKK-a."], ["1. Izvrsitelj obrade", "Veraxio, kao strana koja obraduje osobne podatke u ime klijenta, obraduje podatke iskljucivo u opsegu ugovora."], ["2. Predmet i trajanje", "Obrada se provodi tijekom cijelog trajanja ugovora i samo u opsegu usluge. Nakon prestanka ugovora, podaci se vracaju ili brisu."], ["3. Tehnicke i organizacijske mjere", "Veraxio primjenjuje: sifriranje, kontrolu pristupa, evidentiranje, redovite sigurnosne kopije, obuku osoblja."], ["4. Podizvrsitelji", "Veraxio dobiva odobrenje klijenta prije koristenja podizvrsitelja. Podizvrsitelji podliježu istim obvezama zastite podataka."], ["Talep", "Za zahtjev DPA-a: dpa@veraxio.com"]]}};
+
+let currentLang = localStorage.getItem("veraxio_lang") || "tr";
+
+function changeLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("veraxio_lang", lang);
+    render(lang);
+}
+
+function render(lang) {
+    const t = HUKUKI[lang];
+    if (!t) return;
+
+    // Baslik
+    const baslik = document.getElementById("page-title");
+    if (baslik && t.baslik) baslik.textContent = t.baslik;
+
+    // Icerik bolumleri
+    let html = "";
+    if (t.bolumler) {
+        for (const [b, m] of t.bolumler) {
+            if (b) html += "<h2>" + b + "</h2>";
+            if (m) html += "<p>" + m + "</p>";
+        }
+    }
+    document.getElementById("content-body").innerHTML = html;
+
+    // Sayfa meta
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        const ceviriler = {
+            "back": t.geri || "← Geri",
+            "meta": t.meta || "Son güncelleme: 4 Ekim 2026",
+            "lnk_gizlilik": t.lnk_gizlilik || "Gizlilik Politikası",
+            "lnk_kvkk": t.lnk_kvkk || "KVKK Aydınlatma",
+            "lnk_kullanim": t.lnk_kullanim || "Kullanım Şartları",
+            "lnk_dpa": t.lnk_dpa || "Veri İşleme Sözleşmesi",
+            "footer_copy": t.footer_copy || "© 2026 Veraxio. Tüm hakları saklıdır.",
+        };
+        if (ceviriler[key]) el.textContent = ceviriler[key];
+    });
+
+    document.documentElement.lang = lang;
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = lang;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSelector");
+    if (sel) sel.value = currentLang;
+    render(currentLang);
+});
+</script>
 
 </body>
 </html>

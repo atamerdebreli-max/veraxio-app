@@ -415,7 +415,12 @@
     "2fa_adim3": "Korak 3: Verifikacija",
     "2fa_adim3_aciklama": "Unesite 6-znamenkasti kod.",
     "2fa_aktiflestir_btn": "Aktiviraj 2FA",
-    "2fa_aktiflestirildi": "2FA aktiviran!"
+    "2fa_aktiflestirildi": "2FA aktiviran!",
+    "email_dogrulama_gonderildi": "📧 Email za potvrdu poslan: **{email}** — Molimo provjerite svoj inbox.",
+    "email_dogrulama_gerekli": "Morate potvrditi svoju email adresu prije koristenja racuna. Provjerite inbox.",
+    "email_dogrulama_baslik": "Potvrda emaila",
+    "email_dogrulama_basarili": "✅ Vasa email adresa je uspjesno potvrdena!",
+    "email_dogrulama_gecersiz": "❌ Link za potvrdu je nevaljan ili istekao."
   },
   "auth": {
     "giris_gerekli": "⚠️ Morate se prijaviti da biste vidjeli ovu stranicu.",
@@ -721,5 +726,24 @@
     "adim5_baslik": "Pratite s Nadzorne ploce",
     "adim5_aciklama": "Vidite sve revizije, stopu sukladnosti i analizu rizika.",
     "adim5_ipucu": "Ukljucuje usporedbu mjesec-po-mjesec i matricu sukladnosti."
+  },
+  "session": {
+    "kalan": "Sesija",
+    "son": "Zadnjih",
+    "dk": "min",
+    "doldu": "Sesija istekla",
+    "timeout_mesaj": "⏰ Bili ste neaktivni neko vrijeme. Sesija je zatvorena radi sigurnosti. Molimo prijavite se ponovno."
+  },
+  "sifre": {
+    "kural_baslik": "Zahtjevi lozinke:",
+    "kural_uzunluk": "Najmanje 8 znakova",
+    "kural_buyuk": "Najmanje 1 veliko slovo",
+    "kural_kucuk": "Najmanje 1 malo slovo",
+    "kural_rakam": "Najmanje 1 broj",
+    "guc": "Jacina lozinke",
+    "zayif": "Slaba",
+    "orta": "Srednja",
+    "guclu": "Jaka",
+    "cok_guclu": "Vrlo jaka"
   }
 }
