@@ -1509,7 +1509,25 @@ def giris_kilit_ac(kullanici_adi):
     except Exception:
         pass
 
+def init_db():
+    conn = _baglanti()
+    cur = conn.cursor()
 
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS yukseltme_talepleri (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            kullanici TEXT,
+            email TEXT,
+            mevcut_plan TEXT,
+            hedef_plan TEXT,
+            durum TEXT DEFAULT 'bekliyor',
+            notlar TEXT,
+            tarih TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    conn.commit()
+    conn.close()
 def kalan_deneme_hakki(kullanici_adi):
     return max(0, BRUTE_FORCE_MAX_DENEME - _son_basarisiz_denemeler(kullanici_adi))
 
