@@ -56,7 +56,25 @@ if "email_dogrula" in _qp:
 
 if "davet" in _qp:
     _onemli_parametre_var = True  # davet_token login.py'de query_params'tan okunuyor
+# ============================================================
+# LANDING PAGE (giris yapilmamissa goster)
+# ============================================================
+if "landing_goster" not in st.session_state:
+    st.session_state["landing_goster"] = True
 
+# Giris yapildiysa landing'i kapat
+try:
+    import auth as _auth_landing
+    if _auth_landing.giris_yapildi_mi():
+        st.session_state["landing_goster"] = False
+except Exception:
+    pass
+
+# Landing gosterilecekse, goster ve dur
+if st.session_state["landing_goster"] and not _onemli_parametre_var:
+    import landing_embed
+    landing_embed.goster()
+    st.stop()
 # auth + session importlari (erken)
 import auth as _auth
 import session_manager
