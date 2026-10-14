@@ -116,7 +116,7 @@ else:
                     st.success("🟢 Risk: " + risk.upper())
                 else:
                     st.info("⚪ Risk: " + risk.upper())
-            with col3:
+                        with col3:
                 son_denetim = sistem.get("son_denetim")
                 son_sonuc = sistem.get("son_denetim_sonuc")
                 if son_denetim:
@@ -129,7 +129,7 @@ else:
                         st.info("ℹ️ " + (son_sonuc or "-"))
                 else:
                     st.caption("**Son Denetim:** Henüz yapılmadı")
-                        with col4:
+            with col4:
                 if st.button("🔍", key="denetle_" + str(sistem["id"]), help="Denetle"):
                     st.session_state["envanter_denetle_id"] = sistem["id"]
                     st.session_state["envanter_denetle_tip"] = sistem.get("ai_tipi", "")
