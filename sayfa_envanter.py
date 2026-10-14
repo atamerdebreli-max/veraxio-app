@@ -116,7 +116,7 @@ else:
                     st.success("🟢 Risk: " + risk.upper())
                 else:
                     st.info("⚪ Risk: " + risk.upper())
-                        with col3:
+            with col3:
                 son_denetim = sistem.get("son_denetim")
                 son_sonuc = sistem.get("son_denetim_sonuc")
                 if son_denetim:
