@@ -129,7 +129,11 @@ else:
                         st.info("ℹ️ " + (son_sonuc or "-"))
                 else:
                     st.caption("**Son Denetim:** Henüz yapılmadı")
-            with col4:
+                        with col4:
+                if st.button("🔍", key="denetle_" + str(sistem["id"]), help="Denetle"):
+                    st.session_state["envanter_denetle_id"] = sistem["id"]
+                    st.session_state["envanter_denetle_tip"] = sistem.get("ai_tipi", "")
+                    st.switch_page("sayfa_tek.py")
                 if st.button("🗑️", key="sil_" + str(sistem["id"]), help="Sil"):
                     db.envanter_sil(sistem["id"])
                     st.rerun()
