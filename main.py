@@ -100,6 +100,7 @@ if _auth.giris_yapildi_mi():
 import tema
 tema.tema_uygula()
 # Navigasyon - basliklar i18n'den (dil secici cagrildiktan sonra)
+sayfa_envanter = st.Page("sayfa_envanter.py", title="📋 AI Envanterim", icon="📋")
 sayfa_tek = st.Page("sayfa_tek.py", title=t("menu.tek_denetim"), icon="🔍", default=True)
 sayfa_toplu = st.Page("sayfa_toplu.py", title=t("menu.toplu_denetim"), icon="📂")
 sayfa_gecmis = st.Page("sayfa_gecmis.py", title=t("menu.gecmis"), icon="📜")
