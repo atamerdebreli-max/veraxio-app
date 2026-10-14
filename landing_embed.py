@@ -6,18 +6,20 @@ import streamlit as st
 
 
 def _dil_secici_landing():
-    """Landing sayfasi icin basit dil secici."""
+    """Landing sayfasi icin dil secici."""
     col1, col2 = st.columns([6, 1])
     with col2:
         dil = st.selectbox(
-            "🌐",
+            "Dil",
             ["TR", "EN", "BG", "RO", "HR"],
             index=0,
             key="landing_dil",
             label_visibility="collapsed",
         )
         _map = {"TR": "tr", "EN": "en", "BG": "bg", "RO": "ro", "HR": "hr"}
-        st.session_state["dil"] = _map.get(dil, "tr")
+        yeni_dil = _map.get(dil, "tr")
+        if st.session_state.get("dil") != yeni_dil:
+            st.session_state["dil"] = yeni_dil
 
 
 def goster():
@@ -39,22 +41,11 @@ def goster():
         footer { visibility: hidden; }
         #MainMenu { visibility: hidden; }
 
-        .vx-navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 0;
-            border-bottom: 1px solid #1f1f1f;
-            margin-bottom: 40px;
-        }
-        .vx-logo {
+        .vx-logo-wrap {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 22px;
-            font-weight: 800;
-            color: #fafafa;
-            letter-spacing: -0.5px;
+            padding: 12px 0;
         }
         .vx-logo-icon {
             width: 32px;
@@ -68,17 +59,21 @@ def goster():
             font-size: 18px;
             font-weight: 800;
         }
-        .vx-nav-links {
-            display: flex;
-            gap: 28px;
-            color: #a3a3a3;
-            font-size: 14px;
-            font-weight: 500;
+        .vx-logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fafafa;
+            letter-spacing: -0.5px;
+        }
+
+        .vx-divider {
+            border-bottom: 1px solid #1f1f1f;
+            margin: 8px 0 30px 0;
         }
 
         .vx-hero {
             text-align: center;
-            padding: 50px 20px 40px 20px;
+            padding: 40px 20px 20px 20px;
             position: relative;
         }
         .vx-hero::before {
@@ -133,7 +128,7 @@ def goster():
             font-size: 19px;
             color: #a3a3a3;
             max-width: 640px;
-            margin: 0 auto 36px auto;
+            margin: 0 auto 20px auto;
             line-height: 1.5;
         }
         .vx-hero-sub strong { color: #fafafa; font-weight: 600; }
@@ -180,7 +175,7 @@ def goster():
 
         .vx-section {
             text-align: center;
-            margin: 60px 0 32px 0;
+            margin: 50px 0 24px 0;
         }
         .vx-section h2 {
             font-size: 36px;
@@ -195,18 +190,13 @@ def goster():
             margin: 0;
         }
 
-        .vx-pricing {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 30px 0;
-        }
         .vx-price-card {
             background: #171717;
             border: 1px solid #262626;
-            padding: 28px 24px;
+            padding: 24px 20px;
             border-radius: 14px;
             position: relative;
+            min-height: 260px;
         }
         .vx-price-card.featured {
             border-color: #3b82f6;
@@ -230,23 +220,23 @@ def goster():
             font-size: 14px;
             font-weight: 600;
             color: #a3a3a3;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .vx-price {
-            font-size: 36px;
+            font-size: 34px;
             font-weight: 800;
             color: #fafafa;
             letter-spacing: -1.5px;
             line-height: 1;
         }
-        .vx-period { font-size: 13px; color: #737373; margin: 4px 0 20px 0; }
+        .vx-period { font-size: 13px; color: #737373; margin: 4px 0 18px 0; }
         .vx-features { list-style: none; padding: 0; margin: 0; }
         .vx-features li {
             color: #d4d4d4;
             font-size: 13px;
-            padding: 7px 0 7px 20px;
+            padding: 6px 0 6px 20px;
             position: relative;
             line-height: 1.5;
         }
@@ -264,7 +254,7 @@ def goster():
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            margin: 20px 0 40px 0;
+            margin: 24px 0 40px 0;
         }
         .vx-early-title {
             font-size: 14px;
@@ -298,33 +288,50 @@ def goster():
             .vx-hero h1 { font-size: 36px; letter-spacing: -1px; }
             .vx-hero-sub { font-size: 15px; }
             .vx-stats { grid-template-columns: repeat(2, 1fr); }
-            .vx-pricing { grid-template-columns: 1fr; }
-            .vx-nav-links { display: none; }
         }
     </style>
     """, unsafe_allow_html=True)
 
     # ============================================================
-    # DIL SECICI (sag ust)
+    # NAVBAR
     # ============================================================
-    _dil_secici_landing()
+    nav1, nav2, nav3, nav4, nav5 = st.columns([3, 1, 1, 1, 1])
+
+    with nav1:
+        st.markdown("""
+        <div class="vx-logo-wrap">
+            <span class="vx-logo-icon">◆</span>
+            <span class="vx-logo-text">Veraxio</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with nav2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("Özellikler", key="nav_ozellik", use_container_width=True):
+            st.session_state["landing_anchor"] = "ozellikler"
+
+    with nav3:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("Fiyatlandırma", key="nav_fiyat", use_container_width=True):
+            st.session_state["landing_anchor"] = "fiyatlandirma"
+
+    with nav4:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("İletişim", key="nav_iletisim", use_container_width=True):
+            st.session_state["landing_anchor"] = "iletisim"
+
+    with nav5:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("🔐 Giriş", key="nav_giris", type="primary", use_container_width=True):
+            st.session_state["landing_goster"] = False
+            st.rerun()
+
+    st.markdown('<div class="vx-divider"></div>', unsafe_allow_html=True)
 
     # ============================================================
-    # NAVBAR + LOGO
+    # DIL SECICI
     # ============================================================
-    st.markdown("""
-    <div class="vx-navbar">
-        <div class="vx-logo">
-            <span class="vx-logo-icon">◆</span>
-            Veraxio
-        </div>
-        <div class="vx-nav-links">
-            <span>Özellikler</span>
-            <span>Fiyatlandırma</span>
-            <span>İletişim</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    _dil_secici_landing()
 
     # ============================================================
     # HERO
@@ -403,12 +410,17 @@ def goster():
     # FIYATLANDIRMA
     # ============================================================
     st.markdown("""
-    <div class="vx-section">
+    <div class="vx-section" id="fiyatlandirma">
         <h2>Fiyatlandırma</h2>
         <p>İhtiyacınıza uygun paketi seçin</p>
     </div>
+    """, unsafe_allow_html=True)
 
-    <div class="vx-pricing">
+    fcol1, fcol2, fcol3 = st.columns(3)
+
+    # STARTER
+    with fcol1:
+        st.markdown("""
         <div class="vx-price-card">
             <div class="vx-plan-name">Starter</div>
             <div class="vx-price">4.900 TL</div>
@@ -420,6 +432,15 @@ def goster():
                 <li>E-posta desteği</li>
             </ul>
         </div>
+        """, unsafe_allow_html=True)
+        if st.button("Starter'ı Seç", key="plan_starter", use_container_width=True):
+            st.session_state["landing_goster"] = False
+            st.session_state["secilen_plan"] = "starter"
+            st.rerun()
+
+    # PRO
+    with fcol2:
+        st.markdown("""
         <div class="vx-price-card featured">
             <div class="vx-badge-pop">Popüler</div>
             <div class="vx-plan-name">Pro</div>
@@ -433,6 +454,15 @@ def goster():
                 <li>Otomatik e-posta raporu</li>
             </ul>
         </div>
+        """, unsafe_allow_html=True)
+        if st.button("Pro'yu Seç", key="plan_pro", type="primary", use_container_width=True):
+            st.session_state["landing_goster"] = False
+            st.session_state["secilen_plan"] = "pro"
+            st.rerun()
+
+    # ENTERPRISE
+    with fcol3:
+        st.markdown("""
         <div class="vx-price-card">
             <div class="vx-plan-name">Enterprise</div>
             <div class="vx-price">39.900 TL</div>
@@ -444,8 +474,16 @@ def goster():
                 <li>AB temsilcisi takibi</li>
             </ul>
         </div>
-    </div>
+        """, unsafe_allow_html=True)
+        if st.button("Enterprise'ı Seç", key="plan_ent", use_container_width=True):
+            st.session_state["landing_goster"] = False
+            st.session_state["secilen_plan"] = "enterprise"
+            st.rerun()
 
+    # ============================================================
+    # EARLY BIRD
+    # ============================================================
+    st.markdown("""
     <div class="vx-early">
         <div class="vx-early-title">Erken Kuş İndirimi</div>
         <div class="vx-early-desc">
@@ -475,7 +513,7 @@ def goster():
     # FOOTER
     # ============================================================
     st.markdown("""
-    <div class="vx-footer">
+    <div class="vx-footer" id="iletisim">
         <div class="brand">◆ Veraxio</div>
         <div class="tagline">AB AI Act Madde 50 Uyumluluk Platformu</div>
         <div>info@veraxio.ai</div>
