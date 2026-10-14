@@ -109,6 +109,26 @@ def init_db():
             )
         """)
 
+                # --- Insan Gozetimi Kararlari ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS insan_gozetimi (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT,
+                ai_tipi TEXT,
+                karar_ozeti TEXT,
+                ai_onerisi TEXT,
+                risk_seviyesi TEXT,
+                durum TEXT DEFAULT 'bekliyor',
+                onaylayan TEXT,
+                karar TEXT,
+                karar_notu TEXT,
+                olusturma TEXT,
+                karar_tarih TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1315,3 +1335,73 @@ def annex_iv_sil(dok_id):
     with _baglanti() as conn:
         conn.execute("DELETE FROM annex_iv_dokumanlari WHERE id = ?", (dok_id,))
         conn.commit()
+
+
+
+# ============================================================
+# INSAN GOZETIMI FONKSIYONLARI
+# ============================================================
+def gozetim_kaydet(firma_id, sistem_adi, ai_tipi, karar_ozeti, ai_onerisi, risk_seviyesi):
+    """Yeni insan gozetimi kaydi olusturur (bekliyor durumunda)."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO insan_gozetimi
+            (firma_id, sistem_adi, ai_tipi, karar_ozeti, ai_onerisi,
+             risk_seviyesi, durum, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?, 'bekliyor', ?)
+        """, (firma_id, sistem_adi, ai_tipi, karar_ozeti, ai_onerisi,
+              risk_seviyesi, simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def gozetim_listele(firma_id=None, durum=None):
+    """Insan gozetimi kayitlarini listeler."""
+    sql = "SELECT * FROM insan_gozetimi WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    if durum:
+        sql += " AND durum = ?"
+        params.append(durum)
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def gozetim_karar(gozetim_id, karar, onaylayan, notu=""):
+    """Insan gozetimi kararini kaydeder (onayla/reddet/incele)."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        conn.execute("""
+            UPDATE insan_gozetimi
+            SET durum = ?, onaylayan = ?, karar = ?, karar_notu = ?, karar_tarih = ?
+            WHERE id = ?
+        """, (karar, onaylayan, karar, notu, simdi, gozetim_id))
+        conn.commit()
+        return True
+
+
+def gozetim_sil(gozetim_id):
+    """Insan gozetimi kaydini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM insan_gozetimi WHERE id = ?", (gozetim_id,))
+        conn.commit()
+
+
+def gozetim_istatistik(firma_id=None):
+    """Insan gozetimi istatistigi."""
+    with _baglanti() as conn:
+        if firma_id is not None:
+            where = "WHERE firma_id = ?"
+            params = (firma_id,)
+        else:
+            where = ""
+            params = ()
+        toplam = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where}", params).fetchone()["n"]
+        bekleyen = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'bekliyor'", params).fetchone()["n"]
+        onaylandi = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'onaylandi'", params).fetchone()["n"]
+        reddedildi = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'reddedildi'", params).fetchone()["n"]
+        return {"toplam": toplam, "bekleyen": bekleyen, "onaylandi": onaylandi, "reddedildi": reddedildi}
