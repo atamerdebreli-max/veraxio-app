@@ -59,6 +59,25 @@ def init_db():
                 firma_id INTEGER
             )
         """)
+                # --- AI Envanteri ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS ai_envanteri (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT NOT NULL,
+                ai_tipi TEXT NOT NULL,
+                departman TEXT,
+                sorumlu_kisi TEXT,
+                amac TEXT,
+                risk_seviyesi TEXT DEFAULT 'bilinmiyor',
+                durum TEXT DEFAULT 'aktif',
+                son_denetim TEXT,
+                son_denetim_sonuc TEXT,
+                notlar TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
 
         # --- API anahtarlari ---
         conn.execute("""
@@ -1006,6 +1025,101 @@ def yukseltme_sayaci():
         cur = conn.execute("SELECT durum, COUNT(*) as n FROM yukseltme_talepleri GROUP BY durum")
         return {r["durum"]: r["n"] for r in cur.fetchall()}
 
+
+# ============================================================
+# AI ENVANTERI FONKSIYONLARI
+# ============================================================
+def envanter_ekle(firma_id, sistem_adi, ai_tipi, departman="", sorumlu_kisi="",
+                  amac="", risk_seviyesi="bilinmiyor", notlar=""):
+    """Yeni AI sistemi ekler."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO ai_envanteri
+            (firma_id, sistem_adi, ai_tipi, departman, sorumlu_kisi,
+             amac, risk_seviyesi, durum, notlar, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'aktif', ?, ?)
+        """, (firma_id, sistem_adi, ai_tipi, departman, sorumlu_kisi,
+              amac, risk_seviyesi, notlar, simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def envanter_listele(firma_id=None, sadece_aktif=True):
+    """AI envanterini listeler."""
+    sql = "SELECT * FROM ai_envanteri WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    if sadece_aktif:
+        sql += " AND durum = 'aktif'"
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def envanter_bul(sistem_id):
+    """ID'ye gore sistem dondurur."""
+    with _baglanti() as conn:
+        cur = conn.execute("SELECT * FROM ai_envanteri WHERE id = ?", (sistem_id,))
+        row = cur.fetchone()
+        return dict(row) if row else None
+
+
+def envanter_guncelle(sistem_id, **kwargs):
+    """Envanter kaydini gunceller."""
+    izinli = ["sistem_adi", "ai_tipi", "departman", "sorumlu_kisi",
+              "amac", "risk_seviyesi", "durum", "notlar",
+              "son_denetim", "son_denetim_sonuc"]
+    alanlar = []
+    degerler = []
+    for k, v in kwargs.items():
+        if k in izinli:
+            alanlar.append(k + " = ?")
+            degerler.append(v)
+    if not alanlar:
+        return False
+    degerler.append(sistem_id)
+    sql = "UPDATE ai_envanteri SET " + ", ".join(alanlar) + " WHERE id = ?"
+    with _baglanti() as conn:
+        conn.execute(sql, degerler)
+        conn.commit()
+        return True
+
+
+def envanter_sil(sistem_id):
+    """Envanter kaydini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM ai_envanteri WHERE id = ?", (sistem_id,))
+        conn.commit()
+
+
+def envanter_denetim_guncelle(sistem_id, sonuc):
+    """Son denetim tarihi ve sonucunu gunceller."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        conn.execute("""
+            UPDATE ai_envanteri
+            SET son_denetim = ?, son_denetim_sonuc = ?
+            WHERE id = ?
+        """, (simdi, sonuc, sistem_id))
+        conn.commit()
+
+
+def envanter_istatistik(firma_id=None):
+    """Envanter istatistigi."""
+    with _baglanti() as conn:
+        if firma_id is not None:
+            where = "WHERE firma_id = ? AND durum = 'aktif'"
+            params = (firma_id,)
+        else:
+            where = "WHERE durum = 'aktif'"
+            params = ()
+        toplam = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where}", params).fetchone()["n"]
+        riskli = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where} AND risk_seviyesi IN ('yuksek', 'kritik')", params).fetchone()["n"]
+        denetlenmis = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where} AND son_denetim IS NOT NULL", params).fetchone()["n"]
+        return {"toplam": toplam, "riskli": riskli, "denetlenmis": denetlenmis}
 
 # ============================================================
 # BRUTE FORCE
