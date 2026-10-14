@@ -1395,13 +1395,13 @@ def gozetim_istatistik(firma_id=None):
     """Insan gozetimi istatistigi."""
     with _baglanti() as conn:
         if firma_id is not None:
-            where = "WHERE firma_id = ?"
-            params = (firma_id,)
+            toplam = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE firma_id = ?", (firma_id,)).fetchone()["n"]
+            bekleyen = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE firma_id = ? AND durum = 'bekliyor'", (firma_id,)).fetchone()["n"]
+            onaylandi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE firma_id = ? AND durum = 'onaylandi'", (firma_id,)).fetchone()["n"]
+            reddedildi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE firma_id = ? AND durum = 'reddedildi'", (firma_id,)).fetchone()["n"]
         else:
-            where = ""
-            params = ()
-        toplam = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where}", params).fetchone()["n"]
-        bekleyen = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'bekliyor'", params).fetchone()["n"]
-        onaylandi = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'onaylandi'", params).fetchone()["n"]
-        reddedildi = conn.execute(f"SELECT COUNT(*) as n FROM insan_gozetimi {where} AND durum = 'reddedildi'", params).fetchone()["n"]
+            toplam = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi").fetchone()["n"]
+            bekleyen = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE durum = 'bekliyor'").fetchone()["n"]
+            onaylandi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE durum = 'onaylandi'").fetchone()["n"]
+            reddedildi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE durum = 'reddedildi'").fetchone()["n"]
         return {"toplam": toplam, "bekleyen": bekleyen, "onaylandi": onaylandi, "reddedildi": reddedildi}
