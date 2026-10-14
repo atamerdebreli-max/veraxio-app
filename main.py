@@ -118,7 +118,7 @@ sayfa_admin = st.Page("sayfa_admin.py", title=t("menu.admin"), icon="🔧")
 if _onemli_parametre_var:
     pg = st.navigation([sayfa_login], position="hidden")
 else:
-    pg = st.navigation([sayfa_login, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
+    pg = st.navigation([sayfa_login, sayfa_envanter, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
 
 # Sidebar basligi
 st.sidebar.title("◆ " + t("app.baslik"))
