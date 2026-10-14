@@ -95,6 +95,20 @@ def init_db():
             )
         """)
 
+                # --- Annex IV Dokumantasyon ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS annex_iv_dokumanlari (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT,
+                ai_tipi TEXT,
+                versiyon TEXT DEFAULT '1.0',
+                icerik TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1255,4 +1269,49 @@ def risk_sil(risk_id):
     """Risk kaydini siler."""
     with _baglanti() as conn:
         conn.execute("DELETE FROM risk_degerlendirmeleri WHERE id = ?", (risk_id,))
+        conn.commit()
+
+
+# ============================================================
+# ANNEX IV DOKUMANTASYON FONKSIYONLARI
+# ============================================================
+def annex_iv_kaydet(firma_id, sistem_adi, ai_tipi, versiyon, icerik):
+    """Annex IV dokumanini kaydeder."""
+    import json as _json
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO annex_iv_dokumanlari
+            (firma_id, sistem_adi, ai_tipi, versiyon, icerik, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (firma_id, sistem_adi, ai_tipi, versiyon,
+              _json.dumps(icerik, ensure_ascii=False), simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def annex_iv_listele(firma_id=None):
+    """Annex IV dokumanlarini listeler."""
+    sql = "SELECT * FROM annex_iv_dokumanlari WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def annex_iv_bul(dok_id):
+    """ID'ye gore dokuman dondurur."""
+    with _baglanti() as conn:
+        cur = conn.execute("SELECT * FROM annex_iv_dokumanlari WHERE id = ?", (dok_id,))
+        row = cur.fetchone()
+        return dict(row) if row else None
+
+
+def annex_iv_sil(dok_id):
+    """Annex IV dokumanini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM annex_iv_dokumanlari WHERE id = ?", (dok_id,))
         conn.commit()
