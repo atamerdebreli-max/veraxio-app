@@ -1029,8 +1029,7 @@ def yukseltme_sayaci():
 # ============================================================
 # AI ENVANTERI FONKSIYONLARI
 # ============================================================
-def envanter_ekle(firma_id, sistem_adi, ai_tipi, departman="", sorumlu_kisi="",
-                  amac="", risk_seviyesi="bilinmiyor", notlar=""):
+def envanter_ekle(firma_id, sistem_adi, ai_tipi, departman="", sorumlu_kisi="", amac="", risk_seviyesi="bilinmiyor", notlar=""):
     """Yeni AI sistemi ekler."""
     simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with _baglanti() as conn:
