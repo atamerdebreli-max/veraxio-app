@@ -79,6 +79,22 @@ def init_db():
             )
         """)
 
+                # --- Risk Degerlendirmeleri ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS risk_degerlendirmeleri (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT,
+                ai_tipi TEXT,
+                cevaplar TEXT,
+                risk_seviyesi TEXT,
+                gerekce TEXT,
+                yukumlulukler TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1196,3 +1212,45 @@ def giris_kilit_ac(kullanici_adi):
             conn.commit()
     except Exception:
         pass
+
+
+
+# ============================================================
+# RISK DEGERLENDIRME FONKSIYONLARI
+# ============================================================
+def risk_kaydet(firma_id, sistem_adi, ai_tipi, cevaplar, risk_seviyesi, gerekce, yukumlulukler):
+    """Risk degerlendirmesini kaydeder."""
+    import json as _json
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO risk_degerlendirmeleri
+            (firma_id, sistem_adi, ai_tipi, cevaplar, risk_seviyesi,
+             gerekce, yukumlulukler, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """, (firma_id, sistem_adi, ai_tipi,
+              _json.dumps(cevaplar, ensure_ascii=False),
+              risk_seviyesi, gerekce,
+              _json.dumps(yukumlulukler, ensure_ascii=False),
+              simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def risk_listele(firma_id=None):
+    """Risk degerlendirmelerini listeler."""
+    sql = "SELECT * FROM risk_degerlendirmeleri WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def risk_sil(risk_id):
+    """Risk kaydini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM risk_degerlendirmeleri WHERE id = ?", (risk_id,))
+        conn.commit()
