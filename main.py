@@ -100,6 +100,7 @@ if _auth.giris_yapildi_mi():
 import tema
 tema.tema_uygula()
 # Navigasyon - basliklar i18n'den (dil secici cagrildiktan sonra)
+sayfa_risk = st.Page("sayfa_risk.py", title="🎯 Risk Sınıflandırma", icon="🎯")
 sayfa_envanter = st.Page("sayfa_envanter.py", title="📋 AI Envanterim", icon="📋")
 sayfa_tek = st.Page("sayfa_tek.py", title=t("menu.tek_denetim"), icon="🔍", default=True)
 sayfa_toplu = st.Page("sayfa_toplu.py", title=t("menu.toplu_denetim"), icon="📂")
@@ -118,7 +119,7 @@ sayfa_admin = st.Page("sayfa_admin.py", title=t("menu.admin"), icon="🔧")
 if _onemli_parametre_var:
     pg = st.navigation([sayfa_login], position="hidden")
 else:
-    pg = st.navigation([sayfa_login, sayfa_envanter, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
+    pg = st.navigation([sayfa_login, sayfa_envanter, sayfa_risk, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
 
 # Sidebar basligi
 st.sidebar.title("◆ " + t("app.baslik"))
