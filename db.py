@@ -1160,16 +1160,14 @@ def envanter_istatistik(firma_id=None):
     """Envanter istatistigi."""
     with _baglanti() as conn:
         if firma_id is not None:
-            where = "WHERE firma_id = ? AND durum = 'aktif'"
-            params = (firma_id,)
+            toplam = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE firma_id = ? AND durum = 'aktif'", (firma_id,)).fetchone()["n"]
+            riskli = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE firma_id = ? AND durum = 'aktif' AND risk_seviyesi IN ('yuksek', 'kritik')", (firma_id,)).fetchone()["n"]
+            denetlenmis = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE firma_id = ? AND durum = 'aktif' AND son_denetim IS NOT NULL", (firma_id,)).fetchone()["n"]
         else:
-            where = "WHERE durum = 'aktif'"
-            params = ()
-        toplam = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where}", params).fetchone()["n"]
-        riskli = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where} AND risk_seviyesi IN ('yuksek', 'kritik')", params).fetchone()["n"]
-        denetlenmis = conn.execute(f"SELECT COUNT(*) as n FROM ai_envanteri {where} AND son_denetim IS NOT NULL", params).fetchone()["n"]
+            toplam = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE durum = 'aktif'").fetchone()["n"]
+            riskli = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE durum = 'aktif' AND risk_seviyesi IN ('yuksek', 'kritik')").fetchone()["n"]
+            denetlenmis = conn.execute("SELECT COUNT(*) as n FROM ai_envanteri WHERE durum = 'aktif' AND son_denetim IS NOT NULL").fetchone()["n"]
         return {"toplam": toplam, "riskli": riskli, "denetlenmis": denetlenmis}
-
 # ============================================================
 # BRUTE FORCE
 # ============================================================
