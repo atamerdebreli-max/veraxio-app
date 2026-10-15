@@ -971,6 +971,18 @@
     "rol_user": "Korisnik",
     "rol_admin": "Admin"
   },
+    "standartlar_kategori": {
+    "iso_baglam": "Kontekst i vodstvo",
+    "iso_planlama": "Planiranje",
+    "iso_destek": "Podrška",
+    "iso_operasyon": "Operacija",
+    "iso_performans": "Ocjenjivanje performansi",
+    "iso_iyilestirme": "Poboljšanje",
+    "nist_govern": "GOVERN (Upravljanje)",
+    "nist_map": "MAP (Mapiranje)",
+    "nist_measure": "MEASURE (Mjerenje)",
+    "nist_manage": "MANAGE (Upravljanje)"
+  },
   "sonuc": {
     "onerilen_aksiyonlar": "Radnje",
     "uyumlu": "Usklađeno",
