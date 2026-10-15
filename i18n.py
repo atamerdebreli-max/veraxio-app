@@ -26,12 +26,18 @@ _CEVIRILER = {}
 def _tum_dilleri_yukle():
     """Tum dil dosyalarini bellege yukler (bir kez)."""
     global _CEVIRILER
+    print(f"[i18n] LOCALES_KLASOR = {LOCALES_KLASOR}")
+    print(f"[i18n] Klasor var mi: {os.path.exists(LOCALES_KLASOR)}")
+    if os.path.exists(LOCALES_KLASOR):
+        print(f"[i18n] Dosyalar: {os.listdir(LOCALES_KLASOR)}")
     for dil in DILLER.keys():
         dosya = os.path.join(LOCALES_KLASOR, f"{dil}.json")
         try:
             with open(dosya, encoding="utf-8") as f:
                 _CEVIRILER[dil] = json.load(f)
-        except Exception:
+            print(f"[i18n] {dil}: OK - {len(_CEVIRILER[dil])} ana blok")
+        except Exception as e:
+            print(f"[i18n] {dil}: HATA - {e}")
             _CEVIRILER[dil] = {}
 
 
