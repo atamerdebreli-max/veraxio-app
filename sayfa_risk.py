@@ -1,17 +1,16 @@
 """
 sayfa_risk.py - AI Act Risk Siniflandirma Sihirbazi
-Kullanicinin AI sistemini AI Act'e gore siniflandirir.
 """
 import streamlit as st
 import auth
 auth.giris_gerekli()
 
 import db
-from datetime import datetime
+from i18n import t
 
 
-st.title("🎯 Risk Sınıflandırma Sihirbazı")
-st.markdown("**AI sisteminizin AI Act'e göre risk seviyesini belirleyin.**")
+st.title("🎯 " + t("risk.baslik"))
+st.markdown("**" + t("risk.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
@@ -20,65 +19,60 @@ firma_id = kullanici.get("firma_id") if kullanici else None
 # ============================================================
 # SIHIRBAZ FORMU
 # ============================================================
-st.subheader("📝 Sistem Bilgileri")
+st.subheader(t("risk.sistem_bilgi"))
 
 col1, col2 = st.columns(2)
 with col1:
-    sistem_adi = st.text_input("Sistem Adı *", placeholder="Örn: Müşteri Destek Chatbot")
+    sistem_adi = st.text_input(t("risk.sistem_adi") + " *", placeholder=t("risk.sistem_adi_placeholder"))
 with col2:
-    ai_tipi = st.selectbox("AI Tipi", [
-        "Chatbot / AI Asistan",
-        "Görsel Üretimi",
-        "Metin Üretimi",
-        "Duygu Tanıma",
-        "Biyometrik Sınıflandırma",
-        "Deepfake İçerik",
-        "Kamu Yararı Metni",
-        "Diğer",
+    ai_tipi = st.selectbox(t("risk.ai_tipi"), [
+        t("ai_tipleri.chatbot"), t("ai_tipleri.gorsel"), t("ai_tipleri.metin"),
+        t("ai_tipleri.duygu_musteri"), t("ai_tipleri.biyometrik"),
+        t("ai_tipleri.deepfake"), t("ai_tipleri.kamu_metni"), "Diğer",
     ])
 
 st.markdown("---")
-st.subheader("❓ Değerlendirme Soruları")
+st.subheader(t("risk.degerlendirme"))
 
 # YASAK KONTROLU (Madde 5)
-st.markdown("##### 🚫 Yasak Kullanım Kontrolü (Madde 5)")
-yasak_sosyal_skor = st.checkbox("Sosyal skorlama / genel amaçlı vatandaş puanlama yapıyor mu?")
-yasak_manipulasyon = st.checkbox("İnsan davranışını bilinçaltı manipüle ediyor mu?")
-yasak_savunmasiz = st.checkbox("Yaş, engellilik nedeniyle savunmasız grupları hedefliyor mu?")
-yasak_biyometrik_uzak = st.checkbox("Uzak biyometrik tanımlama (kamuya açık alan) yapıyor mu?")
-yasak_duygu_isyeri = st.checkbox("İş yerinde çalışan duygularını analiz ediyor mu?")
-yasak_kategori = st.checkbox("Irk, siyasi görüş, din, cinsel yönelim sınıflandırması yapıyor mu?")
+st.markdown("##### " + t("risk.yasak_baslik"))
+yasak_sosyal_skor = st.checkbox(t("risk.yasak_sosyal"))
+yasak_manipulasyon = st.checkbox(t("risk.yasak_manipulasyon"))
+yasak_savunmasiz = st.checkbox(t("risk.yasak_savunmasiz"))
+yasak_biyometrik_uzak = st.checkbox(t("risk.yasak_biyometrik"))
+yasak_duygu_isyeri = st.checkbox(t("risk.yasak_duygu_isyeri"))
+yasak_kategori = st.checkbox(t("risk.yasak_kategori"))
 
 # YUKSEK RISK KONTROLU (Madde 6 + Ek III)
-st.markdown("##### ⚠️ Yüksek Risk Kontrolü (Madde 6 + Ek III)")
-yuksek_kritik_altyapi = st.checkbox("Kritik altyapı (enerji, su, ulaşım) yönetimi?")
-yuksek_egitim = st.checkbox("Eğitim / sınav değerlendirmesi?")
-yuksek_istihdam = st.checkbox("İşe alım / terfi / işten çıkarma kararı?")
-yuksek_kredi = st.checkbox("Kredi skorlama / kredi kararı?")
-yuksek_saglik = st.checkbox("Sağlık teşhis / tedavi kararı?")
-yuksek_hukuk = st.checkbox("Hukuki karar / yargı desteği?")
-yuksek_goc = st.checkbox("Göç / sığınma / vize kararı?")
-yuksek_biyometrik = st.checkbox("Biyometrik tanımlama / doğrulama?")
+st.markdown("##### " + t("risk.yuksek_baslik"))
+yuksek_kritik_altyapi = st.checkbox(t("risk.yuksek_kritik"))
+yuksek_egitim = st.checkbox(t("risk.yuksek_egitim"))
+yuksek_istihdam = st.checkbox(t("risk.yuksek_istihdam"))
+yuksek_kredi = st.checkbox(t("risk.yuksek_kredi"))
+yuksek_saglik = st.checkbox(t("risk.yuksek_saglik"))
+yuksek_hukuk = st.checkbox(t("risk.yuksek_hukuk"))
+yuksek_goc = st.checkbox(t("risk.yuksek_goc"))
+yuksek_biyometrik = st.checkbox(t("risk.yuksek_biyometrik"))
 
 # SINIRLI RISK (Madde 50)
-st.markdown("##### 📢 Sınırlı Risk / Şeffaflık (Madde 50)")
-sinirli_chatbot = st.checkbox("Kullanıcı ile doğrudan etkileşim (chatbot)?")
-sinirli_icerik = st.checkbox("AI üretimi içerik (metin, görsel, ses, video)?")
-sinirli_deepfake = st.checkbox("Deepfake / sentetik medya üretimi?")
-sinirli_duygu = st.checkbox("Duygu tanıma / biyometrik kategorizasyon?")
+st.markdown("##### " + t("risk.sinirli_baslik"))
+sinirli_chatbot = st.checkbox(t("risk.sinirli_chatbot"))
+sinirli_icerik = st.checkbox(t("risk.sinirli_icerik"))
+sinirli_deepfake = st.checkbox(t("risk.sinirli_deepfake"))
+sinirli_duygu = st.checkbox(t("risk.sinirli_duygu"))
 
 # KAPSAM
-st.markdown("##### 🌍 Coğrafi Kapsam")
-kapsam_ab = st.checkbox("AB'de kullanıcı / müşteri / ofis var mı?")
+st.markdown("##### " + t("risk.kapsam_baslik"))
+kapsam_ab = st.checkbox(t("risk.kapsam_ab"))
 
 st.markdown("---")
 
 # ============================================================
 # DEGERLENDIR
 # ============================================================
-if st.button("🎯 Risk Seviyesini Belirle", type="primary", use_container_width=True):
+if st.button(t("risk.belirle_btn"), type="primary", use_container_width=True):
     if not sistem_adi:
-        st.error("Sistem Adı zorunludur.")
+        st.error(t("risk.sistem_zorunlu"))
     else:
         # YASAK kontrolu
         yasak_listesi = []
@@ -112,7 +106,6 @@ if st.button("🎯 Risk Seviyesini Belirle", type="primary", use_container_width
             risk_seviyesi = "YASAK"
             gerekce = "AI Act Madde 5 kapsamında yasaklı kullanım tespit edildi."
             yukumlulukler = yasak_listesi
-            renk = "error"
         elif yuksek_listesi:
             risk_seviyesi = "YUKSEK"
             gerekce = "AI Act Madde 6 + Ek III kapsamında yüksek riskli AI sistemi."
@@ -125,17 +118,14 @@ if st.button("🎯 Risk Seviyesini Belirle", type="primary", use_container_width
                 "İnsan gözetimi (Madde 14)",
                 "Doğruluk, sağlamlık, siber güvenlik (Madde 15)",
             ]
-            renk = "warning"
         elif sinirli_listesi:
             risk_seviyesi = "SINIRLI"
             gerekce = "AI Act Madde 50 kapsamında şeffaflık yükümlülüğü olan AI sistemi."
             yukumlulukler = sinirli_listesi
-            renk = "info"
         else:
             risk_seviyesi = "MINIMAL"
             gerekce = "AI Act kapsamında özel yükümlülük tespit edilmedi."
             yukumlulukler = ["Gönüllü etik kurallar önerilir."]
-            renk = "success"
 
         # Kaydet
         try:
@@ -154,37 +144,37 @@ if st.button("🎯 Risk Seviyesini Belirle", type="primary", use_container_width
                 yukumlulukler=yukumlulukler,
             )
         except Exception as e:
-            st.warning("Kayıt hatası: " + str(e))
+            st.warning(t("risk.kayit_hatasi") + str(e))
 
         # Sonucu goster
         st.markdown("---")
-        st.subheader("📊 Risk Değerlendirme Sonucu")
+        st.subheader(t("risk.sonuc_baslik"))
 
         if risk_seviyesi == "YASAK":
-            st.error("## 🚫 RİSK SEVİYESİ: YASAK")
+            st.error("## 🚫 " + t("risk.yasak") + ": " + t("risk.yasak"))
             st.error("**Bu AI sistemi AI Act Madde 5 kapsamında YASAKTIR. Derhal durdurulmalıdır.**")
         elif risk_seviyesi == "YUKSEK":
-            st.warning("## ⚠️ RİSK SEVİYESİ: YÜKSEK")
+            st.warning("## ⚠️ " + t("risk.yuksek"))
             st.warning("**Bu AI sistemi AI Act Madde 6 + Ek III kapsamında YÜKSEK RİSKLİDİR. Ağır yükümlülükler vardır.**")
         elif risk_seviyesi == "SINIRLI":
-            st.info("## 📢 RİSK SEVİYESİ: SINIRLI")
+            st.info("## 📢 " + t("risk.sinirli"))
             st.info("**Bu AI sistemi AI Act Madde 50 kapsamında şeffaflık yükümlülüğüne tabidir.**")
         else:
-            st.success("## ✅ RİSK SEVİYESİ: MİNİMAL")
+            st.success("## ✅ " + t("risk.minimal"))
             st.success("**Bu AI sistemi AI Act kapsamında özel yükümlülük gerektirmez.**")
 
-        st.markdown("### 📋 Gerekçe")
+        st.markdown("### " + t("risk.gerekce"))
         st.write(gerekce)
 
-        st.markdown("### 📌 Uygulanacak Yükümlülükler")
+        st.markdown("### " + t("risk.yukumlulukler"))
         for y in yukumlulukler:
             st.markdown("- " + y)
 
         # CTA
         st.markdown("---")
-        st.markdown("### 🔍 Sonraki Adım")
-        st.info("Şimdi bu sistem için detaylı denetim yapabilirsiniz.")
-        if st.button("🔍 Detaylı Denetime Git", type="primary", use_container_width=True, key="risk_denetime_git"):
+        st.markdown("### " + t("risk.sonraki_adim"))
+        st.info(t("risk.sonraki_aciklama"))
+        if st.button(t("risk.denetime_git"), type="primary", use_container_width=True, key="risk_denetime_git"):
             st.session_state["envanter_denetle_tip"] = ai_tipi
             st.session_state["envanter_denetle_ad"] = sistem_adi
             st.switch_page("sayfa_tek.py")
@@ -193,7 +183,7 @@ if st.button("🎯 Risk Seviyesini Belirle", type="primary", use_container_width
 # GECMIS DEGERLENDIRMELER
 # ============================================================
 st.markdown("---")
-st.subheader("📜 Geçmiş Değerlendirmeler")
+st.subheader(t("risk.gecmis_baslik"))
 
 try:
     gecmis = db.risk_listele(firma_id=firma_id)
@@ -201,12 +191,12 @@ except Exception:
     gecmis = []
 
 if not gecmis:
-    st.info("Henüz risk değerlendirmesi yapılmadı.")
+    st.info(t("risk.gecmis_bos"))
 else:
     for r in gecmis:
         risk = r.get("risk_seviyesi", "-")
         emoji = {"YASAK": "🚫", "YUKSEK": "⚠️", "SINIRLI": "📢", "MINIMAL": "✅"}.get(risk, "⚪")
         with st.expander(f"{emoji} {r.get('sistem_adi', '-')} — {risk}"):
-            st.caption("**Tarih:** " + (r.get("olusturma") or "-"))
-            st.caption("**AI Tipi:** " + (r.get("ai_tipi") or "-"))
-            st.write("**Gerekçe:** " + (r.get("gerekce") or "-"))
+            st.caption("**" + t("genel.tarih") + ":** " + (r.get("olusturma") or "-"))
+            st.caption("**" + t("risk.ai_tipi") + ":** " + (r.get("ai_tipi") or "-"))
+            st.write("**" + t("risk.gerekce") + ":** " + (r.get("gerekce") or "-"))
