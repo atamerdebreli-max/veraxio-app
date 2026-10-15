@@ -1643,3 +1643,29 @@ def audit_ozet(firma_id=None):
             basarili = conn.execute("SELECT COUNT(*) as n FROM audit_log WHERE basarili = 1").fetchone()["n"]
             basarisiz = conn.execute("SELECT COUNT(*) as n FROM audit_log WHERE basarili = 0").fetchone()["n"]
         return {"toplam": toplam, "basarili": basarili, "basarisiz": basarisiz}
+
+
+
+def audit_filtrele(firma_id=None, kullanici_adi=None, eylem=None, tarih_bas=None, tarih_son=None, limit=500):
+    """Detayli audit log filtreleme."""
+    sql = "SELECT * FROM audit_log WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    if kullanici_adi:
+        sql += " AND kullanici_adi LIKE ?"
+        params.append("%" + kullanici_adi + "%")
+    if eylem:
+        sql += " AND eylem = ?"
+        params.append(eylem)
+    if tarih_bas:
+        sql += " AND tarih >= ?"
+        params.append(tarih_bas + " 00:00:00")
+    if tarih_son:
+        sql += " AND tarih <= ?"
+        params.append(tarih_son + " 23:59:59")
+    sql += " ORDER BY tarih DESC LIMIT ?"
+    params.append(limit)
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
