@@ -1687,6 +1687,8 @@ def audit_eylem_dagilimi(firma_id=None):
         return [dict(r) for r in rows]
 
 
+
+
 # ============================================================
 # SUREKLI IZLEME FONKSIYONLARI
 # ============================================================
@@ -1764,7 +1766,6 @@ def alarm_kontrol(firma_id=None):
     """Kritik alarm durumlarini kontrol eder."""
     alarmlar = []
     with _baglanti() as conn:
-        # Son 7 gunde uyumsuz denetim var mi?
         esik7 = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
         if firma_id is not None:
             son_uyumsuz = conn.execute(
@@ -1784,7 +1785,6 @@ def alarm_kontrol(firma_id=None):
                 "mesaj": "Derhal inceleyin ve duzeltici aksiyon alin.",
             })
 
-        # Aktif AI envanteri kontrolu
         if firma_id is not None:
             envanter_sayisi = conn.execute(
                 "SELECT COUNT(*) as n FROM ai_envanteri WHERE firma_id = ? AND durum = 'aktif'",
@@ -1802,7 +1802,6 @@ def alarm_kontrol(firma_id=None):
                 "mesaj": "Sirketinizin AI sistemlerini envantere ekleyin.",
             })
 
-        # Son 30 gunde denetim yapilmadiysa
         if firma_id is not None:
             son_denetim = conn.execute(
                 "SELECT COUNT(*) as n FROM denetimler WHERE tarih >= ? AND firma_id = ?",
