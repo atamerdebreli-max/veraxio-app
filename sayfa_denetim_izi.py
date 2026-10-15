@@ -1,19 +1,20 @@
 """
 sayfa_denetim_izi.py - Denetim Izi ve Degisiklik Gecmisi
-Kim, ne zaman, ne yapti? Tum islem gecmisi.
 """
 import streamlit as st
 import auth
 auth.giris_gerekli()
 
 import db
-from datetime import datetime, timedelta
+import pandas as pd
 import csv as _csv
 import io as _io
+from i18n import t
+from datetime import datetime, timedelta
 
 
-st.title("📜 Denetim İzi")
-st.markdown("**Kim, ne zaman, ne yaptı? Tüm işlem geçmişi.**")
+st.title("📜 " + t("denetim_izi.baslik"))
+st.markdown("**" + t("denetim_izi.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
@@ -25,12 +26,12 @@ firma_id = kullanici.get("firma_id") if kullanici else None
 try:
     ozet = db.audit_ozet(firma_id)
     col1, col2, col3 = st.columns(3)
-    col1.metric("Toplam Kayıt", ozet["toplam"])
-    col2.metric("Başarılı", ozet["basarili"])
-    col3.metric("Başarısız", ozet["basarisiz"])
+    col1.metric(t("denetim_izi.toplam"), ozet["toplam"])
+    col2.metric(t("denetim_izi.basarili"), ozet["basarili"])
+    col3.metric(t("denetim_izi.basarisiz"), ozet["basarisiz"])
     st.markdown("---")
 except Exception as e:
-    st.warning("İstatistik yüklenemedi: " + str(e))
+    st.warning(t("denetim_izi.kayit_hatasi") + str(e))
 
 # ============================================================
 # EYLEM DAGILIMI
@@ -38,11 +39,11 @@ except Exception as e:
 try:
     dagilim = db.audit_eylem_dagilimi(firma_id)
     if dagilim:
-        st.subheader("📊 Eylem Dağılımı")
+        st.subheader(t("denetim_izi.eylem_dagilimi"))
         for d in dagilim[:10]:
             eylem = d.get("eylem", "-")
             sayi = d.get("n", 0)
-            st.markdown(f"- **{eylem}**: {sayi} kez")
+            st.markdown(f"- **{eylem}**: {sayi}")
         st.markdown("---")
 except Exception:
     pass
@@ -50,30 +51,35 @@ except Exception:
 # ============================================================
 # FILTRELER
 # ============================================================
-st.subheader("🔍 Filtrele")
+st.subheader(t("denetim_izi.filtrele"))
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    filtre_kullanici = st.text_input("Kullanıcı Adı", placeholder="admin")
+    filtre_kullanici = st.text_input(t("denetim_izi.kullanici"), placeholder="admin")
 with col2:
-    filtre_eylem = st.text_input("Eylem", placeholder="denetim_yapildi")
+    filtre_eylem = st.text_input(t("denetim_izi.eylem"), placeholder="denetim_yapildi")
 with col3:
-    gun_sayisi = st.selectbox("Tarih Aralığı", ["Son 7 gün", "Son 30 gün", "Son 90 gün", "Tümü"])
+    gun_secenekleri = [
+        t("denetim_izi.son_7"),
+        t("denetim_izi.son_30"),
+        t("denetim_izi.son_90"),
+        t("denetim_izi.tumu"),
+    ]
+    gun_secimi = st.selectbox(t("denetim_izi.tarih_aralik"), gun_secenekleri)
 
-# Tarih hesapla
 tarih_bas = None
-if gun_sayisi == "Son 7 gün":
+if gun_secimi == t("denetim_izi.son_7"):
     tarih_bas = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
-elif gun_sayisi == "Son 30 gün":
+elif gun_secimi == t("denetim_izi.son_30"):
     tarih_bas = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
-elif gun_sayisi == "Son 90 gün":
+elif gun_secimi == t("denetim_izi.son_90"):
     tarih_bas = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
 
 # ============================================================
 # KAYITLAR
 # ============================================================
 st.markdown("---")
-st.subheader("📋 Kayıtlar")
+st.subheader(t("denetim_izi.kayitlar"))
 
 try:
     kayitlar = db.audit_filtrele(
@@ -84,26 +90,22 @@ try:
         limit=500,
     )
 except Exception as e:
-    st.error("Kayıtlar yüklenemedi: " + str(e))
+    st.error(t("denetim_izi.kayit_hatasi") + str(e))
     kayitlar = []
 
 if not kayitlar:
-    st.info("Kayıt bulunamadı.")
+    st.info(t("denetim_izi.kayit_yok"))
 else:
-    st.caption(f"**{len(kayitlar)} kayıt bulundu.**")
+    st.caption(t("denetim_izi.kayit_bulundu").format(sayi=len(kayitlar)))
 
-    # Tablo
-    import pandas as pd
-    df = pd.DataFrame(kayitlar)
-    # Sadece onemli sutunlari goster
     goster = []
     for k in kayitlar:
         goster.append({
-            "Tarih": k.get("tarih", "-"),
-            "Kullanıcı": k.get("kullanici_adi") or "-",
-            "Eylem": k.get("eylem", "-"),
+            t("denetim_izi.tarih"): k.get("tarih", "-"),
+            t("denetim_izi.kullanici"): k.get("kullanici_adi") or "-",
+            t("denetim_izi.eylem"): k.get("eylem", "-"),
             "Detay": (k.get("detay") or "")[:80],
-            "Başarılı": "✅" if k.get("basarili") == 1 else "❌",
+            t("denetim_izi.basarili_kolon"): "✅" if k.get("basarili") == 1 else "❌",
             "IP": k.get("ip_adresi") or "-",
         })
     df_goster = pd.DataFrame(goster)
@@ -112,7 +114,7 @@ else:
     # CSV indir
     csv_buf = _io.StringIO()
     writer = _csv.writer(csv_buf)
-    writer.writerow(["Tarih", "Kullanici", "Eylem", "Detay", "Basarili", "IP"])
+    writer.writerow([t("denetim_izi.tarih"), t("denetim_izi.kullanici"), t("denetim_izi.eylem"), "Detay", t("denetim_izi.basarili_kolon"), "IP"])
     for k in kayitlar:
         writer.writerow([
             k.get("tarih", ""),
@@ -125,7 +127,7 @@ else:
     csv_bytes = csv_buf.getvalue().encode("utf-8-sig")
 
     st.download_button(
-        label="📥 CSV İndir",
+        label=t("denetim_izi.csv_indir"),
         data=csv_bytes,
         file_name="denetim_izi_" + datetime.now().strftime("%Y%m%d") + ".csv",
         mime="text/csv",
