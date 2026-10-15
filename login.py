@@ -1,5 +1,5 @@
 """
-login.py - Giris ve kayit sayfasi (coklu dil destekli)
+login.py - Giris ve kayit sayfasi (coklu dil destekli + Google SSO)
 """
 import streamlit as st
 import db
@@ -10,6 +10,29 @@ from i18n import t
 
 db.init_db()
 auth.ilk_kullanici_olustur()
+
+
+# ============================================================
+# GOOGLE OAUTH CALLBACK (en basta)
+# ============================================================
+_qp_login = dict(st.query_params)
+if "code" in _qp_login and "google_oauth_state" in st.session_state:
+    try:
+        import auth_google
+        with st.spinner("🔵 Google ile giriş yapılıyor..."):
+            _g_sonuc = auth_google.google_callback(_qp_login["code"])
+
+        if _g_sonuc.get("durum") == "OK":
+            _k = _g_sonuc.get("kullanici", {})
+            # Auth sistemine giris yap
+            auth.google_ile_giris_yap(_k)
+            st.query_params.clear()
+            st.success("✅ Google ile giriş başarılı!")
+            st.rerun()
+        else:
+            st.error("❌ " + _g_sonuc.get("mesaj", "Google giriş hatası"))
+    except Exception as _e:
+        st.error("❌ Google giriş hatası: " + str(_e))
 
 
 # ============================================================
@@ -189,6 +212,33 @@ tab_giris, tab_kayit = st.tabs([t("login.tab_giris"), t("login.tab_kayit")])
 
 # --- GIRIS ---
 with tab_giris:
+    # ============================================================
+    # GOOGLE ILE GIRIS BUTONU
+    # ============================================================
+    try:
+        import auth_google
+        _g_url = auth_google.google_giris_url()
+        if _g_url:
+            st.markdown(
+                f'<a href="{_g_url}" target="_self" '
+                f'style="display:flex;align-items:center;justify-content:center;gap:10px;'
+                f'padding:12px;background:#fff;color:#333;border:1px solid #dadce0;'
+                f'border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;'
+                f'margin-bottom:8px;">'
+                f'<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>'
+                f'Google ile Giriş Yap</a>',
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                '<div style="text-align:center;color:#888;margin:12px 0;font-size:13px;">— veya —</div>',
+                unsafe_allow_html=True,
+            )
+    except Exception as _e:
+        print(f"[Google] Buton yuklenemedi: {_e}")
+
+    # ============================================================
+    # NORMAL GIRIS FORMU
+    # ============================================================
     with st.form("giris_formu"):
         kullanici_adi = st.text_input(t("login.kullanici_adi"), placeholder="admin")
         sifre = st.text_input(t("login.sifre"), type="password", placeholder="••••••••")
@@ -202,12 +252,10 @@ with tab_giris:
                 iki_fa_aktif = auth_2fa.iki_fa_gerekli_mi(kullanici_adi)
 
                 if iki_fa_aktif:
-                    # 2FA adimina gec
                     st.session_state["2fa_bekleyen_kullanici"] = kullanici_adi
                     st.session_state["2fa_bekleyen_sifre"] = sifre
                     st.rerun()
                 else:
-                    # Normal giris + brute force korumasi
                     _kilit = db.giris_kilitli_mi(kullanici_adi)
                     if _kilit.get("kilitli"):
                         _kalan = _kilit.get("kalan_dk", 0)
@@ -252,11 +300,9 @@ with tab_giris:
             if submit_2fa:
                 sonuc = auth_2fa.iki_fa_dogrula_giris(bekleyen, kod)
                 if sonuc["durum"] == "OK":
-                    # 2FA basarili -> normal giris yap
                     sifre_bekleyen = st.session_state.get("2fa_bekleyen_sifre", "")
                     sonuc_giris = auth.giris_yap(bekleyen, sifre_bekleyen)
 
-                    # Session temizle
                     if "2fa_bekleyen_kullanici" in st.session_state:
                         del st.session_state["2fa_bekleyen_kullanici"]
                     if "2fa_bekleyen_sifre" in st.session_state:
@@ -270,7 +316,6 @@ with tab_giris:
                 else:
                     st.error("❌ " + sonuc.get("hata", "Kod gecersiz"))
 
-        # Iptal butonu
         if st.button("← " + t("login.2fa_iptal")):
             if "2fa_bekleyen_kullanici" in st.session_state:
                 del st.session_state["2fa_bekleyen_kullanici"]
@@ -303,7 +348,6 @@ with tab_kayit:
     davet_token = st.query_params.get("davet", None)
 
     if davet_token:
-        # Davet kabul
         davet = db.davet_bul(davet_token)
         if davet:
             st.info(f"📨 **{davet['firma_adi']}** " + t("login.davet_baslik"))
@@ -340,7 +384,6 @@ with tab_kayit:
             st.error(t("login.davet_gecersiz"))
         st.stop()
 
-    # Firma olusturma
     with st.form("firma_formu"):
         st.markdown(f"### 🏢 {t('login.firma_bilgi')}")
         firma_adi = st.text_input(t("login.firma_adi") + " *", placeholder="ABC Teknoloji A.S.")
@@ -384,7 +427,6 @@ with tab_kayit:
                     rol="user",
                 )
                 if basarili:
-                    # Email dogrulama gonder
                     try:
                         _dil = st.session_state.get("dil", "tr")
                         _email_sonuc = auth.email_dogrulama_gonder(yeni_kullanici, yeni_email, _dil)
@@ -395,7 +437,6 @@ with tab_kayit:
                     except Exception as _e:
                         print(f"[Kayit] Email hatasi: {_e}")
 
-                    # Trial baslat (7 gun ucretsiz)
                     try:
                         trial_sonuc = db.trial_baslat(yeni_kullanici)
                         if trial_sonuc["durum"] == "OK":
@@ -406,7 +447,6 @@ with tab_kayit:
                     except Exception as e:
                         print(f"[Kayit] Trial hatasi: {e}")
 
-                    # Cache temizle
                     try:
                         from cache_utils import cache_temizle
                         cache_temizle()
@@ -415,8 +455,6 @@ with tab_kayit:
 
                     st.success(f"✅ **{firma_adi}** " + t("login.firma_basarili"))
                     st.info(t("login.firma_sonra_giris"))
-
-                    # OTOMATIK GIRIS YOK - email dogrulanmasi gerekli
                     st.warning("⚠️ " + t("login.email_dogrulama_gerekli"))
                 else:
                     db.firma_sil(firma_id)
@@ -436,4 +474,3 @@ with st.container():
     with c3:
         st.caption("📜 " + t("hukuki.tab_kullanim"))
     st.caption(t("hukuki.footer"))
-
