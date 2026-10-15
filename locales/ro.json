@@ -4,7 +4,7 @@
     "kapsam": "UE Legea AI Articolul 50",
     "surum": "Versiunea 2.0"
   },
-  "menu": {
+    "menu": {
     "tek_denetim": "Audit unic",
     "toplu_denetim": "Audit în lot",
     "gecmis": "Istoric",
