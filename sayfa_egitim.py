@@ -6,11 +6,12 @@ import auth
 auth.giris_gerekli()
 
 import db
+from i18n import t
 from datetime import datetime
 
 
-st.title("🎓 AI Farkındalık Eğitimi")
-st.markdown("**AI Act ve AI etiği hakkında bilgi edinin, sertifikanızı alın.**")
+st.title("🎓 " + t("egitim.baslik"))
+st.markdown("**" + t("egitim.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
@@ -22,7 +23,7 @@ kullanici_adi = kullanici.get("kullanici_adi", "?")
 # ============================================================
 MODULLER = {
     "MOD1": {
-        "baslik": "AI Act Nedir?",
+        "anahtar_baslik": "egitim.mod1_baslik",
         "sure": "10 dk",
         "icerik": """
 ## AB Yapay Zeka Tüzüğü (AI Act)
@@ -44,25 +45,16 @@ AI Act, Avrupa Birliği'nin yapay zeka sistemlerini düzenleyen ilk kapsamlı ya
 - **15 milyon Euro** veya **cironun %3'ü** (hangisi yüksekse)
 """,
         "quiz": [
-            {
-                "soru": "AI Act hangi tarihte tam olarak uygulanmaya başlayacak?",
-                "secenekler": ["1 Ağustos 2024", "2 Ağustos 2026", "1 Ocak 2027", "31 Aralık 2025"],
-                "dogru": 1,
-            },
-            {
-                "soru": "AI Act kapsamında maksimum ceza nedir?",
-                "secenekler": ["1 milyon Euro", "5 milyon Euro", "15 milyon Euro veya cironun %3'ü", "10 milyon Euro"],
-                "dogru": 2,
-            },
-            {
-                "soru": "Aşağıdakilerden hangisi AI Act'te YASAK kategorisindedir?",
-                "secenekler": ["Chatbot", "Sosyal skorlama", "AI görsel üretimi", "Metin özetleme"],
-                "dogru": 1,
-            },
+            {"soru": "AI Act hangi tarihte tam olarak uygulanmaya başlayacak?",
+             "secenekler": ["1 Ağustos 2024", "2 Ağustos 2026", "1 Ocak 2027", "31 Aralık 2025"], "dogru": 1},
+            {"soru": "AI Act kapsamında maksimum ceza nedir?",
+             "secenekler": ["1 milyon Euro", "5 milyon Euro", "15 milyon Euro veya cironun %3'ü", "10 milyon Euro"], "dogru": 2},
+            {"soru": "Aşağıdakilerden hangisi AI Act'te YASAK kategorisindedir?",
+             "secenekler": ["Chatbot", "Sosyal skorlama", "AI görsel üretimi", "Metin özetleme"], "dogru": 1},
         ],
     },
     "MOD2": {
-        "baslik": "Şeffaflık Yükümlülükleri (Madde 50)",
+        "anahtar_baslik": "egitim.mod2_baslik",
         "sure": "15 dk",
         "icerik": """
 ## Madde 50 — Şeffaflık Yükümlülükleri
@@ -88,20 +80,14 @@ AI Act Madde 50, sınırlı riskli AI sistemleri için şeffaflık kuralları ge
 - Kanunla yetkilendirilmiş kullanımlar
 """,
         "quiz": [
-            {
-                "soru": "Chatbot bildirimi ne zaman yapılmalı?",
-                "secenekler": ["Kullanıcı sorduğunda", "İlk etkileşimde", "10 mesaj sonra", "Şart değil"],
-                "dogru": 1,
-            },
-            {
-                "soru": "AI Act Madde 50 hangi risk kategorisiyle ilgilidir?",
-                "secenekler": ["Yasak AI", "Yüksek riskli", "Sınırlı riskli (şeffaflık)", "Minimal riskli"],
-                "dogru": 2,
-            },
+            {"soru": "Chatbot bildirimi ne zaman yapılmalı?",
+             "secenekler": ["Kullanıcı sorduğunda", "İlk etkileşimde", "10 mesaj sonra", "Şart değil"], "dogru": 1},
+            {"soru": "AI Act Madde 50 hangi risk kategorisiyle ilgilidir?",
+             "secenekler": ["Yasak AI", "Yüksek riskli", "Sınırlı riskli (şeffaflık)", "Minimal riskli"], "dogru": 2},
         ],
     },
     "MOD3": {
-        "baslik": "Yüksek Riskli AI Sistemleri",
+        "anahtar_baslik": "egitim.mod3_baslik",
         "sure": "15 dk",
         "icerik": """
 ## Yüksek Riskli AI Sistemleri (Madde 6 + Ek III)
@@ -126,20 +112,14 @@ AI Act Madde 50, sınırlı riskli AI sistemleri için şeffaflık kuralları ge
 - Doğruluk, sağlamlık, siber güvenlik (Madde 15)
 """,
         "quiz": [
-            {
-                "soru": "Aşağıdakilerden hangisi YÜKSEK RİSKLİ AI kategorisindedir?",
-                "secenekler": ["Chatbot", "Kredi skorlama", "AI görsel üretimi", "Müzik önerisi"],
-                "dogru": 1,
-            },
-            {
-                "soru": "Yüksek riskli AI sistemleri için hangi yükümlülük zorunludur?",
-                "secenekler": ["Reklam", "İnsan gözetimi", "Ücretsiz erişim", "Açık kaynak"],
-                "dogru": 1,
-            },
+            {"soru": "Aşağıdakilerden hangisi YÜKSEK RİSKLİ AI kategorisindedir?",
+             "secenekler": ["Chatbot", "Kredi skorlama", "AI görsel üretimi", "Müzik önerisi"], "dogru": 1},
+            {"soru": "Yüksek riskli AI sistemleri için hangi yükümlülük zorunludur?",
+             "secenekler": ["Reklam", "İnsan gözetimi", "Ücretsiz erişim", "Açık kaynak"], "dogru": 1},
         ],
     },
     "MOD4": {
-        "baslik": "Veri Yönetişimi ve KVKK",
+        "anahtar_baslik": "egitim.mod4_baslik",
         "sure": "10 dk",
         "icerik": """
 ## Veri Yönetişimi ve KVKK Uyumu
@@ -163,20 +143,14 @@ AI Act Madde 50, sınırlı riskli AI sistemleri için şeffaflık kuralları ge
 - Adillik testleri düzenli yapılmalı
 """,
         "quiz": [
-            {
-                "soru": "Veri ihlali kaç saat içinde bildirilmelidir?",
-                "secenekler": ["24 saat", "48 saat", "72 saat", "1 hafta"],
-                "dogru": 2,
-            },
-            {
-                "soru": "KVKK kapsamında kişisel veri işleme için ne gerekir?",
-                "secenekler": ["Şirket kararı", "Açık rıza", "Yönetici onayı", "Devlet izni"],
-                "dogru": 1,
-            },
+            {"soru": "Veri ihlali kaç saat içinde bildirilmelidir?",
+             "secenekler": ["24 saat", "48 saat", "72 saat", "1 hafta"], "dogru": 2},
+            {"soru": "KVKK kapsamında kişisel veri işleme için ne gerekir?",
+             "secenekler": ["Şirket kararı", "Açık rıza", "Yönetici onayı", "Devlet izni"], "dogru": 1},
         ],
     },
     "MOD5": {
-        "baslik": "Etik AI ve Sorumluluk",
+        "anahtar_baslik": "egitim.mod5_baslik",
         "sure": "10 dk",
         "icerik": """
 ## Etik AI ve Sorumluluk
@@ -202,16 +176,10 @@ AI Act Madde 50, sınırlı riskli AI sistemleri için şeffaflık kuralları ge
 - İhlaller bildirilmeli
 """,
         "quiz": [
-            {
-                "soru": "Etik AI ilkelerinden biri DEĞİLDİR?",
-                "secenekler": ["Şeffaflık", "Adalet", "Maksimum kâr", "Sorumluluk"],
-                "dogru": 2,
-            },
-            {
-                "soru": "Yüksek riskli AI kararlarında ne zorunludur?",
-                "secenekler": ["Reklam", "İnsan gözetimi", "Ücretsiz erişim", "Anonimlik"],
-                "dogru": 1,
-            },
+            {"soru": "Etik AI ilkelerinden biri DEĞİLDİR?",
+             "secenekler": ["Şeffaflık", "Adalet", "Maksimum kâr", "Sorumluluk"], "dogru": 2},
+            {"soru": "Yüksek riskli AI kararlarında ne zorunludur?",
+             "secenekler": ["Reklam", "İnsan gözetimi", "Ücretsiz erişim", "Anonimlik"], "dogru": 1},
         ],
     },
 }
@@ -224,18 +192,17 @@ try:
 except Exception:
     tamamlanan = []
 
-tamamlanan_kodlar = {t["modul_kodu"]: t for t in tamamlanan if t.get("tamamlandi") == 1}
+tamamlanan_kodlar = {t_item["modul_kodu"]: t_item for t_item in tamamlanan if t_item.get("tamamlandi") == 1}
 
-# Istatistik
-st.subheader("📊 Eğitim Durumunuz")
+st.subheader(t("egitim.durum"))
 toplam_modul = len(MODULLER)
 tamamlanan_sayi = len(tamamlanan_kodlar)
 ilerleme = round(100 * tamamlanan_sayi / toplam_modul, 0) if toplam_modul else 0
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Toplam Modül", toplam_modul)
-col2.metric("Tamamlanan", tamamlanan_sayi)
-col3.metric("İlerleme", f"%{ilerleme}")
+col1.metric(t("egitim.toplam_modul"), toplam_modul)
+col2.metric(t("egitim.tamamlanan"), tamamlanan_sayi)
+col3.metric(t("egitim.ilerleme"), f"%{ilerleme}")
 
 st.progress(ilerleme / 100)
 st.markdown("---")
@@ -243,14 +210,14 @@ st.markdown("---")
 # ============================================================
 # MODUL SECIMI
 # ============================================================
-st.subheader("📚 Eğitim Modülleri")
+st.subheader(t("egitim.moduller"))
 
 modul_secenekleri = []
 for kod, m in MODULLER.items():
     durum_emoji = "✅" if kod in tamamlanan_kodlar else "⏳"
-    modul_secenekleri.append(f"{durum_emoji} {kod}: {m['baslik']} ({m['sure']})")
+    modul_secenekleri.append(f"{durum_emoji} {kod}: {t(m['anahtar_baslik'])} ({m['sure']})")
 
-secili_modul_str = st.selectbox("Bir modül seçin:", modul_secenekleri)
+secili_modul_str = st.selectbox(t("egitim.modul_sec"), modul_secenekleri)
 secili_kod = secili_modul_str.split(":")[0].replace("✅", "").replace("⏳", "").strip()
 
 modul = MODULLER[secili_kod]
@@ -259,15 +226,14 @@ modul = MODULLER[secili_kod]
 # MODUL ICERIGI
 # ============================================================
 st.markdown("---")
-st.markdown(f"## 📖 {modul['baslik']}")
-st.caption(f"⏱️ Tahmini süre: {modul['sure']}")
+st.markdown(f"## 📖 {t(modul['anahtar_baslik'])}")
+st.caption(f"⏱️ {modul['sure']}")
 st.markdown(modul["icerik"])
 
 st.markdown("---")
-st.markdown("## 📝 Quiz")
-st.caption("Modülü tamamlamak için tüm soruları doğru cevaplayın.")
+st.markdown("## " + t("egitim.quiz"))
+st.caption(t("egitim.quiz_caption"))
 
-# Quiz
 dogru_sayisi = 0
 toplam_soru = len(modul["quiz"])
 cevaplar = []
@@ -276,7 +242,7 @@ with st.form(f"quiz_{secili_kod}"):
     for i, soru in enumerate(modul["quiz"]):
         st.markdown(f"**{i+1}. {soru['soru']}**")
         secim = st.radio(
-            "Cevap:",
+            t("egitim.cevap"),
             soru["secenekler"],
             key=f"quiz_{secili_kod}_{i}",
             label_visibility="collapsed",
@@ -284,34 +250,34 @@ with st.form(f"quiz_{secili_kod}"):
         cevaplar.append(soru["secenekler"].index(secim))
         st.markdown("")
 
-    if st.form_submit_button("✅ Cevapları Gönder", type="primary", use_container_width=True):
+    if st.form_submit_button(t("egitim.gonder"), type="primary", use_container_width=True):
         dogru_sayisi = sum(1 for i, c in enumerate(cevaplar) if c == modul["quiz"][i]["dogru"])
         quiz_skoru = round(100 * dogru_sayisi / toplam_soru, 0)
 
         if quiz_skoru >= 70:
-            st.success(f"🎉 **Tebrikler!** {dogru_sayisi}/{toplam_soru} doğru — Skor: %{quiz_skoru}")
+            st.success(t("egitim.tebrikler").format(dogru=dogru_sayisi, toplam=toplam_soru, skor=int(quiz_skoru)))
             try:
                 db.egitim_kaydet(
                     firma_id=firma_id,
                     kullanici_adi=kullanici_adi,
                     modul_kodu=secili_kod,
-                    modul_adi=modul["baslik"],
+                    modul_adi=t(modul["anahtar_baslik"]),
                     quiz_skoru=int(quiz_skoru),
                     tamamlandi=1,
                 )
                 st.balloons()
                 st.rerun()
             except Exception as e:
-                st.warning("Kayıt hatası: " + str(e))
+                st.warning(t("egitim.kayit_hatasi") + str(e))
         else:
-            st.error(f"❌ **Tekrar deneyin.** {dogru_sayisi}/{toplam_soru} doğru — Skor: %{quiz_skoru} (Geçme: %70)")
+            st.error(t("egitim.tekrar_dene").format(dogru=dogru_sayisi, toplam=toplam_soru, skor=int(quiz_skoru)))
 
 # ============================================================
 # SERTIFIKA
 # ============================================================
 if tamamlanan_sayi == toplam_modul:
     st.markdown("---")
-    st.success("🏆 **TEBRİKLER! Tüm modülleri tamamladınız!**")
+    st.success(t("egitim.sertifika"))
 
     sertifika = f"""
 ═══════════════════════════════════════════
@@ -333,7 +299,7 @@ Modüller:
     for kod, m in MODULLER.items():
         kayit = tamamlanan_kodlar.get(kod, {})
         skor = kayit.get("quiz_skoru", 0)
-        sertifika += f"\n  ✅ {m['baslik']} — Skor: %{skor}"
+        sertifika += f"\n  ✅ {t(m['anahtar_baslik'])} — Skor: %{skor}"
 
     sertifika += f"""
 
@@ -346,7 +312,7 @@ Sertifika No: CERT-{kullanici_adi}-{datetime.now().strftime('%Y%m%d')}
 """
 
     st.download_button(
-        label="🏆 Sertifikayı İndir",
+        label=t("egitim.sertifika_indir"),
         data=sertifika.encode("utf-8"),
         file_name=f"sertifika_{kullanici_adi}.txt",
         mime="text/plain",
@@ -357,11 +323,11 @@ Sertifika No: CERT-{kullanici_adi}-{datetime.now().strftime('%Y%m%d')}
 # KAYITLAR
 # ============================================================
 st.markdown("---")
-st.subheader("📜 Eğitim Kayıtlarınız")
+st.subheader(t("egitim.kayitlar"))
 
 if not tamamlanan:
-    st.info("Henüz eğitim tamamlanmadı.")
+    st.info(t("egitim.kayit_yok"))
 else:
-    for t in tamamlanan:
-        if t.get("tamamlandi") == 1:
-            st.markdown(f"✅ **{t.get('modul_adi', '-')}** — Skor: %{t.get('quiz_skoru', 0)} — {t.get('olusturma', '')[:10]}")
+    for t_item in tamamlanan:
+        if t_item.get("tamamlandi") == 1:
+            st.markdown(f"✅ **{t_item.get('modul_adi', '-')}** — Skor: %{t_item.get('quiz_skoru', 0)} — {t_item.get('olusturma', '')[:10]}")
