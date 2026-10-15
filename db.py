@@ -163,6 +163,18 @@ def init_db():
             )
         """)
 
+                # --- Politika Sablonlari ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS politika_sablonlari (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sablon_adi TEXT,
+                sablon_kodu TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1518,3 +1530,32 @@ def red_team_sil(test_id):
     with _baglanti() as conn:
         conn.execute("DELETE FROM red_team_testleri WHERE id = ?", (test_id,))
         conn.commit()
+
+
+
+
+# ============================================================
+# POLITIKA SABLONU FONKSIYONLARI
+# ============================================================
+def politika_logla(firma_id, sablon_adi, sablon_kodu):
+    """Indirilen sablonu loglar."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        conn.execute("""
+            INSERT INTO politika_sablonlari
+            (firma_id, sablon_adi, sablon_kodu, olusturma)
+            VALUES (?, ?, ?, ?)
+        """, (firma_id, sablon_adi, sablon_kodu, simdi))
+        conn.commit()
+
+
+def politika_log_listele(firma_id=None):
+    """Indirilen sablonlari listeler."""
+    sql = "SELECT * FROM politika_sablonlari WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    sql += " ORDER BY olusturma DESC LIMIT 50"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
