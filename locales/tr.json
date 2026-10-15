@@ -971,6 +971,18 @@
     "rol_user": "Kullanıcı",
     "rol_admin": "Yönetici"
   },
+  "standartlar_kategori": {
+    "iso_baglam": "Bağlam ve Liderlik",
+    "iso_planlama": "Planlama",
+    "iso_destek": "Destek",
+    "iso_operasyon": "Operasyon",
+    "iso_performans": "Performans Değerlendirme",
+    "iso_iyilestirme": "İyileştirme",
+    "nist_govern": "GOVERN (Yönetişim)",
+    "nist_map": "MAP (Haritalama)",
+    "nist_measure": "MEASURE (Ölçüm)",
+    "nist_manage": "MANAGE (Yönetim)"
+  },
   "sonuc": {
     "onerilen_aksiyonlar": "Önerilen Aksiyonlar",
     "uyumlu": "Uyumlu",
