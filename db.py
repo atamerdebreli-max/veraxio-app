@@ -146,6 +146,23 @@ def init_db():
             )
         """)
 
+                # --- Red Team Testleri ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS red_team_testleri (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT,
+                ai_tipi TEXT,
+                senaryolar TEXT,
+                basarili_saldiri INTEGER,
+                toplam_senaryo INTEGER,
+                risk_skoru REAL,
+                risk_seviyesi TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1458,4 +1475,46 @@ def bias_sil(bias_id):
     """Bias kaydini siler."""
     with _baglanti() as conn:
         conn.execute("DELETE FROM bias_analizleri WHERE id = ?", (bias_id,))
+        conn.commit()
+
+
+
+
+# ============================================================
+# RED TEAM FONKSIYONLARI
+# ============================================================
+def red_team_kaydet(firma_id, sistem_adi, ai_tipi, senaryolar, basarili_saldiri, toplam_senaryo, risk_skoru, risk_seviyesi):
+    """Red team test sonucunu kaydeder."""
+    import json as _json
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO red_team_testleri
+            (firma_id, sistem_adi, ai_tipi, senaryolar, basarili_saldiri,
+             toplam_senaryo, risk_skoru, risk_seviyesi, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (firma_id, sistem_adi, ai_tipi,
+              _json.dumps(senaryolar, ensure_ascii=False),
+              basarili_saldiri, toplam_senaryo,
+              risk_skoru, risk_seviyesi, simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def red_team_listele(firma_id=None):
+    """Red team testlerini listeler."""
+    sql = "SELECT * FROM red_team_testleri WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def red_team_sil(test_id):
+    """Red team kaydini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM red_team_testleri WHERE id = ?", (test_id,))
         conn.commit()
