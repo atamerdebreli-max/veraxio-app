@@ -16,77 +16,77 @@ st.markdown("---")
 kullanici = auth.mevcut_kullanici()
 
 # ============================================================
-# STANDARTLAR
+# STANDARTLAR (Maddeler uluslararasi Ingilizce standartlardan)
 # ============================================================
 STANDARTLAR = {
     "ISO 42001": {
-        "aciklama": "Yapay Zeka Yönetim Sistemi (AIMS) - Uluslararası Standart",
+        "aciklama": "AI Management System (AIMS) - International Standard",
         "kategoriler": {
-            "Bağlam ve Liderlik": [
-                "AI politikası tanımlanmış ve onaylanmış",
-                "AI rolleri ve sorumlulukları belirlenmiş",
-                "AI riskleri için yönetim taahhüdü var",
-                "AI etik kurulu oluşturulmuş",
+            "iso_baglam": [
+                "AI policy defined and approved",
+                "AI roles and responsibilities assigned",
+                "Management commitment for AI risks exists",
+                "AI ethics committee established",
             ],
-            "Planlama": [
-                "AI riskleri ve fırsatları tanımlanmış",
-                "AI hedefleri ölçülebilir şekilde belirlenmiş",
-                "Yasal ve düzenleyici gereksinimler belirlenmiş",
-                "Risk değerlendirme metodolojisi var",
+            "iso_planlama": [
+                "AI risks and opportunities identified",
+                "AI objectives set measurably",
+                "Legal and regulatory requirements identified",
+                "Risk assessment methodology exists",
             ],
-            "Destek": [
-                "AI ekibi için eğitim planı var",
-                "AI farkındalık programı mevcut",
-                "İletişim planı tanımlanmış",
-                "Dokümantasyon sistemi kurulmuş",
+            "iso_destek": [
+                "Training plan for AI team exists",
+                "AI awareness program in place",
+                "Communication plan defined",
+                "Documentation system established",
             ],
-            "Operasyon": [
-                "AI risk değerlendirmesi düzenli yapılıyor",
-                "AI sistemleri envanteri tutuluyor",
-                "Değişiklik yönetimi süreci var",
-                "Tedarikçi yönetimi yapılıyor",
+            "iso_operasyon": [
+                "AI risk assessment performed regularly",
+                "AI systems inventory maintained",
+                "Change management process exists",
+                "Supplier management conducted",
             ],
-            "Performans Değerlendirme": [
-                "AI performansı izleniyor",
-                "İç denetimler yapılıyor",
-                "Yönetim gözden geçirmesi yapılıyor",
-                "Uygunsuzluklar kayıt altına alınıyor",
+            "iso_performans": [
+                "AI performance monitored",
+                "Internal audits conducted",
+                "Management review performed",
+                "Nonconformities recorded",
             ],
-            "İyileştirme": [
-                "Sürekli iyileştirme süreci var",
-                "Düzeltici aksiyonlar takip ediliyor",
-                "Öğrenilen dersler kaydediliyor",
+            "iso_iyilestirme": [
+                "Continuous improvement process exists",
+                "Corrective actions tracked",
+                "Lessons learned documented",
             ],
         },
     },
     "NIST AI RMF": {
-        "aciklama": "AI Risk Yönetim Çerçevesi - ABD Ulusal Standartlar Enstitüsü",
+        "aciklama": "AI Risk Management Framework - NIST",
         "kategoriler": {
-            "GOVERN (Yönetişim)": [
-                "AI risk yönetimi politikası oluşturulmuş",
-                "Roller ve sorumluluklar tanımlanmış",
-                "AI risk kültürü teşvik ediliyor",
-                "Paydaş katılımı sağlanıyor",
-                "Yasal gereksinimler izleniyor",
+            "nist_govern": [
+                "AI risk management policy established",
+                "Roles and responsibilities defined",
+                "AI risk culture promoted",
+                "Stakeholder engagement ensured",
+                "Legal requirements monitored",
             ],
-            "MAP (Haritalama)": [
-                "AI sistemleri kategorize edilmiş",
-                "Kullanım senaryoları belgelenmiş",
-                "Etkilenen paydaşlar tanımlanmış",
-                "Riskler ve faydalar haritalanmış",
+            "nist_map": [
+                "AI systems categorized",
+                "Use cases documented",
+                "Affected stakeholders identified",
+                "Risks and benefits mapped",
             ],
-            "MEASURE (Ölçüm)": [
-                "AI performansı ölçülüyor",
-                "Doğruluk ve güvenilirlik test ediliyor",
-                "Bias ve adillik değerlendiriliyor",
-                "Güvenlik açıkları test ediliyor",
-                "Şeffaflık ve açıklanabilirlik sağlanıyor",
+            "nist_measure": [
+                "AI performance measured",
+                "Accuracy and reliability tested",
+                "Bias and fairness assessed",
+                "Security vulnerabilities tested",
+                "Transparency and explainability ensured",
             ],
-            "MANAGE (Yönetim)": [
-                "Risk önceliklendirmesi yapılıyor",
-                "Risk azaltma stratejileri uygulanıyor",
-                "Olay müdahale planı hazırlanmış",
-                "Sürekli izleme mekanizması var",
+            "nist_manage": [
+                "Risk prioritization performed",
+                "Risk mitigation strategies applied",
+                "Incident response plan prepared",
+                "Continuous monitoring mechanism exists",
             ],
         },
     },
@@ -116,10 +116,11 @@ if state_key not in st.session_state:
 toplam_madde = 0
 isaretlenen = 0
 
-for kategori, maddeler in std["kategoriler"].items():
-    st.markdown(f"### 🔹 {kategori}")
+for kategori_key, maddeler in std["kategoriler"].items():
+    kategori_ad = t(f"standartlar_kategori.{kategori_key}")
+    st.markdown(f"### 🔹 {kategori_ad}")
     for i, madde in enumerate(maddeler):
-        key = f"{state_key}_{kategori}_{i}"
+        key = f"{state_key}_{kategori_key}_{i}"
         mevcut = st.session_state[state_key].get(key, False)
         secim = st.checkbox(madde, value=mevcut, key=key)
         st.session_state[state_key][key] = secim
@@ -148,55 +149,57 @@ else:
     st.error(f"🔴 " + t("standartlar.dusuk_uyum") + f" (%{uyum_orani})")
 
 st.markdown("### " + t("standartlar.kategori_ozet"))
-for kategori, maddeler in std["kategoriler"].items():
+for kategori_key, maddeler in std["kategoriler"].items():
+    kategori_ad = t(f"standartlar_kategori.{kategori_key}")
     kat_toplam = len(maddeler)
     kat_uyumlu = 0
     for i in range(kat_toplam):
-        key = f"{state_key}_{kategori}_{i}"
+        key = f"{state_key}_{kategori_key}_{i}"
         if st.session_state[state_key].get(key, False):
             kat_uyumlu += 1
     kat_oran = round(100 * kat_uyumlu / kat_toplam, 1) if kat_toplam else 0
     emoji = "🟢" if kat_oran >= 80 else ("🟡" if kat_oran >= 50 else "🔴")
-    st.markdown(f"{emoji} **{kategori}**: {kat_uyumlu}/{kat_toplam} (%{kat_oran})")
+    st.markdown(f"{emoji} **{kategori_ad}**: {kat_uyumlu}/{kat_toplam} (%{kat_oran})")
 
 # ============================================================
 # RAPOR INDIR
 # ============================================================
 st.markdown("---")
 
-rapor = f"""# {secili_standart} UYUMLULUK RAPORU
+rapor = f"""# {secili_standart} COMPLIANCE REPORT
 
-**Şirket:** {kullanici.get('ad_soyad') or kullanici.get('kullanici_adi', '-')}
-**Tarih:** {datetime.now().strftime('%d.%m.%Y %H:%M')}
-**Standart:** {secili_standart}
-**Genel Uyum:** %{uyum_orani}
-
----
-
-## GENEL SONUC
-
-- Toplam Madde: {toplam_madde}
-- Uyumlu: {isaretlenen}
-- Uyumsuz: {toplam_madde - isaretlenen}
-- Uyum Oranı: %{uyum_orani}
+**Company:** {kullanici.get('ad_soyad') or kullanici.get('kullanici_adi', '-')}
+**Date:** {datetime.now().strftime('%d.%m.%Y %H:%M')}
+**Standard:** {secili_standart}
+**Overall Compliance:** %{uyum_orani}
 
 ---
 
-## KATEGORI DETAYLARI
+## OVERALL RESULT
+
+- Total Items: {toplam_madde}
+- Compliant: {isaretlenen}
+- Non-compliant: {toplam_madde - isaretlenen}
+- Compliance Rate: %{uyum_orani}
+
+---
+
+## CATEGORY DETAILS
 
 """
 
-for kategori, maddeler in std["kategoriler"].items():
+for kategori_key, maddeler in std["kategoriler"].items():
+    kategori_ad = t(f"standartlar_kategori.{kategori_key}")
     kat_toplam = len(maddeler)
     kat_uyumlu = 0
     for i in range(kat_toplam):
-        key = f"{state_key}_{kategori}_{i}"
+        key = f"{state_key}_{kategori_key}_{i}"
         if st.session_state[state_key].get(key, False):
             kat_uyumlu += 1
     kat_oran = round(100 * kat_uyumlu / kat_toplam, 1) if kat_toplam else 0
-    rapor += f"\n### {kategori} (%{kat_oran})\n\n"
+    rapor += f"\n### {kategori_ad} (%{kat_oran})\n\n"
     for i, madde in enumerate(maddeler):
-        key = f"{state_key}_{kategori}_{i}"
+        key = f"{state_key}_{kategori_key}_{i}"
         durum = "✅" if st.session_state[state_key].get(key, False) else "❌"
         rapor += f"- {durum} {madde}\n"
 
