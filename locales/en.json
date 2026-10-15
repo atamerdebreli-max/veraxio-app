@@ -17,6 +17,18 @@
     "hesabim": "My Account",
     "yukselt": "Upgrade Plan",
     "onboarding": "Getting Started"
+    "envanter": "AI Inventory",
+    "risk": "Risk Classification",
+    "annex": "Annex IV Documentation",
+    "gozetim": "Human Oversight",
+    "bias": "Bias Audit",
+    "red_team": "Red Teaming",
+    "politikalar": "Policy Templates",
+    "entegrasyon": "Integrations",
+    "denetim_izi": "Audit Trail",
+    "izleme": "Continuous Monitoring",
+    "standartlar": "Standards Compliance",
+    "egitim": "Training Module",
   },
   "genel": {
     "denetle": "AUDIT",
