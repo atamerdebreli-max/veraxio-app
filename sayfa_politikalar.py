@@ -1,17 +1,17 @@
 """
 sayfa_politikalar.py - Hazir Politika Sablonlari
-AI Act uyumlulugu icin 6 hazir politika sablonu sunar.
 """
 import streamlit as st
 import auth
 auth.giris_gerekli()
 
 import db
+from i18n import t
 from datetime import datetime
 
 
-st.title("📋 Politika Şablonları")
-st.markdown("**AI Act uyumluluğu için hazır politika şablonları.**")
+st.title("📋 " + t("politikalar.baslik"))
+st.markdown("**" + t("politikalar.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
@@ -19,12 +19,13 @@ firma_id = kullanici.get("firma_id") if kullanici else None
 firma_adi = kullanici.get("ad_soyad") or kullanici.get("kullanici_adi") or "Şirket"
 
 # ============================================================
-# SABLONLAR
+# SABLONLAR (UI ceviri anahtarlari)
 # ============================================================
 SABLONLAR = {
     "AI Kullanım Politikası": {
+        "anahtar_baslik": "politikalar.sablon1_baslik",
+        "anahtar_aciklama": "politikalar.sablon1_aciklama",
         "kod": "AIKP",
-        "aciklama": "Şirketinizdeki AI kullanımına ilişkin genel kurallar.",
         "icerik": """# AI KULLANIM POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -76,8 +77,9 @@ Bu politika yılda en az bir kez gözden geçirilir.
 """,
     },
     "Veri Yönetişimi Politikası": {
+        "anahtar_baslik": "politikalar.sablon2_baslik",
+        "anahtar_aciklama": "politikalar.sablon2_aciklama",
         "kod": "VYP",
-        "aciklama": "AI sistemlerinde kullanılan verilerin yönetimi.",
         "icerik": """# VERİ YÖNETİŞİMİ POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -124,8 +126,9 @@ imha edilmesine ilişkin kuralları belirler.
 """,
     },
     "Etik AI Politikası": {
+        "anahtar_baslik": "politikalar.sablon3_baslik",
+        "anahtar_aciklama": "politikalar.sablon3_aciklama",
         "kod": "EAP",
-        "aciklama": "AI sistemlerinin etik ilkeleri.",
         "icerik": """# ETİK AI POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -172,8 +175,9 @@ Kullanıcılar AI kararlarına itiraz edebilir.
 """,
     },
     "Şeffaflık Politikası": {
+        "anahtar_baslik": "politikalar.sablon4_baslik",
+        "anahtar_aciklama": "politikalar.sablon4_aciklama",
         "kod": "SP",
-        "aciklama": "AI Act Madde 50 uyumlu şeffaflık kuralları.",
         "icerik": """# ŞEFFAFLIK POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -220,8 +224,9 @@ AI Act güncellemeleri takip edilir.
 """,
     },
     "İnsan Gözetimi Politikası": {
+        "anahtar_baslik": "politikalar.sablon5_baslik",
+        "anahtar_aciklama": "politikalar.sablon5_aciklama",
         "kod": "IGP",
-        "aciklama": "AI Act Madde 14 uyumlu insan gözetimi.",
         "icerik": """# İNSAN GÖZETİMİ POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -269,8 +274,9 @@ Tüm gözetim kararları 5 yıl saklanır.
 """,
     },
     "Risk Yönetimi Politikası": {
+        "anahtar_baslik": "politikalar.sablon6_baslik",
+        "anahtar_aciklama": "politikalar.sablon6_aciklama",
         "kod": "RYP",
-        "aciklama": "AI Act Madde 9 uyumlu risk yönetim sistemi.",
         "icerik": """# RİSK YÖNETİMİ POLİTİKASI
 
 **Şirket:** {FIRMA}
@@ -324,32 +330,30 @@ Yönetime aylık risk raporu sunulur.
 # ============================================================
 # SABLON KARTLARI
 # ============================================================
-st.subheader("📚 Hazır Şablonlar")
-st.caption("Her şablonu şirketiniz için uyarlayıp indirebilirsiniz. **Word/PDF** olarak kaydedebilirsiniz.")
+st.subheader(t("politikalar.hazir_sablonlar"))
+st.caption(t("politikalar.aciklama"))
 
 for ad, sablon in SABLONLAR.items():
     with st.container():
         col1, col2 = st.columns([4, 1])
         with col1:
-            st.markdown(f"### 📄 {ad}")
-            st.caption(sablon["aciklama"])
+            st.markdown("### 📄 " + t(sablon["anahtar_baslik"]))
+            st.caption(t(sablon["anahtar_aciklama"]))
         with col2:
             st.markdown("<br>", unsafe_allow_html=True)
-            # Icerik uret
             icerik = sablon["icerik"].format(
                 FIRMA=firma_adi,
                 TARIH=datetime.now().strftime("%d.%m.%Y"),
             )
-            # Indir butonu
             st.download_button(
-                label="📥 İndir",
+                label=t("politikalar.indir"),
                 data=icerik.encode("utf-8"),
                 file_name=f"{sablon['kod']}_{firma_adi.replace(' ', '_')}.md",
                 mime="text/markdown",
                 use_container_width=True,
                 key="dl_" + sablon["kod"],
             )
-        with st.expander("👁️ Önizleme"):
+        with st.expander(t("politikalar.onizleme")):
             st.markdown(sablon["icerik"].format(
                 FIRMA=firma_adi,
                 TARIH=datetime.now().strftime("%d.%m.%Y"),
@@ -359,7 +363,7 @@ for ad, sablon in SABLONLAR.items():
 # ============================================================
 # INDIRME GECMISI
 # ============================================================
-st.subheader("📜 İndirme Geçmişi")
+st.subheader(t("politikalar.gecmis_baslik"))
 
 try:
     gecmis = db.politika_log_listele(firma_id=firma_id)
@@ -367,7 +371,7 @@ except Exception:
     gecmis = []
 
 if not gecmis:
-    st.info("Henüz şablon indirilmedi.")
+    st.info(t("politikalar.gecmis_bos"))
 else:
     for g in gecmis[:10]:
         st.caption("📄 **" + (g.get("sablon_adi") or "-") + "** — " + (g.get("olusturma") or "-"))
