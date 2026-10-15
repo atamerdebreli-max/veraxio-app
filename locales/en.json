@@ -4,7 +4,7 @@
     "kapsam": "EU AI Act Article 50",
     "surum": "Version 2.0"
   },
-  "menu": {
+    "menu": {
     "tek_denetim": "Single Audit",
     "toplu_denetim": "Batch Audit",
     "gecmis": "History",
