@@ -207,11 +207,31 @@ st.markdown(f"## {t('login.baslik')}")
 st.markdown(f"*{t('login.alt_baslik')}*")
 st.markdown("---")
 
-tab_giris, tab_kayit = st.tabs([t("login.tab_giris"), t("login.tab_kayit")])
+# Aktif tab kontrolu (landing'den gelindiyse)
+if "login_tab" not in st.session_state:
+    st.session_state["login_tab"] = "giris"
+
+_aktif_tab = st.session_state.get("login_tab", "giris")
+_tab_secenekleri = [t("login.tab_giris"), t("login.tab_kayit")]
+_tab_index = 0 if _aktif_tab == "giris" else 1
+
+_tab_secim = st.radio(
+    "_login_tab_radio",
+    _tab_secenekleri,
+    index=_tab_index,
+    horizontal=True,
+    label_visibility="collapsed",
+    key="_login_tab_radio_key",
+)
+
+if _tab_secim == t("login.tab_giris"):
+    st.session_state["login_tab"] = "giris"
+else:
+    st.session_state["login_tab"] = "kayit"
 
 
 # --- GIRIS ---
-with tab_giris:
+if st.session_state["login_tab"] == "giris":
     # ============================================================
     # GOOGLE ILE GIRIS BUTONU
     # ============================================================
@@ -342,7 +362,7 @@ with tab_giris:
 
 
 # --- KAYIT ---
-with tab_kayit:
+if st.session_state["login_tab"] == "kayit":
     st.markdown(t("login.yeni_firma"))
 
     davet_token = st.query_params.get("davet", None)
