@@ -17,6 +17,18 @@
     "hesabim": "Hesabim",
     "yukselt": "Plan Yukselt",
     "onboarding": "Başlangıç Rehberi"
+    "envanter": "AI Envanterim",
+    "risk": "Risk Sınıflandırma",
+    "annex": "Annex IV Dokümantasyon",
+    "gozetim": "İnsan Gözetimi",
+    "bias": "Bias Denetimi",
+    "red_team": "Red Teaming",
+    "politikalar": "Politika Şablonları",
+    "entegrasyon": "Entegrasyonlar",
+    "denetim_izi": "Denetim İzi",
+    "izleme": "Sürekli İzleme",
+    "standartlar": "Standart Uyumluluk",
+    "egitim": "Eğitim Modülü",
   },
   "genel": {
     "denetle": "DENETLE",
