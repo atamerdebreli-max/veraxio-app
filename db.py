@@ -1669,3 +1669,19 @@ def audit_filtrele(firma_id=None, kullanici_adi=None, eylem=None, tarih_bas=None
     params.append(limit)
     with _baglanti() as conn:
         return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+
+def audit_eylem_dagilimi(firma_id=None):
+    """Eylem bazli audit log dagilimi."""
+    with _baglanti() as conn:
+        if firma_id is not None:
+            rows = conn.execute(
+                "SELECT eylem, COUNT(*) as n FROM audit_log WHERE firma_id = ? GROUP BY eylem ORDER BY n DESC",
+                (firma_id,)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT eylem, COUNT(*) as n FROM audit_log GROUP BY eylem ORDER BY n DESC"
+            ).fetchall()
+        return [dict(r) for r in rows]
