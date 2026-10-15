@@ -175,6 +175,20 @@ def init_db():
             )
         """)
 
+                # --- Entegrasyon Ayarlari ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS entegrasyonlar (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                tip TEXT,
+                webhook_url TEXT,
+                aktif INTEGER DEFAULT 1,
+                son_test TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1532,8 +1546,6 @@ def red_team_sil(test_id):
         conn.commit()
 
 
-
-
 # ============================================================
 # POLITIKA SABLONU FONKSIYONLARI
 # ============================================================
@@ -1559,3 +1571,58 @@ def politika_log_listele(firma_id=None):
     sql += " ORDER BY olusturma DESC LIMIT 50"
     with _baglanti() as conn:
         return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+
+
+# ============================================================
+# ENTEGRASYON FONKSIYONLARI
+# ============================================================
+def entegrasyon_kaydet(firma_id, tip, webhook_url):
+    """Entegrasyonu kaydeder (varsa gunceller)."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        mevcut = conn.execute(
+            "SELECT id FROM entegrasyonlar WHERE firma_id = ? AND tip = ?",
+            (firma_id, tip)
+        ).fetchone()
+        if mevcut:
+            conn.execute("""
+                UPDATE entegrasyonlar SET webhook_url = ?, aktif = 1 WHERE id = ?
+            """, (webhook_url, mevcut["id"]))
+        else:
+            conn.execute("""
+                INSERT INTO entegrasyonlar (firma_id, tip, webhook_url, aktif, olusturma)
+                VALUES (?, ?, ?, 1, ?)
+            """, (firma_id, tip, webhook_url, simdi))
+        conn.commit()
+        return True
+
+
+def entegrasyon_bul(firma_id, tip):
+    """Firma icin entegrasyonu bulur."""
+    with _baglanti() as conn:
+        cur = conn.execute(
+            "SELECT * FROM entegrasyonlar WHERE firma_id = ? AND tip = ? AND aktif = 1",
+            (firma_id, tip)
+        )
+        row = cur.fetchone()
+        return dict(row) if row else None
+
+
+def entegrasyon_sil(firma_id, tip):
+    """Entegrasyonu siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM entegrasyonlar WHERE firma_id = ? AND tip = ?", (firma_id, tip))
+        conn.commit()
+
+
+def entegrasyon_test_guncelle(firma_id, tip):
+    """Son test tarihini gunceller."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        conn.execute(
+            "UPDATE entegrasyonlar SET son_test = ? WHERE firma_id = ? AND tip = ?",
+            (simdi, firma_id, tip)
+        )
+        conn.commit()
