@@ -971,6 +971,18 @@
     "rol_user": "User",
     "rol_admin": "Admin"
   },
+    "standartlar_kategori": {
+    "iso_baglam": "Context and Leadership",
+    "iso_planlama": "Planning",
+    "iso_destek": "Support",
+    "iso_operasyon": "Operation",
+    "iso_performans": "Performance Evaluation",
+    "iso_iyilestirme": "Improvement",
+    "nist_govern": "GOVERN",
+    "nist_map": "MAP",
+    "nist_measure": "MEASURE",
+    "nist_manage": "MANAGE"
+  },
   "sonuc": {
     "onerilen_aksiyonlar": "Recommended Actions",
     "uyumlu": "Compliant",
