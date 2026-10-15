@@ -189,6 +189,21 @@ def init_db():
             )
         """)
 
+                # --- Egitim Tamamlama ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS egitim_tamamlama (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                kullanici_adi TEXT,
+                modul_kodu TEXT,
+                modul_adi TEXT,
+                quiz_skoru INTEGER,
+                tamamlandi INTEGER DEFAULT 0,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1821,3 +1836,55 @@ def alarm_kontrol(firma_id=None):
             })
 
     return alarmlar
+    
+
+# ============================================================
+# EGITIM MODULU FONKSIYONLARI
+# ============================================================
+def egitim_kaydet(firma_id, kullanici_adi, modul_kodu, modul_adi, quiz_skoru, tamamlandi):
+    """Egitim tamamlamasini kaydeder."""
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        mevcut = conn.execute(
+            "SELECT id FROM egitim_tamamlama WHERE kullanici_adi = ? AND modul_kodu = ?",
+            (kullanici_adi, modul_kodu)
+        ).fetchone()
+        if mevcut:
+            conn.execute("""
+                UPDATE egitim_tamamlama
+                SET quiz_skoru = ?, tamamlandi = ?, olusturma = ?
+                WHERE id = ?
+            """, (quiz_skoru, tamamlandi, simdi, mevcut["id"]))
+        else:
+            conn.execute("""
+                INSERT INTO egitim_tamamlama
+                (firma_id, kullanici_adi, modul_kodu, modul_adi, quiz_skoru, tamamlandi, olusturma)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            """, (firma_id, kullanici_adi, modul_kodu, modul_adi, quiz_skoru, tamamlandi, simdi))
+        conn.commit()
+        return True
+
+
+def egitim_listele(kullanici_adi):
+    """Kullanicinin egitim kayitlarini listeler."""
+    with _baglanti() as conn:
+        rows = conn.execute(
+            "SELECT * FROM egitim_tamamlama WHERE kullanici_adi = ?",
+            (kullanici_adi,)
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+
+def egitim_istatistik(firma_id=None):
+    """Firma bazli egitim istatistigi."""
+    with _baglanti() as conn:
+        if firma_id is not None:
+            toplam = conn.execute(
+                "SELECT COUNT(*) as n FROM egitim_tamamlama WHERE tamamlandi = 1 AND firma_id = ?",
+                (firma_id,)
+            ).fetchone()["n"]
+        else:
+            toplam = conn.execute(
+                "SELECT COUNT(*) as n FROM egitim_tamamlama WHERE tamamlandi = 1"
+            ).fetchone()["n"]
+        return {"tamamlanan": toplam}
