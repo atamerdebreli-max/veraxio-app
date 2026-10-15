@@ -531,7 +531,7 @@ def goster():
         with btn2:
             if st.button(T['demo_btn'], use_container_width=True, key="hero_demo_btn"):
                 st.session_state["landing_goster"] = False
-                st.session_state["ucretsiz_demo"] = True
+                st.session_state["login_tab"] = "kayit"
                 st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -600,6 +600,7 @@ def goster():
         """, unsafe_allow_html=True)
         if st.button(f"{T['select_btn']} →", key="plan_starter_btn", use_container_width=True):
             st.session_state["landing_goster"] = False
+            st.session_state["login_tab"] = "kayit"
             st.session_state["secilen_plan"] = "starter"
             st.rerun()
 
@@ -622,6 +623,7 @@ def goster():
         """, unsafe_allow_html=True)
         if st.button(f"{T['select_btn']} →", key="plan_pro_btn", type="primary", use_container_width=True):
             st.session_state["landing_goster"] = False
+            st.session_state["login_tab"] = "kayit"
             st.session_state["secilen_plan"] = "pro"
             st.rerun()
 
@@ -642,6 +644,7 @@ def goster():
         """, unsafe_allow_html=True)
         if st.button(f"{T['select_btn']} →", key="plan_ent_btn", use_container_width=True):
             st.session_state["landing_goster"] = False
+            st.session_state["login_tab"] = "kayit"
             st.session_state["secilen_plan"] = "enterprise"
             st.rerun()
 
