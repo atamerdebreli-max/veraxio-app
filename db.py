@@ -129,6 +129,23 @@ def init_db():
             )
         """)
 
+                # --- Bias Analizleri ---
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS bias_analizleri (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firma_id INTEGER,
+                sistem_adi TEXT,
+                dataset_adi TEXT,
+                hassas_sutun TEXT,
+                sonuc_sutun TEXT,
+                bias_skoru REAL,
+                risk_seviyesi TEXT,
+                detay TEXT,
+                olusturma TEXT,
+                FOREIGN KEY (firma_id) REFERENCES firma(id)
+            )
+        """)
+
         # --- API anahtarlari ---
         conn.execute("""
             CREATE TABLE IF NOT EXISTS api_anahtarlari (
@@ -1403,3 +1420,42 @@ def gozetim_istatistik(firma_id=None):
             onaylandi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE durum = 'onaylandi'").fetchone()["n"]
             reddedildi = conn.execute("SELECT COUNT(*) as n FROM insan_gozetimi WHERE durum = 'reddedildi'").fetchone()["n"]
         return {"toplam": toplam, "bekleyen": bekleyen, "onaylandi": onaylandi, "reddedildi": reddedildi}
+
+
+
+# ============================================================
+# BIAS ANALIZ FONKSIYONLARI
+# ============================================================
+def bias_kaydet(firma_id, sistem_adi, dataset_adi, hassas_sutun, sonuc_sutun, bias_skoru, risk_seviyesi, detay):
+    """Bias analizini kaydeder."""
+    import json as _json
+    simdi = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        cur = conn.execute("""
+            INSERT INTO bias_analizleri
+            (firma_id, sistem_adi, dataset_adi, hassas_sutun, sonuc_sutun,
+             bias_skoru, risk_seviyesi, detay, olusturma)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (firma_id, sistem_adi, dataset_adi, hassas_sutun, sonuc_sutun,
+              bias_skoru, risk_seviyesi, _json.dumps(detay, ensure_ascii=False), simdi))
+        conn.commit()
+        return cur.lastrowid
+
+
+def bias_listele(firma_id=None):
+    """Bias analizlerini listeler."""
+    sql = "SELECT * FROM bias_analizleri WHERE 1=1"
+    params = []
+    if firma_id is not None:
+        sql += " AND firma_id = ?"
+        params.append(firma_id)
+    sql += " ORDER BY olusturma DESC"
+    with _baglanti() as conn:
+        return [dict(row) for row in conn.execute(sql, params).fetchall()]
+
+
+def bias_sil(bias_id):
+    """Bias kaydini siler."""
+    with _baglanti() as conn:
+        conn.execute("DELETE FROM bias_analizleri WHERE id = ?", (bias_id,))
+        conn.commit()
