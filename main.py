@@ -56,6 +56,9 @@ if "email_dogrula" in _qp:
 
 if "davet" in _qp:
     _onemli_parametre_var = True  # davet_token login.py'de query_params'tan okunuyor
+
+if "code" in _qp and "google_oauth_state" in st.session_state:
+    _onemli_parametre_var = True  # Google callback -> login sayfasi gosterilsin
 # ============================================================
 # LANDING PAGE (giris yapilmamissa goster)
 # ============================================================
