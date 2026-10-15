@@ -1685,3 +1685,140 @@ def audit_eylem_dagilimi(firma_id=None):
                 "SELECT eylem, COUNT(*) as n FROM audit_log GROUP BY eylem ORDER BY n DESC"
             ).fetchall()
         return [dict(r) for r in rows]
+
+
+# ============================================================
+# SUREKLI IZLEME FONKSIYONLARI
+# ============================================================
+def trend_analizi(firma_id=None, gun=30):
+    """Son N gunun denetim trendi."""
+    esik = (datetime.now() - timedelta(days=gun)).strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        if firma_id is not None:
+            where = "WHERE tarih >= ? AND firma_id = ?"
+            params = (esik, firma_id)
+        else:
+            where = "WHERE tarih >= ?"
+            params = (esik,)
+
+        toplam = conn.execute(f"SELECT COUNT(*) as n FROM denetimler {where}", params).fetchone()["n"]
+        uyumlu = conn.execute(f"SELECT COUNT(*) as n FROM denetimler {where} AND genel_sonuc = 'UYUMLU'", params).fetchone()["n"]
+        uyumsuz = conn.execute(f"SELECT COUNT(*) as n FROM denetimler {where} AND genel_sonuc = 'UYUMSUZ'", params).fetchone()["n"]
+
+        return {
+            "gun": gun,
+            "toplam": toplam,
+            "uyumlu": uyumlu,
+            "uyumsuz": uyumsuz,
+            "uyum_orani": round(100 * uyumlu / toplam, 1) if toplam else 0,
+        }
+
+
+def haftalik_trend(firma_id=None, hafta=8):
+    """Son N haftanin denetim trendi."""
+    with _baglanti() as conn:
+        sonuclar = []
+        for i in range(hafta - 1, -1, -1):
+            bas = (datetime.now() - timedelta(days=(i + 1) * 7)).strftime("%Y-%m-%d %H:%M:%S")
+            bit = (datetime.now() - timedelta(days=i * 7)).strftime("%Y-%m-%d %H:%M:%S")
+            if firma_id is not None:
+                r = conn.execute(
+                    "SELECT COUNT(*) as n, SUM(CASE WHEN genel_sonuc='UYUMLU' THEN 1 ELSE 0 END) as u FROM denetimler WHERE tarih >= ? AND tarih < ? AND firma_id = ?",
+                    (bas, bit, firma_id)
+                ).fetchone()
+            else:
+                r = conn.execute(
+                    "SELECT COUNT(*) as n, SUM(CASE WHEN genel_sonuc='UYUMLU' THEN 1 ELSE 0 END) as u FROM denetimler WHERE tarih >= ? AND tarih < ?",
+                    (bas, bit)
+                ).fetchone()
+            toplam = r["n"] or 0
+            uyumlu = r["u"] or 0
+            sonuclar.append({
+                "hafta": hafta - i,
+                "baslangic": bas[:10],
+                "toplam": toplam,
+                "uyumlu": uyumlu,
+                "uyum_orani": round(100 * uyumlu / toplam, 1) if toplam else 0,
+            })
+        return sonuclar
+
+
+def ai_tipi_dagilimi(firma_id=None, gun=30):
+    """Son N gunde AI tipi bazli denetim dagilimi."""
+    esik = (datetime.now() - timedelta(days=gun)).strftime("%Y-%m-%d %H:%M:%S")
+    with _baglanti() as conn:
+        if firma_id is not None:
+            rows = conn.execute(
+                "SELECT ai_tipi, COUNT(*) as n FROM denetimler WHERE tarih >= ? AND firma_id = ? GROUP BY ai_tipi ORDER BY n DESC",
+                (esik, firma_id)
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT ai_tipi, COUNT(*) as n FROM denetimler WHERE tarih >= ? GROUP BY ai_tipi ORDER BY n DESC",
+                (esik,)
+            ).fetchall()
+        return [dict(r) for r in rows]
+
+
+def alarm_kontrol(firma_id=None):
+    """Kritik alarm durumlarini kontrol eder."""
+    alarmlar = []
+    with _baglanti() as conn:
+        # Son 7 gunde uyumsuz denetim var mi?
+        esik7 = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
+        if firma_id is not None:
+            son_uyumsuz = conn.execute(
+                "SELECT COUNT(*) as n FROM denetimler WHERE tarih >= ? AND genel_sonuc = 'UYUMSUZ' AND firma_id = ?",
+                (esik7, firma_id)
+            ).fetchone()["n"]
+        else:
+            son_uyumsuz = conn.execute(
+                "SELECT COUNT(*) as n FROM denetimler WHERE tarih >= ? AND genel_sonuc = 'UYUMSUZ'",
+                (esik7,)
+            ).fetchone()["n"]
+
+        if son_uyumsuz > 0:
+            alarmlar.append({
+                "seviye": "kritik",
+                "baslik": f"Son 7 gunde {son_uyumsuz} uyumsuz denetim",
+                "mesaj": "Derhal inceleyin ve duzeltici aksiyon alin.",
+            })
+
+        # Aktif AI envanteri kontrolu
+        if firma_id is not None:
+            envanter_sayisi = conn.execute(
+                "SELECT COUNT(*) as n FROM ai_envanteri WHERE firma_id = ? AND durum = 'aktif'",
+                (firma_id,)
+            ).fetchone()["n"]
+        else:
+            envanter_sayisi = conn.execute(
+                "SELECT COUNT(*) as n FROM ai_envanteri WHERE durum = 'aktif'"
+            ).fetchone()["n"]
+
+        if envanter_sayisi == 0:
+            alarmlar.append({
+                "seviye": "uyari",
+                "baslik": "AI Envanteri bos",
+                "mesaj": "Sirketinizin AI sistemlerini envantere ekleyin.",
+            })
+
+        # Son 30 gunde denetim yapilmadiysa
+        if firma_id is not None:
+            son_denetim = conn.execute(
+                "SELECT COUNT(*) as n FROM denetimler WHERE tarih >= ? AND firma_id = ?",
+                (esik7, firma_id)
+            ).fetchone()["n"]
+        else:
+            son_denetim = conn.execute(
+                "SELECT COUNT(*) as n FROM denetimler WHERE tarih >= ?",
+                (esik7,)
+            ).fetchone()["n"]
+
+        if son_denetim == 0 and envanter_sayisi > 0:
+            alarmlar.append({
+                "seviye": "uyari",
+                "baslik": "Son 7 gunde denetim yapilmadi",
+                "mesaj": "Duzenli denetim yapmaniz onerilir.",
+            })
+
+    return alarmlar
