@@ -438,6 +438,31 @@ def email_dogrula(token):
     # Kullaniciyi dogrula
     db.kullanici_dogrula(token_kayit["kullanici_adi"])
 
+
+# ============================================================
+# GOOGLE SSO ILE GIRIS
+# ============================================================
+def google_ile_giris_yap(kullanici_dict):
+    """Google'dan gelen kullanici bilgisiyle oturum acar."""
+    if not kullanici_dict:
+        return False
+    st.session_state["kullanici"] = kullanici_dict
+    st.session_state["giris_yapildi"] = True
+    try:
+        db.kullanici_giris_guncelle(kullanici_dict.get("kullanici_adi", ""))
+        db.audit_kaydet(
+            eylem="giris_google",
+            kullanici_adi=kullanici_dict.get("kullanici_adi", ""),
+            firma_id=kullanici_dict.get("firma_id"),
+            detay="Google SSO ile giris",
+            basarili=True,
+        )
+    except Exception:
+        pass
+    return True
+
+
+    
     # Token'i kullanildi olarak isaretle
     db.token_kullanildi(token)
 
