@@ -5,16 +5,15 @@ import streamlit as st
 import auth
 auth.giris_gerekli()
 
-import db
+from i18n import t
 from datetime import datetime
 
 
-st.title("📚 Standart Uyumluluk")
-st.markdown("**ISO 42001 ve NIST AI RMF standartlarına göre uyumluluğunuzu değerlendirin.**")
+st.title("📚 " + t("standartlar.baslik"))
+st.markdown("**" + t("standartlar.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
-firma_id = kullanici.get("firma_id") if kullanici else None
 
 # ============================================================
 # STANDARTLAR
@@ -96,10 +95,10 @@ STANDARTLAR = {
 # ============================================================
 # STANDART SECIMI
 # ============================================================
-st.subheader("📋 Standart Seçimi")
+st.subheader(t("standartlar.secim"))
 
 secili_standart = st.selectbox(
-    "Değerlendirmek istediğiniz standart:",
+    t("standartlar.secim_label"),
     list(STANDARTLAR.keys()),
 )
 
@@ -107,15 +106,13 @@ std = STANDARTLAR[secili_standart]
 st.info(f"**{secili_standart}** — {std['aciklama']}")
 
 st.markdown("---")
-st.subheader(f"✅ {secili_standart} Kontrol Listesi")
-st.caption("Her maddeyi değerlendirin. İşaretlediğiniz maddeler **uyumlu** sayılır.")
+st.subheader(t("standartlar.kontrol_listesi"))
+st.caption(t("standartlar.kontrol_caption"))
 
-# State
 state_key = f"std_{secili_standart.replace(' ', '_')}"
 if state_key not in st.session_state:
     st.session_state[state_key] = {}
 
-# Kategoriler
 toplam_madde = 0
 isaretlenen = 0
 
@@ -134,25 +131,23 @@ for kategori, maddeler in std["kategoriler"].items():
 # SONUC
 # ============================================================
 st.markdown("---")
-st.subheader("📊 Uyumluluk Sonucu")
+st.subheader(t("standartlar.sonuc_baslik"))
 
 uyum_orani = round(100 * isaretlenen / toplam_madde, 1) if toplam_madde else 0
 
 col1, col2, col3 = st.columns(3)
-col1.metric("Toplam Madde", toplam_madde)
-col2.metric("Uyumlu", isaretlenen)
-col3.metric("Uyum Oranı", f"%{uyum_orani}")
+col1.metric(t("standartlar.toplam_madde"), toplam_madde)
+col2.metric(t("standartlar.uyumlu"), isaretlenen)
+col3.metric(t("standartlar.uyum_orani"), f"%{uyum_orani}")
 
-# Renkli sonuc
 if uyum_orani >= 80:
-    st.success(f"🟢 **YÜKSEK UYUM** — %{uyum_orani} — {secili_standart} standartlarına büyük ölçüde uyumlusunuz.")
+    st.success(f"🟢 " + t("standartlar.yuksek_uyum") + f" (%{uyum_orani})")
 elif uyum_orani >= 50:
-    st.warning(f"🟡 **ORTA UYUM** — %{uyum_orani} — İyileştirme alanları var.")
+    st.warning(f"🟡 " + t("standartlar.orta_uyum") + f" (%{uyum_orani})")
 else:
-    st.error(f"🔴 **DÜŞÜK UYUM** — %{uyum_orani} — Ciddi eksiklikler var, derhal aksiyon alın.")
+    st.error(f"🔴 " + t("standartlar.dusuk_uyum") + f" (%{uyum_orani})")
 
-# Kategori bazli ozet
-st.markdown("### 📋 Kategori Bazlı Özet")
+st.markdown("### " + t("standartlar.kategori_ozet"))
 for kategori, maddeler in std["kategoriler"].items():
     kat_toplam = len(maddeler)
     kat_uyumlu = 0
@@ -206,7 +201,7 @@ for kategori, maddeler in std["kategoriler"].items():
         rapor += f"- {durum} {madde}\n"
 
 st.download_button(
-    label=f"📥 {secili_standart} Raporu İndir (Markdown)",
+    label=t("standartlar.rapor_indir"),
     data=rapor.encode("utf-8"),
     file_name=f"{secili_standart.replace(' ', '_')}_rapor_{datetime.now().strftime('%Y%m%d')}.md",
     mime="text/markdown",
@@ -214,4 +209,4 @@ st.download_button(
 )
 
 st.markdown("---")
-st.caption("📌 **Not:** Bu değerlendirme bir öz değerlendirmedir. Resmi sertifikasyon için akredite kuruluşa başvurun.")
+st.caption(t("standartlar.not"))
