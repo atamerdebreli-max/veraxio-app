@@ -15,3 +15,5 @@ sqlalchemy
 pyjwt
 cryptography
 fpdf2
+authlib
+httpx
