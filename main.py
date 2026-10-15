@@ -100,6 +100,7 @@ if _auth.giris_yapildi_mi():
 import tema
 tema.tema_uygula()
 # Navigasyon - basliklar i18n'den (dil secici cagrildiktan sonra)
+sayfa_denetim_izi = st.Page("sayfa_denetim_izi.py", title="📜 Denetim İzi", icon="📜")
 sayfa_entegrasyon = st.Page("sayfa_entegrasyon.py", title="🔌 Entegrasyonlar", icon="🔌")
 sayfa_politikalar = st.Page("sayfa_politikalar.py", title="📋 Politika Şablonları", icon="📋")
 sayfa_red_team = st.Page("sayfa_red_team.py", title="🎯 Red Teaming", icon="🎯")
@@ -125,7 +126,7 @@ sayfa_admin = st.Page("sayfa_admin.py", title=t("menu.admin"), icon="🔧")
 if _onemli_parametre_var:
     pg = st.navigation([sayfa_login], position="hidden")
 else:
-    pg = st.navigation([sayfa_login, sayfa_envanter, sayfa_risk, sayfa_annex, sayfa_gozetim, sayfa_bias, sayfa_red_team, sayfa_politikalar, sayfa_entegrasyon, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
+    pg = st.navigation([sayfa_login, sayfa_envanter, sayfa_risk, sayfa_annex, sayfa_gozetim, sayfa_bias, sayfa_red_team, sayfa_politikalar, sayfa_entegrasyon, sayfa_denetim_izi, sayfa_tek, sayfa_toplu, sayfa_gecmis, sayfa_dashboard, sayfa_onboarding, sayfa_zamanlanmis, sayfa_ekip, sayfa_hukuki, sayfa_hesabim, sayfa_yukselt, sayfa_admin])
 
 # Sidebar basligi
 st.sidebar.title("◆ " + t("app.baslik"))
