@@ -971,6 +971,18 @@
     "rol_user": "Потребител",
     "rol_admin": "Админ"
   },
+    "standartlar_kategori": {
+    "iso_baglam": "Контекст и лидерство",
+    "iso_planlama": "Планиране",
+    "iso_destek": "Подкрепа",
+    "iso_operasyon": "Операции",
+    "iso_performans": "Оценка на ефективността",
+    "iso_iyilestirme": "Подобрение",
+    "nist_govern": "GOVERN (Управление)",
+    "nist_map": "MAP (Картографиране)",
+    "nist_measure": "MEASURE (Измерване)",
+    "nist_manage": "MANAGE (Управление)"
+  },
   "sonuc": {
     "onerilen_aksiyonlar": "Действия",
     "uyumlu": "Съответстващ",
