@@ -6,12 +6,12 @@ import auth
 auth.giris_gerekli()
 
 import db
-from datetime import datetime
 import pandas as pd
+from i18n import t
 
 
-st.title("📈 Sürekli İzleme")
-st.markdown("**AI sistemlerinizin zaman içindeki uyumluluk trendi ve alarmlar.**")
+st.title("📈 " + t("izleme.baslik"))
+st.markdown("**" + t("izleme.alt_baslik") + "**")
 st.markdown("---")
 
 kullanici = auth.mevcut_kullanici()
@@ -20,16 +20,16 @@ firma_id = kullanici.get("firma_id") if kullanici else None
 # ============================================================
 # ALARMLAR
 # ============================================================
-st.subheader("🚨 Aktif Alarmlar")
+st.subheader(t("izleme.aktif_alarmlar"))
 
 try:
     alarmlar = db.alarm_kontrol(firma_id)
 except Exception as e:
     alarmlar = []
-    st.warning("Alarm kontrolu yapilamadi: " + str(e))
+    st.warning(t("izleme.kayit_hatasi") + str(e) if "kayit_hatasi" in dir() else str(e))
 
 if not alarmlar:
-    st.success("✅ Su anda aktif alarm yok. Her sey yolunda!")
+    st.success(t("izleme.alarm_yok"))
 else:
     for a in alarmlar:
         seviye = a.get("seviye", "uyari")
@@ -45,24 +45,24 @@ st.markdown("---")
 # ============================================================
 # GENEL TREND
 # ============================================================
-st.subheader("📊 Genel Trend")
+st.subheader(t("izleme.genel_trend"))
 
 try:
     t30 = db.trend_analizi(firma_id, gun=30)
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Son 30 Gün", t30["toplam"])
-    col2.metric("Uyumlu", t30["uyumlu"])
-    col3.metric("Uyumsuz", t30["uyumsuz"])
-    col4.metric("Uyum Oranı", f"%{t30['uyum_orani']}")
+    col1.metric(t("izleme.son_30"), t30["toplam"])
+    col2.metric(t("izleme.uyumlu"), t30["uyumlu"])
+    col3.metric(t("izleme.uyumsuz"), t30["uyumsuz"])
+    col4.metric(t("izleme.uyum_orani"), f"%{t30['uyum_orani']}")
 except Exception as e:
-    st.error("Trend yuklenemedi: " + str(e))
+    st.error(t("izleme.kayit_hatasi") + str(e) if "kayit_hatasi" in dir() else str(e))
 
 st.markdown("---")
 
 # ============================================================
 # HAFTALIK TREND GRAFIGI
 # ============================================================
-st.subheader("📅 Haftalık Uyum Trendi (Son 8 Hafta)")
+st.subheader(t("izleme.haftalik_trend"))
 
 try:
     haftalik = db.haftalik_trend(firma_id, hafta=8)
@@ -71,21 +71,20 @@ try:
         df_h = pd.DataFrame(haftalik)
         df_h = df_h.rename(columns={
             "hafta": "Hafta",
-            "toplam": "Toplam",
-            "uyumlu": "Uyumlu",
-            "uyum_orani": "Uyum %",
+            "toplam": t("izleme.toplam") if "toplam" in dir() else "Toplam",
+            "uyumlu": t("izleme.uyumlu"),
+            "uyum_orani": t("izleme.uyum_orani"),
         })
-        st.dataframe(df_h[["Hafta", "Toplam", "Uyumlu", "Uyum %"]], use_container_width=True)
+        st.dataframe(df_h[["Hafta", "Toplam", t("izleme.uyumlu"), t("izleme.uyum_orani")]], use_container_width=True)
 
-        # Basit grafik
         try:
             import plotly.express as px
             fig = px.line(
                 df_h,
                 x="Hafta",
-                y="Uyum %",
+                y=t("izleme.uyum_orani"),
                 markers=True,
-                title="Haftalik Uyum Orani (%)",
+                title=t("izleme.haftalik_trend"),
             )
             fig.update_layout(
                 plot_bgcolor="#0a0a0a",
@@ -94,33 +93,33 @@ try:
             )
             st.plotly_chart(fig, use_container_width=True)
         except Exception:
-            st.bar_chart(df_h.set_index("Hafta")["Uyum %"])
+            st.bar_chart(df_h.set_index("Hafta")[t("izleme.uyum_orani")])
     else:
-        st.info("Henuz yeterli veri yok.")
+        st.info(t("izleme.yeterli_veri_yok"))
 except Exception as e:
-    st.error("Haftalik trend yuklenemedi: " + str(e))
+    st.error(t("izleme.kayit_hatasi") + str(e) if "kayit_hatasi" in dir() else str(e))
 
 st.markdown("---")
 
 # ============================================================
 # AI TIPI DAGILIMI
 # ============================================================
-st.subheader("🤖 AI Tipi Dağılımı (Son 30 Gün)")
+st.subheader(t("izleme.ai_tipi_dagilimi"))
 
 try:
     dagilim = db.ai_tipi_dagilimi(firma_id, gun=30)
     if dagilim:
         df_d = pd.DataFrame(dagilim)
-        df_d = df_d.rename(columns={"ai_tipi": "AI Tipi", "n": "Denetim Sayısı"})
+        df_d = df_d.rename(columns={"ai_tipi": t("envanter.ai_tipi"), "n": t("izleme.toplam") if "toplam" in dir() else "Adet"})
         st.dataframe(df_d, use_container_width=True)
 
         try:
             import plotly.express as px
             fig2 = px.pie(
                 df_d,
-                names="AI Tipi",
-                values="Denetim Sayısı",
-                title="AI Tipi Dagilimi",
+                names=t("envanter.ai_tipi"),
+                values=df_d.columns[1],
+                title=t("izleme.ai_tipi_dagilimi"),
             )
             fig2.update_layout(
                 plot_bgcolor="#0a0a0a",
@@ -129,26 +128,26 @@ try:
             )
             st.plotly_chart(fig2, use_container_width=True)
         except Exception:
-            st.bar_chart(df_d.set_index("AI Tipi")["Denetim Sayısı"])
+            st.bar_chart(df_d.set_index(t("envanter.ai_tipi"))[df_d.columns[1]])
     else:
-        st.info("Son 30 gunde denetim yapilmadi.")
+        st.info(t("izleme.denetim_yok"))
 except Exception as e:
-    st.error("Dagilim yuklenemedi: " + str(e))
+    st.error(t("izleme.kayit_hatasi") + str(e) if "kayit_hatasi" in dir() else str(e))
 
 # ============================================================
 # OZET
 # ============================================================
 st.markdown("---")
-st.subheader("💡 Yorum ve Oneriler")
+st.subheader(t("izleme.yorumlar"))
 
 try:
     if t30["toplam"] == 0:
-        st.info("Henuz denetim yapilmadi. Denetim yaptikca trend burada gorunecek.")
+        st.info(t("izleme.denetim_yok_yorum"))
     elif t30["uyum_orani"] >= 80:
-        st.success("🎉 Uyum oraniniz yuksek! Duzenli denetimlerle bunu koruyun.")
+        st.success(t("izleme.yuksek_uyum"))
     elif t30["uyum_orani"] >= 50:
-        st.warning("⚠️ Uyum oraniniz orta seviyede. Iyilestirme alanlarina odaklanin.")
+        st.warning(t("izleme.orta_uyum"))
     else:
-        st.error("🚨 Uyum oraniniz dusuk. Derhal aksiyon alin.")
+        st.error(t("izleme.dusuk_uyum"))
 except Exception:
     pass
