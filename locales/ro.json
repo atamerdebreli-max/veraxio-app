@@ -971,6 +971,18 @@
     "rol_user": "Utilizator",
     "rol_admin": "Admin"
   },
+    "standartlar_kategori": {
+    "iso_baglam": "Context și leadership",
+    "iso_planlama": "Planificare",
+    "iso_destek": "Suport",
+    "iso_operasyon": "Operare",
+    "iso_performans": "Evaluarea performanței",
+    "iso_iyilestirme": "Îmbunătățire",
+    "nist_govern": "GOVERN (Guvernanță)",
+    "nist_map": "MAP (Cartografiere)",
+    "nist_measure": "MEASURE (Măsurare)",
+    "nist_manage": "MANAGE (Management)"
+  },
   "sonuc": {
     "onerilen_aksiyonlar": "Acțiuni",
     "uyumlu": "Conform",
